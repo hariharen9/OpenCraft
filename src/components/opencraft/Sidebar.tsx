@@ -3,8 +3,6 @@ import {
   FileText,
   CheckCircle2,
   Calendar,
-  Cloud,
-  Users,
   ClipboardList,
   ChevronDown,
   Hand,
@@ -12,16 +10,21 @@ import {
   Monitor,
   Download,
   PenSquare,
+  ListTodo,
 } from "lucide-react";
-import { useEditorStore } from "@/store/editor-store";
+import { useEditorStore, type ActiveView } from "@/store/editor-store";
 
 const item =
   "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-[#c8c8c8] hover:bg-[#2f2f2f] cursor-pointer transition-colors active:scale-[0.99]";
+const itemActive =
+  "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-white bg-[#2a2a2a] cursor-default";
 
 export function Sidebar() {
   const editor = useEditorStore((s) => s.editor);
   const title = useEditorStore((s) => s.title);
   const setTitle = useEditorStore((s) => s.setTitle);
+  const activeView = useEditorStore((s) => s.activeView);
+  const setActiveView = useEditorStore((s) => s.setActiveView);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
@@ -45,6 +48,16 @@ export function Sidebar() {
     e.target.value = "";
   };
 
+  const navItem = (view: ActiveView, icon: React.ReactNode, label: string) => (
+    <button
+      onClick={() => setActiveView(view)}
+      className={activeView === view ? itemActive : item + " w-full"}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+
   return (
     <aside className="flex h-full w-[260px] shrink-0 flex-col bg-transparent text-[#c8c8c8]">
       {/* Top spacer (window controls area on macOS) */}
@@ -61,36 +74,13 @@ export function Sidebar() {
 
       {/* Primary nav */}
       <nav className="px-2 space-y-0.5">
-        <button
-          onClick={() => editor?.commands.clearContent(true)}
-          className={item + " w-full"}
-        >
-          <PenSquare className="h-4 w-4 text-[#9a9a9a]" />
-          New Document
-        </button>
-        <div className={item + " bg-[#2a2a2a] text-white"}>
-          <FileText className="h-4 w-4 text-[#9a9a9a]" />
-          All Docs
-        </div>
-        <div className={item}>
-          <CheckCircle2 className="h-4 w-4 text-[#9a9a9a]" />
-          Tasks
-        </div>
-        <div className={item}>
-          <Calendar className="h-4 w-4 text-[#9a9a9a]" />
-          Calendar
-        </div>
+        {navItem("home", <FileText className="h-4 w-4 text-[#9a9a9a]" />, "Home")}
+        {navItem("editor", <PenSquare className="h-4 w-4 text-[#9a9a9a]" />, "New Document")}
+        {navItem("tasks", <CheckCircle2 className="h-4 w-4 text-[#9a9a9a]" />, "Tasks")}
+        {navItem("calendar", <Calendar className="h-4 w-4 text-[#9a9a9a]" />, "Calendar")}
       </nav>
 
       <div className="mt-4 px-2 space-y-0.5">
-        <div className={item}>
-          <Cloud className="h-4 w-4 text-[#9a9a9a]" />
-          Imagine
-        </div>
-        <div className={item}>
-          <Users className="h-4 w-4 text-[#9a9a9a]" />
-          Shared with Me
-        </div>
         <div className={item + " justify-between"}>
           <span className="flex items-center gap-2.5">
             <ClipboardList className="h-4 w-4 text-[#9a9a9a]" />

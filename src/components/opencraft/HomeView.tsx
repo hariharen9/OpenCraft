@@ -1,0 +1,210 @@
+import { useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
+import {
+  FileText,
+  CheckCircle2,
+  Calendar,
+  PenSquare,
+  ArrowRight,
+  Clock,
+  Star,
+} from "lucide-react";
+import { useEditorStore } from "@/store/editor-store";
+import { useTasksStore } from "@/store/tasks-store";
+import { format } from "date-fns";
+
+const greeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+};
+
+export function HomeView() {
+  const setActiveView = useEditorStore((s) => s.setActiveView);
+  const title = useEditorStore((s) => s.title);
+  const updatedAt = useEditorStore((s) => s.updatedAt);
+  const starred = useEditorStore((s) => s.starred);
+  const { tasks, loaded, loadTasks } = useTasksStore();
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
+
+  const incompleteTasks = useMemo(
+    () => tasks.filter((t) => !t.completed).length,
+    [tasks],
+  );
+
+  const todayTasks = useMemo(
+    () =>
+      tasks.filter((t) => {
+        if (!t.dueDate || t.completed) return false;
+        return t.dueDate === format(new Date(), "yyyy-MM-dd");
+      }).length,
+    [tasks],
+  );
+
+  const stats = [
+    {
+      label: "Documents",
+      value: 1,
+      icon: <FileText className="h-4 w-4" />,
+      color: "text-blue-400",
+      bg: "bg-blue-500/10",
+      onClick: () => setActiveView("editor"),
+    },
+    {
+      label: "Tasks",
+      value: loaded ? incompleteTasks : "—",
+      icon: <CheckCircle2 className="h-4 w-4" />,
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10",
+      onClick: () => setActiveView("tasks"),
+    },
+    {
+      label: "Due today",
+      value: loaded ? todayTasks : "—",
+      icon: <Clock className="h-4 w-4" />,
+      color: "text-amber-400",
+      bg: "bg-amber-500/10",
+      onClick: () => setActiveView("tasks"),
+    },
+    {
+      label: "Starred",
+      value: starred ? 1 : 0,
+      icon: <Star className="h-4 w-4" />,
+      color: "text-rose-400",
+      bg: "bg-rose-500/10",
+      onClick: () => setActiveView("editor"),
+    },
+  ];
+
+  return (
+    <div className="flex h-full flex-col overflow-y-auto bg-[#1f1f1f]">
+      <div className="mx-auto w-full max-w-4xl px-12 py-16">
+        {/* Greeting */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mb-8"
+        >
+          <h1 className="text-[32px] font-bold tracking-[-0.02em] text-[#e8e8e8]">
+            {greeting()}
+          </h1>
+          <p className="mt-1 text-[14px] text-[#888]">
+            {format(new Date(), "EEEE, MMMM d, yyyy")}
+          </p>
+        </motion.div>
+
+        {/* Stats grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.05 }}
+          className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4"
+        >
+          {stats.map((s) => (
+            <motion.button
+              key={s.label}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={s.onClick}
+              className="flex items-center gap-3 rounded-xl bg-[#262626] p-4 text-left ring-1 ring-[#333] transition-colors hover:bg-[#2c2c2c]"
+            >
+              <div className={"flex h-9 w-9 items-center justify-center rounded-lg " + s.bg + " " + s.color}>
+                {s.icon}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-[18px] font-semibold text-[#e8e8e8]">{s.value}</div>
+                <div className="text-[12px] text-[#888]">{s.label}</div>
+              </div>
+            </motion.button>
+          ))}
+        </motion.div>
+
+        {/* Quick actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="mb-8"
+        >
+          <h2 className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#777]">
+            Quick Actions
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            <ActionBtn
+              icon={<PenSquare className="h-3.5 w-3.5" />}
+              label="New Document"
+              onClick={() => setActiveView("editor")}
+            />
+            <ActionBtn
+              icon={<CheckCircle2 className="h-3.5 w-3.5" />}
+              label="Tasks"
+              onClick={() => setActiveView("tasks")}
+            />
+            <ActionBtn
+              icon={<Calendar className="h-3.5 w-3.5" />}
+              label="Calendar"
+              onClick={() => setActiveView("calendar")}
+            />
+          </div>
+        </motion.div>
+
+        {/* Recent document */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.15 }}
+        >
+          <h2 className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#777]">
+            Recent Document
+          </h2>
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => setActiveView("editor")}
+            className="flex w-full items-center gap-4 rounded-xl bg-[#262626] p-4 text-left ring-1 ring-[#333] transition-colors hover:bg-[#2c2c2c]"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#333] text-[#9a9a9a]">
+              <FileText className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-[14px] font-medium text-[#e0e0e0]">
+                {title || "Untitled Page"}
+              </div>
+              <div className="mt-0.5 text-[12px] text-[#666]">
+                {updatedAt
+                  ? `Edited ${format(updatedAt, "MMM d, yyyy 'at' h:mm a")}`
+                  : "No edits yet"}
+              </div>
+            </div>
+            <ArrowRight className="h-4 w-4 shrink-0 text-[#555]" />
+          </motion.button>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+function ActionBtn({
+  icon,
+  label,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 rounded-lg bg-[#262626] px-3.5 py-2 text-[13px] text-[#cfcfcf] ring-1 ring-[#333] transition-colors hover:bg-[#2c2c2c] active:scale-95"
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}

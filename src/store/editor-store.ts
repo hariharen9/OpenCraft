@@ -3,11 +3,11 @@ import type { Editor } from "@tiptap/react";
 
 export type FontChoice = "default" | "serif" | "mono";
 export type SeparatorStyle = "line" | "dots" | "squiggle";
+export type ActiveView = "home" | "editor" | "tasks" | "calendar";
 
 interface EditorStore {
   editor: Editor | null;
   setEditor: (e: Editor | null) => void;
-  // forces re-renders when selection / doc changes so toolbar reflects state
   tick: number;
   bump: () => void;
   pageBg: string;
@@ -35,6 +35,8 @@ interface EditorStore {
   toggleSidebar: () => void;
   inspectorOpen: boolean;
   toggleInspector: () => void;
+  activeView: ActiveView;
+  setActiveView: (v: ActiveView) => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
@@ -67,4 +69,6 @@ export const useEditorStore = create<EditorStore>((set) => ({
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
   inspectorOpen: true,
   toggleInspector: () => set((s) => ({ inspectorOpen: !s.inspectorOpen })),
+  activeView: "home",
+  setActiveView: (v) => set({ activeView: v }),
 }));
