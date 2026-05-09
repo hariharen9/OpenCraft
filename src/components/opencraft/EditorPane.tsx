@@ -18,9 +18,6 @@ import { Link } from "@tiptap/extension-link";
 import { FontFamily } from "@tiptap/extension-font-family";
 import { Markdown } from "tiptap-markdown";
 import {
-  Share2,
-  Bell,
-  HelpCircle,
   PanelLeft,
   PanelRight,
   MessageSquare,
@@ -29,6 +26,8 @@ import {
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
 import { LocalStorageProvider } from "@/lib/storage/local";
+import { EditorToolbar } from "./EditorToolbar";
+import { EditorBubbleMenu } from "./EditorBubbleMenu";
 
 const DOC_ID = "default";
 
@@ -146,27 +145,11 @@ export function EditorPane() {
           </IconBtn>
         </div>
 
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 truncate text-[13px] text-[#9a9a9a]">
+        <div className="truncate text-[13px] text-[#9a9a9a]">
           {title || "Untitled Page"}
         </div>
 
         <div className="flex items-center gap-1.5">
-          <button
-            aria-label="Profile"
-            className="h-7 w-7 rounded-full bg-gradient-to-br from-[#ff8a4c] to-[#ff5470] text-[11px] font-semibold text-white"
-          >
-            O
-          </button>
-          <button className="flex items-center gap-1.5 rounded-full bg-[#2a2a2a] px-2.5 py-1 text-[12px] text-[#ddd] hover:bg-[#333] active:scale-95">
-            <Share2 className="h-3.5 w-3.5" />
-            Share
-          </button>
-          <IconBtn label="Notifications">
-            <Bell className="h-4 w-4" />
-          </IconBtn>
-          <IconBtn label="Help">
-            <HelpCircle className="h-4 w-4" />
-          </IconBtn>
           <IconBtn
             label="Toggle inspector"
             onClick={toggleInspector}
@@ -224,6 +207,13 @@ export function EditorPane() {
           </button>
         </div>
       </div>
+
+      {editor && (
+        <>
+          <EditorBubbleMenu editor={editor} />
+          <EditorToolbar editor={editor} />
+        </>
+      )}
     </main>
   );
 }

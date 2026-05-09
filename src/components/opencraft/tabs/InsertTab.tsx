@@ -198,10 +198,6 @@ export function InsertTab() {
 
   return (
     <div className="space-y-6">
-      <p className="text-[12px] text-[#888]">
-        Drag and drop any item to the document
-      </p>
-
       <div className="space-y-1">
         {blocks.map((it) => (
           <Row key={it.label} item={it} />
