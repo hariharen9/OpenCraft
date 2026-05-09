@@ -29,6 +29,7 @@ const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function CalendarView() {
   const setActiveView = useEditorStore((s) => s.setActiveView);
+  const accent = useEditorStore((s) => s.accentColor);
   const { tasks, loaded, loadTasks, addTask, toggleTask, deleteTask } = useTasksStore();
   const [cursor, setCursor] = useState(new Date());
   const [selected, setSelected] = useState<Date | null>(null);
@@ -146,13 +147,14 @@ export function CalendarView() {
                     <span
                       className={
                         "flex h-7 w-7 items-center justify-center rounded-full text-[13px] " +
-                        (isCur ? "bg-[#ff8a4c] font-semibold text-white" : "")
+                        (isCur ? "font-semibold text-white" : "")
                       }
+                      style={isCur ? { backgroundColor: accent } : undefined}
                     >
                       {format(day, "d")}
                     </span>
                     {hasTasks && (
-                      <span className="mt-0.5 h-1 w-1 rounded-full bg-[#ff8a4c]" />
+                      <span className="mt-0.5 h-1 w-1 rounded-full" style={{ backgroundColor: accent }} />
                     )}
                   </button>
                 );
@@ -167,7 +169,10 @@ export function CalendarView() {
             <h3 className="mb-2 text-[12px] font-semibold text-[#e0e0e0]">
               {format(selected, "EEEE, MMMM d")}
               {isToday(selected) && (
-                <span className="ml-2 rounded-full bg-[#ff8a4c]/20 px-2 py-0.5 text-[10px] text-[#ff8a4c]">
+                <span
+                  className="ml-2 rounded-full px-2 py-0.5 text-[10px]"
+                  style={{ backgroundColor: `${accent}20`, color: accent }}
+                >
                   Today
                 </span>
               )}
@@ -204,9 +209,10 @@ export function CalendarView() {
                               exit={{ scale: 0 }}
                               transition={{ type: "spring", stiffness: 400, damping: 25 }}
                               viewBox="0 0 16 16"
-                              className="h-2.5 w-2.5 text-[#ff8a4c]"
+                              className="h-2.5 w-2.5"
                               fill="none"
                               stroke="currentColor"
+                              style={{ color: accent }}
                               strokeWidth="3"
                               strokeLinecap="round"
                               strokeLinejoin="round"

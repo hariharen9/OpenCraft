@@ -9,6 +9,7 @@ type Filter = "all" | "today" | "upcoming" | "completed";
 
 export function TasksView() {
   const setActiveView = useEditorStore((s) => s.setActiveView);
+  const accent = useEditorStore((s) => s.accentColor);
   const { tasks, loaded, loadTasks, addTask, toggleTask, deleteTask } = useTasksStore();
   const [filter, setFilter] = useState<Filter>("all");
   const [input, setInput] = useState("");
@@ -122,12 +123,13 @@ export function TasksView() {
             <motion.div layout className="space-y-0.5">
               <AnimatePresence mode="popLayout">
                 {filtered.map((task) => (
-                  <TaskRow
-                    key={task.id}
-                    task={task}
-                    onToggle={toggleTask}
-                    onDelete={deleteTask}
-                  />
+                <TaskRow
+                  key={task.id}
+                  task={task}
+                  onToggle={toggleTask}
+                  onDelete={deleteTask}
+                  accent={accent}
+                />
                 ))}
               </AnimatePresence>
             </motion.div>
@@ -150,10 +152,12 @@ function TaskRow({
   task,
   onToggle,
   onDelete,
+  accent,
 }: {
   task: Task;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  accent: string;
 }) {
   const dueLabel = task.dueDate
     ? (() => {
@@ -185,9 +189,10 @@ function TaskRow({
               exit={{ scale: 0, opacity: 0 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
               viewBox="0 0 16 16"
-              className="h-3 w-3 text-[#ff8a4c]"
+              className="h-3 w-3"
               fill="none"
               stroke="currentColor"
+              style={{ color: accent }}
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"

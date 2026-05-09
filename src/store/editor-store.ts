@@ -37,6 +37,8 @@ interface EditorStore {
   toggleInspector: () => void;
   activeView: ActiveView;
   setActiveView: (v: ActiveView) => void;
+  accentColor: string;
+  setAccentColor: (c: string) => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
@@ -71,4 +73,6 @@ export const useEditorStore = create<EditorStore>((set) => ({
   toggleInspector: () => set((s) => ({ inspectorOpen: !s.inspectorOpen })),
   activeView: "home",
   setActiveView: (v) => set({ activeView: v }),
+  accentColor: "#ff8a4c",
+  setAccentColor: (c) => set({ accentColor: c }),
 }));

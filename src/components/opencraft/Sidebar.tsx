@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
-  FileText,
+  Home,
   CheckCircle2,
   Calendar,
   ClipboardList,
@@ -10,9 +10,11 @@ import {
   Monitor,
   Download,
   PenSquare,
-  ListTodo,
+  Settings,
+  Plus,
 } from "lucide-react";
 import { useEditorStore, type ActiveView } from "@/store/editor-store";
+import { SettingsDialog } from "./SettingsDialog";
 
 const item =
   "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-[#c8c8c8] hover:bg-[#2f2f2f] cursor-pointer transition-colors active:scale-[0.99]";
@@ -26,6 +28,8 @@ export function Sidebar() {
   const activeView = useEditorStore((s) => s.activeView);
   const setActiveView = useEditorStore((s) => s.setActiveView);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [spaceOpen, setSpaceOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleExport = () => {
     if (!editor) return;
@@ -64,17 +68,39 @@ export function Sidebar() {
       <div className="h-[44px] shrink-0" />
 
       {/* Workspace switcher */}
-      <div className="px-3 pb-2">
-        <button className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-[13px] font-semibold text-[#e8e8e8] hover:bg-[#2f2f2f] active:scale-[0.99]">
-          <span className="text-base leading-none">📁</span>
+      <div className="relative px-3 pb-2">
+        <button
+          onClick={() => setSpaceOpen(!spaceOpen)}
+          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-[13px] font-semibold text-[#e8e8e8] hover:bg-[#2f2f2f] active:scale-[0.99]"
+        >
+          <ClipboardList className="h-4 w-4 text-[#e8e8e8]" />
           <span className="flex-1 text-left">My Space</span>
-          <ChevronDown className="h-3.5 w-3.5 text-[#888]" />
+          <ChevronDown className="h-3.5 w-3.5 text-[#888] transition-transform" style={{ rotate: spaceOpen ? "180deg" : "0deg" }} />
         </button>
+
+        {spaceOpen && (
+          <div className="mt-1 overflow-hidden rounded-lg bg-[#262626] py-1 ring-1 ring-[#333]">
+            <button
+              onClick={() => setSpaceOpen(false)}
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-[13px] text-[#c8c8c8] transition-colors hover:bg-[#2f2f2f] active:scale-[0.99]"
+            >
+              <Plus className="h-4 w-4 text-[#9a9a9a]" />
+              New Workspace
+            </button>
+            <button
+              onClick={() => { setSpaceOpen(false); setSettingsOpen(true); }}
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-[13px] text-[#c8c8c8] transition-colors hover:bg-[#2f2f2f] active:scale-[0.99]"
+            >
+              <Settings className="h-4 w-4 text-[#9a9a9a]" />
+              Settings
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Primary nav */}
       <nav className="px-2 space-y-0.5">
-        {navItem("home", <FileText className="h-4 w-4 text-[#9a9a9a]" />, "Home")}
+        {navItem("home", <Home className="h-4 w-4 text-[#9a9a9a]" />, "Home")}
         {navItem("editor", <PenSquare className="h-4 w-4 text-[#9a9a9a]" />, "New Document")}
         {navItem("tasks", <CheckCircle2 className="h-4 w-4 text-[#9a9a9a]" />, "Tasks")}
         {navItem("calendar", <Calendar className="h-4 w-4 text-[#9a9a9a]" />, "Calendar")}
@@ -151,6 +177,8 @@ export function Sidebar() {
           onChange={handleImport}
         />
       </div>
+
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </aside>
   );
 }
