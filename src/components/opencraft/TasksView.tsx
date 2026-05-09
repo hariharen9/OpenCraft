@@ -1,10 +1,17 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, X, Calendar as CalendarIcon, ChevronDown, ChevronRight,
   Trash2, Flag, Circle, CheckCircle2, Clock, Tag, StickyNote,
-  Sparkles, ListFilter, MoreHorizontal, ArrowUpDown,
+  Sparkles, ListFilter, MoreHorizontal, ArrowUpDown, GripVertical,
+  Inbox, Repeat,
 } from "lucide-react";
+import {
+  DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { useEditorStore } from "@/store/editor-store";
 import { useTasksStore, type Task, type Priority } from "@/store/tasks-store";
 import { useSettingsStore } from "@/store/settings-store";
@@ -25,7 +32,7 @@ const CATEGORIES = ["Inbox", "Work", "Personal", "Ideas", "Errands"];
 
 export function TasksView() {
   const accent = useEditorStore((s) => s.accentColor);
-  const { tasks, loaded, loadTasks, addTask, toggleTask, deleteTask, editTask, clearCompleted, addSubtask, toggleSubtask, deleteSubtask } = useTasksStore();
+  const { tasks, loaded, loadTasks, addTask, toggleTask, deleteTask, editTask, clearCompleted, addSubtask, toggleSubtask, deleteSubtask, reorderTasks } = useTasksStore();
   const { syncCalendarTasks, loadSettings } = useSettingsStore();
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<SortMode>("manual");
@@ -280,44 +287,57 @@ export function TasksView() {
           </div>
         ) : filtered.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center pt-20"
+            transition={{ duration: 0.35 }}
+            className="flex flex-col items-center justify-center pt-16"
           >
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#262626]">
-              <Sparkles className="h-7 w-7 text-[#555]" />
+            <div className="relative mb-6">
+              <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-[#262626] to-[#1a1a1a] shadow-lg ring-1 ring-[#333]">
+                {filter === "all" && <Inbox className="h-9 w-9 text-[#444]" />}
+                {filter === "today" && <Clock className="h-9 w-9 text-[#444]" />}
+                {filter === "upcoming" && <CalendarIcon className="h-9 w-9 text-[#444]" />}
+                {filter === "overdue" && <Sparkles className="h-9 w-9 text-emerald-800" />}
+                {filter === "completed" && <CheckCircle2 className="h-9 w-9 text-[#444]" />}
+              </div>
+              <div className="absolute -right-1 -top-1 h-4 w-4 rounded-full" style={{ backgroundColor: accent + '30' }} />
             </div>
-            <p className="text-[14px] font-medium text-[#666]">
+            <p className="text-[15px] font-semibold text-[#666]">
               {filter === "all" && "No tasks yet"}
               {filter === "today" && "Nothing due today"}
               {filter === "upcoming" && "No upcoming tasks"}
               {filter === "overdue" && "Nothing overdue — nice!"}
               {filter === "completed" && "No completed tasks"}
             </p>
-            <p className="mt-1 text-[12px] text-[#444]">
-              {filter === "all" ? "Create your first task to get started" : "Check another filter"}
+            <p className="mt-1.5 text-[13px] text-[#444]">
+              {filter === "all" ? "Hit the button above to create your first task" : "Try switching to a different filter"}
             </p>
+            {filter === "all" && (
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="mt-5 flex items-center gap-2 rounded-xl px-4 py-2 text-[13px] font-medium text-white transition-all active:scale-95"
+                style={{ backgroundColor: accent }}
+              >
+                <Plus className="h-4 w-4" />
+                Create a task
+              </button>
+            )}
           </motion.div>
         ) : (
-          <motion.div layout className="space-y-1">
-            <AnimatePresence mode="popLayout">
-              {filtered.map((task) => (
-                <TaskRow
-                  key={task.id}
-                  task={task}
-                  accent={accent}
-                  expanded={expandedTask === task.id}
-                  onToggleExpand={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
-                  onToggle={toggleTask}
-                  onDelete={deleteTask}
-                  onEdit={editTask}
-                  onAddSubtask={addSubtask}
-                  onToggleSubtask={toggleSubtask}
-                  onDeleteSubtask={deleteSubtask}
-                />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          <DndTaskList
+            tasks={filtered}
+            sort={sort}
+            accent={accent}
+            expandedTask={expandedTask}
+            setExpandedTask={setExpandedTask}
+            toggleTask={toggleTask}
+            deleteTask={deleteTask}
+            editTask={editTask}
+            addSubtask={addSubtask}
+            toggleSubtask={toggleSubtask}
+            deleteSubtask={deleteSubtask}
+            reorderTasks={reorderTasks}
+          />
         )}
       </div>
     </div>
@@ -553,5 +573,96 @@ function TaskRow({
         )}
       </AnimatePresence>
     </motion.div>
+  );
+}
+
+/* ─── Drag and Drop Wrappers ─── */
+function DndTaskList({
+  tasks, sort, accent, expandedTask, setExpandedTask, toggleTask, deleteTask, editTask,
+  addSubtask, toggleSubtask, deleteSubtask, reorderTasks,
+}: any) {
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor)
+  );
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = tasks.findIndex((t: Task) => t.id === active.id);
+      const newIndex = tasks.findIndex((t: Task) => t.id === over.id);
+      reorderTasks(oldIndex, newIndex);
+    }
+  }, [tasks, reorderTasks]);
+
+  // If we are not in manual sort mode, we shouldn't allow drag-and-drop reordering
+  if (sort !== "manual") {
+    return (
+      <motion.div layout className="space-y-1">
+        <AnimatePresence mode="popLayout">
+          {tasks.map((task: Task) => (
+            <TaskRow
+              key={task.id}
+              task={task}
+              accent={accent}
+              expanded={expandedTask === task.id}
+              onToggleExpand={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
+              onToggle={toggleTask}
+              onDelete={deleteTask}
+              onEdit={editTask}
+              onAddSubtask={addSubtask}
+              onToggleSubtask={toggleSubtask}
+              onDeleteSubtask={deleteSubtask}
+            />
+          ))}
+        </AnimatePresence>
+      </motion.div>
+    );
+  }
+
+  return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={tasks.map((t: Task) => t.id)} strategy={verticalListSortingStrategy}>
+        <motion.div layout className="space-y-1">
+          <AnimatePresence mode="popLayout">
+            {tasks.map((task: Task) => (
+              <SortableTaskRow
+                key={task.id}
+                task={task}
+                accent={accent}
+                expanded={expandedTask === task.id}
+                onToggleExpand={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
+                onToggle={toggleTask}
+                onDelete={deleteTask}
+                onEdit={editTask}
+                onAddSubtask={addSubtask}
+                onToggleSubtask={toggleSubtask}
+                onDeleteSubtask={deleteSubtask}
+              />
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      </SortableContext>
+    </DndContext>
+  );
+}
+
+function SortableTaskRow(props: any) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: props.task.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+    position: "relative" as const,
+    zIndex: isDragging ? 10 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <div className="absolute left-[-20px] top-4 opacity-0 transition-opacity hover:opacity-100 cursor-grab" {...attributes} {...listeners}>
+        <GripVertical className="h-4 w-4 text-[#555]" />
+      </div>
+      <TaskRow {...props} />
+    </div>
   );
 }

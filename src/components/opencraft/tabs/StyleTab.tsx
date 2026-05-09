@@ -1,5 +1,6 @@
-import { Plus, Minus, Squircle, Waves } from "lucide-react";
+import { Plus, Minus, Squircle, Waves, ChevronDown } from "lucide-react";
 import { useEditorStore, type SeparatorStyle } from "@/store/editor-store";
+import { useWorkspaceStore } from "@/store/workspace-store";
 
 const PAGE_BGS = [
   "#1c1c1c",
@@ -12,17 +13,27 @@ const PAGE_BGS = [
 const TEXT_COLORS = ["#e0e0e0", "#ffffff", "#9a9a9a", "#ff8a4c", "#4cc2ff", "#a78bfa"];
 
 export function StyleTab() {
-  const pageBg = useEditorStore((s) => s.pageBg);
-  const setPageBg = useEditorStore((s) => s.setPageBg);
+  const editor = useEditorStore((s) => s.editor);
   const textColor = useEditorStore((s) => s.textColor);
   const setTextColor = useEditorStore((s) => s.setTextColor);
-  const editor = useEditorStore((s) => s.editor);
-  const widePage = useEditorStore((s) => s.widePage);
-  const setWidePage = useEditorStore((s) => s.setWidePage);
-  const coverImage = useEditorStore((s) => s.coverImage);
-  const setCoverImage = useEditorStore((s) => s.setCoverImage);
-  const separator = useEditorStore((s) => s.separator);
-  const setSeparator = useEditorStore((s) => s.setSeparator);
+
+  const activeDocId = useWorkspaceStore((s) => s.activeDocId);
+  const docs = useWorkspaceStore((s) => s.docs);
+  const updateDocMeta = useWorkspaceStore((s) => s.updateDocMeta);
+
+  const doc = docs.find((d) => d.id === activeDocId) ?? null;
+
+  // Per-document styling (with safe defaults)
+  const pageBg = doc?.pageBg ?? "#1f1f1f";
+  const widePage = doc?.widePage ?? false;
+  const coverImage = doc?.coverImage ?? null;
+  const separator = (doc?.separator ?? "line") as SeparatorStyle;
+  const font = doc?.font ?? "default";
+  const fontSize = doc?.fontSize ?? "Ss";
+
+  const setDocStyle = (updates: Record<string, unknown>) => {
+    if (activeDocId) updateDocMeta(activeDocId, updates as any);
+  };
 
   return (
     <div className="space-y-6">
@@ -62,7 +73,7 @@ export function StyleTab() {
           <SwatchPopover
             colors={PAGE_BGS}
             value={pageBg}
-            onChange={setPageBg}
+            onChange={(c) => setDocStyle({ pageBg: c })}
           />
         </Row>
         <Row label="Text Color">
@@ -81,7 +92,7 @@ export function StyleTab() {
         <Row label="Cover Image">
           {coverImage ? (
             <button
-              onClick={() => setCoverImage(null)}
+              onClick={() => setDocStyle({ coverImage: null })}
               className="flex h-6 w-6 items-center justify-center rounded-md bg-[#2a2a2a] text-[#888] hover:bg-[#333] active:scale-90"
               aria-label="Remove cover"
             >
@@ -91,7 +102,7 @@ export function StyleTab() {
             <button
               onClick={() => {
                 const url = window.prompt("Cover image URL");
-                if (url) setCoverImage(url);
+                if (url) setDocStyle({ coverImage: url });
               }}
               className="flex h-6 w-6 items-center justify-center rounded-md bg-[#2a2a2a] text-[#888] hover:bg-[#333] active:scale-90"
               aria-label="Add cover"
@@ -113,7 +124,7 @@ export function StyleTab() {
           ).map((s) => (
             <button
               key={s.id}
-              onClick={() => setSeparator(s.id)}
+              onClick={() => setDocStyle({ separator: s.id })}
               className={
                 "flex items-center justify-center gap-1.5 rounded-full px-3 py-2 text-[12px] transition-colors active:scale-95 " +
                 (separator === s.id
@@ -129,7 +140,12 @@ export function StyleTab() {
       </Section>
 
       <Section label="Font">
-        <FontShortcut />
+        <FontShortcut
+          font={font}
+          fontSize={fontSize}
+          onFontChange={(f) => setDocStyle({ font: f })}
+          onSizeChange={(s) => setDocStyle({ fontSize: s })}
+        />
       </Section>
 
       <Section label="Advanced">
@@ -137,7 +153,7 @@ export function StyleTab() {
           <button
             role="switch"
             aria-checked={widePage}
-            onClick={() => setWidePage(!widePage)}
+            onClick={() => setDocStyle({ widePage: !widePage })}
             className={
               "relative h-5 w-9 rounded-full transition-colors " +
               (widePage ? "bg-[#0e3a72]" : "bg-[#3a3a3a]")
@@ -207,13 +223,29 @@ function SwatchPopover({
   );
 }
 
-function FontShortcut() {
-  const font = useEditorStore((s) => s.font);
-  const setFont = useEditorStore((s) => s.setFont);
-  const fontSize = useEditorStore((s) => s.fontSize);
-  const setFontSize = useEditorStore((s) => s.setFontSize);
-  const cycle = () =>
-    setFont(font === "default" ? "serif" : font === "serif" ? "mono" : "default");
+function FontShortcut({
+  font,
+  fontSize,
+  onFontChange,
+  onSizeChange,
+}: {
+  font: string;
+  fontSize: string;
+  onFontChange: (f: "default" | "serif" | "mono") => void;
+  onSizeChange: (s: "Ss" | "00" | "Rr") => void;
+}) {
+  const editor = useEditorStore((s) => s.editor);
+  const cycle = () => {
+    const next = font === "default" ? "serif" : font === "serif" ? "mono" : "default";
+    onFontChange(next);
+    const family =
+      next === "serif"
+        ? "Georgia, serif"
+        : next === "mono"
+          ? "ui-monospace, SF Mono, monospace"
+          : "ui-sans-serif, system-ui, sans-serif";
+    editor?.chain().focus().setFontFamily(family).run();
+  };
   const label = font === "default" ? "Default" : font === "serif" ? "Serif" : "Mono";
 
   return (
@@ -224,11 +256,12 @@ function FontShortcut() {
       >
         <span className="text-[14px] italic">Aa</span>
         {label}
+        <ChevronDown className="h-3 w-3 opacity-60" />
       </button>
       {(["Ss", "00", "Rr"] as const).map((s) => (
         <button
           key={s}
-          onClick={() => setFontSize(s)}
+          onClick={() => onSizeChange(s)}
           className={
             "h-8 w-8 rounded-md text-[12px] font-medium transition-colors active:scale-90 " +
             (fontSize === s

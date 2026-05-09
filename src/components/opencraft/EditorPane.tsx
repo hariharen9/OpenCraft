@@ -33,11 +33,6 @@ import { EditorBubbleMenu } from "./EditorBubbleMenu";
 export function EditorPane() {
   const setEditor = useEditorStore((s) => s.setEditor);
   const bump = useEditorStore((s) => s.bump);
-  const pageBg = useEditorStore((s) => s.pageBg);
-  const font = useEditorStore((s) => s.font);
-  const fontSize = useEditorStore((s) => s.fontSize);
-  const widePage = useEditorStore((s) => s.widePage);
-  const coverImage = useEditorStore((s) => s.coverImage);
   const sidebarOpen = useEditorStore((s) => s.sidebarOpen);
   const inspectorOpen = useEditorStore((s) => s.inspectorOpen);
   const toggleSidebar = useEditorStore((s) => s.toggleSidebar);
@@ -49,6 +44,13 @@ export function EditorPane() {
 
   const activeDoc = docs.find((d) => d.id === activeDocId) ?? null;
   const title = activeDoc?.title ?? "";
+
+  // Per-document styling (fall back to defaults)
+  const pageBg = activeDoc?.pageBg ?? "#1f1f1f";
+  const font = activeDoc?.font ?? "default";
+  const fontSize = activeDoc?.fontSize ?? "Ss";
+  const widePage = activeDoc?.widePage ?? false;
+  const coverImage = activeDoc?.coverImage ?? null;
 
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadedDocRef = useRef<string | null>(null);

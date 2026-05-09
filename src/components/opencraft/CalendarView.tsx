@@ -272,14 +272,19 @@ export function CalendarView() {
               </div>
             ) : selectedTasks.length === 0 ? (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center py-10"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col items-center justify-center py-12"
               >
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#222]">
-                  <CalendarDays className="h-5 w-5 text-[#555]" />
+                <div className="relative mb-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#262626] to-[#1a1a1a] shadow-md ring-1 ring-[#333]">
+                    <CalendarDays className="h-7 w-7 text-[#444]" />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full" style={{ backgroundColor: accent + '40' }} />
                 </div>
-                <p className="text-[12px] text-[#555]">No tasks for this day</p>
+                <p className="text-[14px] font-medium text-[#666]">No agenda</p>
+                <p className="mt-1 text-[12px] text-[#444]">Add a task below</p>
               </motion.div>
             ) : (
               <div className="space-y-1">

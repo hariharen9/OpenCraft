@@ -19,6 +19,8 @@ import { useEditorStore, type ActiveView } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
 import { SettingsDialog } from "./SettingsDialog";
 
+import opencraftLogo from "@/Assets/opencraft-white-single.png";
+
 const item =
   "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-[#c8c8c8] hover:bg-[#2f2f2f] cursor-pointer transition-colors active:scale-[0.99]";
 const itemActive =
@@ -107,7 +109,12 @@ export function Sidebar() {
   return (
     <aside className="flex h-full w-[260px] shrink-0 flex-col bg-transparent text-[#c8c8c8]">
       {/* Top spacer (window controls area on macOS) */}
-      <div className="h-[44px] shrink-0" />
+      <div className="h-[20px] shrink-0" />
+      
+      {/* Logo */}
+      <div className="px-5 pb-3 pt-2">
+        <img src={opencraftLogo} alt="OpenCraft Logo" className="h-9 w-auto object-contain opacity-90" />
+      </div>
 
       {/* Workspace switcher */}
       <div className="relative px-3 pb-2">

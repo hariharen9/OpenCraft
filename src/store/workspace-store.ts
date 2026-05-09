@@ -11,6 +11,13 @@ export interface DocMeta {
   createdAt: number;
   updatedAt: number;
   folder: string;
+  // Per-document styling
+  pageBg: string;
+  font: "default" | "serif" | "mono";
+  fontSize: "Ss" | "00" | "Rr";
+  widePage: boolean;
+  coverImage: string | null;
+  separator: "line" | "dots" | "squiggle";
 }
 
 export interface Workspace {
@@ -41,7 +48,7 @@ interface WorkspaceStore {
   createDoc: (workspaceId?: string) => string;
   deleteDoc: (id: string) => void;
   setActiveDoc: (id: string | null) => void;
-  updateDocMeta: (id: string, updates: Partial<Pick<DocMeta, "title" | "starred" | "updatedAt" | "folder">>) => void;
+  updateDocMeta: (id: string, updates: Partial<Omit<DocMeta, "id" | "createdAt">>) => void;
 }
 
 const DOCS_KEY = "opencraft:docs";
@@ -135,6 +142,12 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       createdAt: Date.now(),
       updatedAt: Date.now(),
       folder: "Unsorted",
+      pageBg: "#1f1f1f",
+      font: "default",
+      fontSize: "Ss",
+      widePage: false,
+      coverImage: null,
+      separator: "line",
     };
     set((s) => ({
       docs: [doc, ...s.docs],

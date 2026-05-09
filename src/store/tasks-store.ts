@@ -102,7 +102,7 @@ export const useTasksStore = create<TasksStore>((set) => ({
 
   toggleTask: (id) => {
     set((s) => {
-      const tasks = s.tasks.map((t) =>
+      let newTasks = s.tasks.map((t) =>
         t.id === id
           ? {
               ...t,
@@ -111,8 +111,54 @@ export const useTasksStore = create<TasksStore>((set) => ({
             }
           : t,
       );
-      scheduleSave(tasks);
-      return { tasks };
+
+      // Recurrence: when completing a recurring task, create the next one
+      const toggled = newTasks.find((t) => t.id === id);
+      if (
+        toggled &&
+        toggled.completed &&
+        toggled.recurrence &&
+        toggled.recurrence !== "none" &&
+        toggled.dueDate
+      ) {
+        const due = new Date(toggled.dueDate);
+        if (!isNaN(due.getTime())) {
+          let next: Date;
+          if (toggled.recurrence === "daily") {
+            next = new Date(due);
+            next.setDate(next.getDate() + 1);
+          } else if (toggled.recurrence === "weekly") {
+            next = new Date(due);
+            next.setDate(next.getDate() + 7);
+          } else {
+            next = new Date(due);
+            next.setMonth(next.getMonth() + 1);
+          }
+          const nextDue = next.toISOString().split("T")[0];
+          const recurring: Task = {
+            id: genId(),
+            title: toggled.title,
+            completed: false,
+            dueDate: nextDue,
+            createdAt: Date.now(),
+            completedAt: null,
+            priority: toggled.priority,
+            tags: [...toggled.tags],
+            notes: toggled.notes,
+            subtasks: toggled.subtasks.map((st) => ({
+              ...st,
+              id: genId(),
+              completed: false,
+            })),
+            recurrence: toggled.recurrence,
+            category: toggled.category,
+          };
+          newTasks = [recurring, ...newTasks];
+        }
+      }
+
+      scheduleSave(newTasks);
+      return { tasks: newTasks };
     });
   },
 
