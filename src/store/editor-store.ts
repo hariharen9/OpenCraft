@@ -18,19 +18,12 @@ interface EditorStore {
   setFont: (f: FontChoice) => void;
   fontSize: "Ss" | "00" | "Rr";
   setFontSize: (s: "Ss" | "00" | "Rr") => void;
-  title: string;
-  setTitle: (t: string) => void;
-  createdAt: number;
-  updatedAt: number;
-  touchUpdated: () => void;
   separator: SeparatorStyle;
   setSeparator: (s: SeparatorStyle) => void;
   widePage: boolean;
   setWidePage: (b: boolean) => void;
   coverImage: string | null;
   setCoverImage: (c: string | null) => void;
-  starred: boolean;
-  toggleStar: () => void;
   sidebarOpen: boolean;
   toggleSidebar: () => void;
   inspectorOpen: boolean;
@@ -54,19 +47,12 @@ export const useEditorStore = create<EditorStore>((set) => ({
   setFont: (f) => set({ font: f }),
   fontSize: "Ss",
   setFontSize: (s) => set({ fontSize: s }),
-  title: "",
-  setTitle: (t) => set({ title: t, updatedAt: Date.now() }),
-  createdAt: Date.now(),
-  updatedAt: Date.now(),
-  touchUpdated: () => set({ updatedAt: Date.now() }),
   separator: "line",
   setSeparator: (s) => set({ separator: s }),
   widePage: false,
   setWidePage: (b) => set({ widePage: b }),
   coverImage: null,
   setCoverImage: (c) => set({ coverImage: c }),
-  starred: false,
-  toggleStar: () => set((s) => ({ starred: !s.starred })),
   sidebarOpen: true,
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
   inspectorOpen: true,

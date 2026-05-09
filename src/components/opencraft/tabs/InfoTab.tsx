@@ -13,6 +13,7 @@ import {
   Circle,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
+import { useWorkspaceStore } from "@/store/workspace-store";
 
 function timeAgo(ts: number) {
   const diff = Math.floor((Date.now() - ts) / 1000);
@@ -26,12 +27,23 @@ function timeAgo(ts: number) {
 export function InfoTab() {
   const editor = useEditorStore((s) => s.editor);
   const tick = useEditorStore((s) => s.tick);
-  const createdAt = useEditorStore((s) => s.createdAt);
-  const updatedAt = useEditorStore((s) => s.updatedAt);
-  const starred = useEditorStore((s) => s.starred);
-  const toggleStar = useEditorStore((s) => s.toggleStar);
+
+  const activeDocId = useWorkspaceStore((s) => s.activeDocId);
+  const docs = useWorkspaceStore((s) => s.docs);
+  const updateDocMeta = useWorkspaceStore((s) => s.updateDocMeta);
+  const deleteDoc = useWorkspaceStore((s) => s.deleteDoc);
+
+  const activeDoc = docs.find((d) => d.id === activeDocId) ?? null;
+  const createdAt = activeDoc?.createdAt ?? Date.now();
+  const updatedAt = activeDoc?.updatedAt ?? Date.now();
+  const starred = activeDoc?.starred ?? false;
+
   const [section, setSection] = useState<"info" | "actions">("info");
   const [reviewOpen, setReviewOpen] = useState(true);
+
+  const toggleStar = () => {
+    if (activeDocId) updateDocMeta(activeDocId, { starred: !starred });
+  };
 
   const stats = useMemo(() => {
     if (!editor) return { words: 0, chars: 0, blocks: 0, minutes: 0 };
@@ -136,13 +148,13 @@ export function InfoTab() {
             icon={<Trash2 className="h-3.5 w-3.5" />}
             label="Delete"
             destructive
-            onClick={() => editor?.commands.clearContent(true)}
+            onClick={() => { if (activeDocId) deleteDoc(activeDocId); }}
           />
         </Section>
       )}
 
       <Section label="Location">
-        <ActionRow icon={<Inbox className="h-3.5 w-3.5" />} label="Unsorted" />
+        <ActionRow icon={<Inbox className="h-3.5 w-3.5" />} label={activeDoc?.folder ?? "Unsorted"} />
       </Section>
     </div>
   );

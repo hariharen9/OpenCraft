@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -25,11 +25,10 @@ import {
   Plus,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
+import { useWorkspaceStore } from "@/store/workspace-store";
 import { LocalStorageProvider } from "@/lib/storage/local";
 import { EditorToolbar } from "./EditorToolbar";
 import { EditorBubbleMenu } from "./EditorBubbleMenu";
-
-const DOC_ID = "default";
 
 export function EditorPane() {
   const setEditor = useEditorStore((s) => s.setEditor);
@@ -37,16 +36,29 @@ export function EditorPane() {
   const pageBg = useEditorStore((s) => s.pageBg);
   const font = useEditorStore((s) => s.font);
   const fontSize = useEditorStore((s) => s.fontSize);
-  const title = useEditorStore((s) => s.title);
-  const setTitle = useEditorStore((s) => s.setTitle);
   const widePage = useEditorStore((s) => s.widePage);
   const coverImage = useEditorStore((s) => s.coverImage);
   const sidebarOpen = useEditorStore((s) => s.sidebarOpen);
   const inspectorOpen = useEditorStore((s) => s.inspectorOpen);
   const toggleSidebar = useEditorStore((s) => s.toggleSidebar);
   const toggleInspector = useEditorStore((s) => s.toggleInspector);
-  const touchUpdated = useEditorStore((s) => s.touchUpdated);
+
+  const activeDocId = useWorkspaceStore((s) => s.activeDocId);
+  const docs = useWorkspaceStore((s) => s.docs);
+  const updateDocMeta = useWorkspaceStore((s) => s.updateDocMeta);
+
+  const activeDoc = docs.find((d) => d.id === activeDocId) ?? null;
+  const title = activeDoc?.title ?? "";
+
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const loadedDocRef = useRef<string | null>(null);
+
+  const setTitle = useCallback(
+    (t: string) => {
+      if (activeDocId) updateDocMeta(activeDocId, { title: t, updatedAt: Date.now() });
+    },
+    [activeDocId, updateDocMeta],
+  );
 
   const editor = useEditor({
     extensions: [
@@ -82,14 +94,16 @@ export function EditorPane() {
     },
     onSelectionUpdate: () => bump(),
     onTransaction: () => bump(),
-    onUpdate: ({ editor }) => {
+    onUpdate: ({ editor: ed }) => {
       bump();
-      touchUpdated();
+      const docId = useWorkspaceStore.getState().activeDocId;
+      if (!docId) return;
+      useWorkspaceStore.getState().updateDocMeta(docId, { updatedAt: Date.now() });
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => {
-        const md = (editor.storage as any).markdown?.getMarkdown?.() ?? "";
-        LocalStorageProvider.save(DOC_ID, {
-          json: editor.getJSON(),
+        const md = (ed.storage as any).markdown?.getMarkdown?.() ?? "";
+        LocalStorageProvider.save(docId, {
+          json: ed.getJSON(),
           markdown: md,
           updatedAt: Date.now(),
         });
@@ -103,26 +117,65 @@ export function EditorPane() {
     return () => setEditor(null);
   }, [editor, setEditor]);
 
+  // Load document content when activeDocId changes
   useEffect(() => {
-    if (!editor) return;
+    if (!editor || !activeDocId) return;
+    if (loadedDocRef.current === activeDocId) return;
+    loadedDocRef.current = activeDocId;
+
+    // Save current doc before switching
+    if (saveTimer.current) {
+      clearTimeout(saveTimer.current);
+      saveTimer.current = null;
+    }
+
     let cancelled = false;
-    LocalStorageProvider.load(DOC_ID).then((doc) => {
-      if (cancelled || !doc) return;
-      try {
-        editor.commands.setContent(doc.json as never);
-      } catch {
-        editor.commands.setContent(doc.markdown);
+    LocalStorageProvider.load(activeDocId).then((doc) => {
+      if (cancelled) return;
+      if (doc) {
+        try {
+          editor.commands.setContent(doc.json as never);
+        } catch {
+          editor.commands.setContent(doc.markdown);
+        }
+      } else {
+        editor.commands.clearContent(true);
       }
     });
     return () => {
       cancelled = true;
     };
-  }, [editor]);
+  }, [editor, activeDocId]);
 
   const fontClass =
     font === "serif" ? "font-serif" : font === "mono" ? "font-mono" : "font-sans";
   const sizeClass =
     fontSize === "00" ? "text-[15px]" : fontSize === "Rr" ? "text-[17px]" : "text-[16px]";
+
+  // No active document — show placeholder
+  if (!activeDocId) {
+    return (
+      <main className="relative flex h-full min-w-0 flex-1 flex-col items-center justify-center" style={{ backgroundColor: pageBg }}>
+        <header className="absolute inset-x-0 top-0 z-10 flex h-[44px] shrink-0 items-center justify-between px-3">
+          <div className="flex items-center gap-1">
+            <IconBtn label="Toggle sidebar" onClick={toggleSidebar} active={sidebarOpen}>
+              <PanelLeft className="h-4 w-4" />
+            </IconBtn>
+          </div>
+          <div />
+          <div className="flex items-center gap-1.5">
+            <IconBtn label="Toggle inspector" onClick={toggleInspector} active={inspectorOpen}>
+              <PanelRight className="h-4 w-4" />
+            </IconBtn>
+          </div>
+        </header>
+        <div className="text-center">
+          <p className="text-[14px] text-[#666]">No document selected</p>
+          <p className="mt-1 text-[12px] text-[#444]">Create or select a document from the sidebar</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main
