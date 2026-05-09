@@ -57,7 +57,7 @@ function OpenCraft() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className="absolute inset-0 flex"
+                  className="absolute inset-0 flex h-full w-full"
                 >
                   <HomeView />
                 </motion.div>
@@ -69,7 +69,7 @@ function OpenCraft() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className="absolute inset-0 flex"
+                  className="absolute inset-0 flex h-full w-full"
                 >
                   <TasksView />
                 </motion.div>
@@ -81,7 +81,7 @@ function OpenCraft() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  className="absolute inset-0 flex"
+                  className="absolute inset-0 flex h-full w-full"
                 >
                   <CalendarView />
                 </motion.div>
@@ -90,7 +90,7 @@ function OpenCraft() {
           </div>
         </div>
       </div>
-      {inspectorOpen && <Inspector />}
+      {inspectorOpen && activeView !== "tasks" && activeView !== "calendar" && activeView !== "home" && <Inspector />}
     </div>
   );
 }

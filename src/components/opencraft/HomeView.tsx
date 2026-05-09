@@ -81,14 +81,14 @@ export function HomeView() {
   ];
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto bg-[#1f1f1f]">
-      <div className="mx-auto w-full max-w-4xl px-12 py-16">
+    <div className="flex h-full w-full flex-col overflow-y-auto bg-[#1f1f1f]">
+      <div className="mx-auto w-full max-w-5xl px-12 py-16">
         {/* Greeting */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="mb-8"
+          className="mb-12 text-center"
         >
           <h1 className="text-[32px] font-bold tracking-[-0.02em] text-[#e8e8e8]">
             {greeting()}
@@ -129,12 +129,12 @@ export function HomeView() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className="mb-8"
+          className="mb-12 flex flex-col items-center"
         >
-          <h2 className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#777]">
+          <h2 className="mb-4 text-[12px] font-semibold uppercase tracking-wider text-[#777]">
             Quick Actions
           </h2>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-3">
             <ActionBtn
               icon={<PenSquare className="h-3.5 w-3.5" />}
               label="New Document"
@@ -158,8 +158,9 @@ export function HomeView() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.15 }}
+          className="flex flex-col items-center"
         >
-          <h2 className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#777]">
+          <h2 className="mb-4 text-[12px] font-semibold uppercase tracking-wider text-[#777]">
             Recent Document
           </h2>
           <motion.button

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { X, Link2, Unlink2 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
+import { useSettingsStore } from "@/store/settings-store";
 
 const PRESETS = [
   "#ff8a4c",
@@ -19,6 +20,14 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
   const setAccentColor = useEditorStore((s) => s.setAccentColor);
   const [custom, setCustom] = useState(storeAccent);
 
+  const syncCalendarTasks = useSettingsStore((s) => s.syncCalendarTasks);
+  const setSyncCalendarTasks = useSettingsStore((s) => s.setSyncCalendarTasks);
+  const loadSettings = useSettingsStore((s) => s.loadSettings);
+
+  useEffect(() => {
+    if (open) loadSettings();
+  }, [open, loadSettings]);
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -31,7 +40,8 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
             </Dialog.Close>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-6">
+            {/* Accent color */}
             <div>
               <label className="mb-2 block text-[12px] font-medium text-[#ccc]">Accent Color</label>
               <div className="flex flex-wrap gap-2">
@@ -66,6 +76,36 @@ export function SettingsDialog({ open, onOpenChange }: { open: boolean; onOpenCh
                   className="flex-1 rounded-md bg-[#262626] px-2.5 py-1.5 text-[13px] text-[#e0e0e0] outline-none ring-1 ring-[#333] transition-all focus:ring-[#555] placeholder:text-[#555]"
                 />
               </div>
+            </div>
+
+            {/* Calendar-Tasks sync */}
+            <div>
+              <label className="mb-2 block text-[12px] font-medium text-[#ccc]">Integrations</label>
+              <button
+                onClick={() => setSyncCalendarTasks(!syncCalendarTasks)}
+                className="flex w-full items-center gap-3 rounded-lg bg-[#262626] px-4 py-3 ring-1 ring-[#333] transition-colors hover:bg-[#2c2c2c]"
+              >
+                <div className={"flex h-8 w-8 items-center justify-center rounded-lg " + (syncCalendarTasks ? "bg-[#ff8a4c]/15 text-[#ff8a4c]" : "bg-[#333] text-[#666]")}>
+                  {syncCalendarTasks ? <Link2 className="h-4 w-4" /> : <Unlink2 className="h-4 w-4" />}
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="text-[13px] font-medium text-[#e0e0e0]">
+                    Calendar ↔ Tasks sync
+                  </div>
+                  <div className="text-[11px] text-[#777]">
+                    {syncCalendarTasks
+                      ? "Tasks with due dates appear on the calendar"
+                      : "Calendar and tasks are independent"}
+                  </div>
+                </div>
+                <div
+                  className={"h-5 w-9 rounded-full p-0.5 transition-colors " + (syncCalendarTasks ? "bg-[#ff8a4c]" : "bg-[#444]")}
+                >
+                  <div
+                    className={"h-4 w-4 rounded-full bg-white transition-transform " + (syncCalendarTasks ? "translate-x-4" : "translate-x-0")}
+                  />
+                </div>
+              </button>
             </div>
           </div>
         </Dialog.Content>
