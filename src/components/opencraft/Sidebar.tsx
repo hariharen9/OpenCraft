@@ -22,9 +22,9 @@ import { SettingsDialog } from "./SettingsDialog";
 import opencraftLogo from "@/Assets/opencraft-white-single.png";
 
 const item =
-  "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-[#c8c8c8] hover:bg-[#2f2f2f] cursor-pointer transition-colors active:scale-[0.99]";
+  "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-[#c8c8c8] hover:bg-[#2f2f2f] cursor-pointer transition-colors active:scale-[0.99] w-full";
 const itemActive =
-  "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-white bg-[#2a2a2a] cursor-default";
+  "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-white bg-[#2a2a2a] cursor-default w-full";
 
 export function Sidebar() {
   const editor = useEditorStore((s) => s.editor);
@@ -99,7 +99,7 @@ export function Sidebar() {
   const navItem = (view: ActiveView, icon: React.ReactNode, label: string) => (
     <button
       onClick={() => setActiveView(view)}
-      className={activeView === view && (view !== "editor" || !activeDocId) ? itemActive : item + " w-full"}
+      className={activeView === view && (view !== "editor" || !activeDocId) ? itemActive : item}
     >
       {icon}
       {label}
@@ -199,7 +199,7 @@ export function Sidebar() {
       {/* Primary nav */}
       <nav className="px-2 space-y-0.5">
         {navItem("home", <Home className="h-4 w-4 text-[#9a9a9a]" />, "Home")}
-        <button onClick={handleNewDoc} className={item + " w-full"}>
+        <button onClick={handleNewDoc} className={item}>
           <PenSquare className="h-4 w-4 text-[#9a9a9a]" />
           New Document
         </button>
@@ -217,14 +217,32 @@ export function Sidebar() {
         ) : (
           <div className="space-y-0.5">
             {starredDocs.map((doc) => (
-              <button
-                key={doc.id}
-                onClick={() => handleOpenDoc(doc.id)}
-                className={doc.id === activeDocId && activeView === "editor" ? itemActive : item + " w-full"}
-              >
-                <Star className="h-3.5 w-3.5 fill-current text-yellow-400" />
-                <span className="flex-1 truncate text-left">{doc.title || "Untitled"}</span>
-              </button>
+              <div key={doc.id} className="group relative">
+                <button
+                  onClick={() => handleOpenDoc(doc.id)}
+                  className={doc.id === activeDocId && activeView === "editor" ? itemActive + " pr-12" : item + " pr-12"}
+                >
+                  <Star className="h-3.5 w-3.5 fill-current text-yellow-400 shrink-0" />
+                  <span className="flex-1 truncate text-left">{doc.title || "Untitled"}</span>
+                </button>
+                {/* Hover actions */}
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); updateDocMeta(doc.id, { starred: false }); }}
+                    className="rounded p-0.5 text-[#555] hover:text-[#aaa]"
+                    title="Unstar"
+                  >
+                    <Star className="h-3 w-3 fill-current text-[#555]" />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); deleteDoc(doc.id); }}
+                    className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
+                    title="Delete"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         )}
@@ -250,8 +268,8 @@ export function Sidebar() {
               <button
                 onClick={() => handleOpenDoc(doc.id)}
                 className={doc.id === activeDocId && activeView === "editor"
-                  ? itemActive + " w-full"
-                  : item + " w-full"}
+                  ? itemActive
+                  : item}
               >
                 <FileText className="h-4 w-4 text-[#9a9a9a]" />
                 <span className="flex-1 truncate text-left">{doc.title || "Untitled"}</span>

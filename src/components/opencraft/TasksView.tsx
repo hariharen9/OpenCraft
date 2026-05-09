@@ -16,6 +16,9 @@ import { useEditorStore } from "@/store/editor-store";
 import { useTasksStore, type Task, type Priority } from "@/store/tasks-store";
 import { useSettingsStore } from "@/store/settings-store";
 import { format, isToday, isTomorrow, isPast, isFuture, parseISO, isValid, isThisWeek } from "date-fns";
+import { Select } from "@/components/ui/custom-select";
+import { DatePicker } from "@/components/ui/custom-date-picker";
+
 
 type Filter = "all" | "today" | "upcoming" | "completed" | "overdue";
 type SortMode = "manual" | "priority" | "dueDate" | "created";
@@ -235,30 +238,31 @@ export function TasksView() {
                 className="w-full bg-transparent text-[14px] text-[#e0e0e0] outline-none placeholder:text-[#555]"
               />
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <input
-                  type="date"
-                  value={dueInput}
-                  onChange={(e) => setDueInput(e.target.value)}
-                  className="rounded-md bg-[#333] px-2 py-1 text-[11px] text-[#ccc] outline-none"
-                />
-                <select
-                  value={priorityInput}
-                  onChange={(e) => setPriorityInput(e.target.value as Priority)}
-                  className="rounded-md bg-[#333] px-2 py-1 text-[11px] text-[#ccc] outline-none"
-                >
-                  {(Object.keys(PRIORITY_CONFIG) as Priority[]).map((p) => (
-                    <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>
-                  ))}
-                </select>
-                <select
-                  value={categoryInput}
-                  onChange={(e) => setCategoryInput(e.target.value)}
-                  className="rounded-md bg-[#333] px-2 py-1 text-[11px] text-[#ccc] outline-none"
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                <div className="w-[120px]">
+                  <DatePicker
+                    value={dueInput || null}
+                    onChange={(val) => setDueInput(val || "")}
+                    placeholder="Due Date"
+                  />
+                </div>
+                <div className="w-[100px]">
+                  <Select
+                    value={priorityInput}
+                    onChange={(val) => setPriorityInput(val as Priority)}
+                    options={(Object.keys(PRIORITY_CONFIG) as Priority[]).map((p) => ({
+                      value: p,
+                      label: PRIORITY_CONFIG[p].label,
+                      icon: <span className="mr-1">{PRIORITY_CONFIG[p].icon}</span>
+                    }))}
+                  />
+                </div>
+                <div className="w-[100px]">
+                  <Select
+                    value={categoryInput}
+                    onChange={setCategoryInput}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                  />
+                </div>
                 <div className="flex-1" />
                 <button
                   onClick={() => setShowAddForm(false)}
@@ -543,30 +547,31 @@ function TaskRow({
 
               {/* Quick edit row */}
               <div className="flex flex-wrap gap-2">
-                <select
-                  value={task.priority}
-                  onChange={(e) => onEdit(task.id, { priority: e.target.value as Priority })}
-                  className="rounded-md bg-[#1f1f1f] px-2 py-1 text-[11px] text-[#aaa] outline-none ring-1 ring-[#333]"
-                >
-                  {(Object.keys(PRIORITY_CONFIG) as Priority[]).map((p) => (
-                    <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>
-                  ))}
-                </select>
-                <select
-                  value={task.category}
-                  onChange={(e) => onEdit(task.id, { category: e.target.value })}
-                  className="rounded-md bg-[#1f1f1f] px-2 py-1 text-[11px] text-[#aaa] outline-none ring-1 ring-[#333]"
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-                <input
-                  type="date"
-                  value={task.dueDate ?? ""}
-                  onChange={(e) => onEdit(task.id, { dueDate: e.target.value || null })}
-                  className="rounded-md bg-[#1f1f1f] px-2 py-1 text-[11px] text-[#aaa] outline-none ring-1 ring-[#333]"
-                />
+                <div className="w-[100px]">
+                  <Select
+                    value={task.priority}
+                    onChange={(val) => onEdit(task.id, { priority: val as Priority })}
+                    options={(Object.keys(PRIORITY_CONFIG) as Priority[]).map((p) => ({
+                      value: p,
+                      label: PRIORITY_CONFIG[p].label,
+                      icon: <span className="mr-1">{PRIORITY_CONFIG[p].icon}</span>
+                    }))}
+                  />
+                </div>
+                <div className="w-[100px]">
+                  <Select
+                    value={task.category}
+                    onChange={(val) => onEdit(task.id, { category: val })}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                  />
+                </div>
+                <div className="w-[120px]">
+                  <DatePicker
+                    value={task.dueDate ?? null}
+                    onChange={(val) => onEdit(task.id, { dueDate: val })}
+                    placeholder="Due Date"
+                  />
+                </div>
               </div>
             </div>
           </motion.div>
