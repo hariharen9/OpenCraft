@@ -6,7 +6,6 @@ import { EditorPane } from "@/components/opencraft/EditorPane";
 import { TasksView } from "@/components/opencraft/TasksView";
 import { CalendarView } from "@/components/opencraft/CalendarView";
 import { Inspector } from "@/components/opencraft/Inspector";
-import { GlobalContextMenu } from "@/components/ui/custom-context-menu";
 import { useEditorStore } from "@/store/editor-store";
 
 export const Route = createFileRoute("/")({
@@ -92,7 +91,6 @@ function OpenCraft() {
         </div>
       </div>
       {inspectorOpen && activeView !== "tasks" && activeView !== "calendar" && activeView !== "home" && <Inspector />}
-      <GlobalContextMenu />
     </div>
   );
 }
