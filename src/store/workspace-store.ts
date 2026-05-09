@@ -10,7 +10,9 @@ export interface DocMeta {
   starred: boolean;
   createdAt: number;
   updatedAt: number;
-  folder: string;
+  viewedAt?: number;
+  folder: string; // references folder id, "root" if none
+  tags: string[]; // array of string tags
   // Per-document styling
   pageBg: string;
   font: "default" | "serif" | "mono";
@@ -20,12 +22,24 @@ export interface DocMeta {
   separator: "line" | "dots" | "squiggle";
 }
 
+export interface Folder {
+  id: string;
+  name: string;
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+}
+
 export interface Workspace {
   id: string;
   name: string;
   icon: string;
   createdAt: number;
   docOrder: string[];
+  folders: Folder[];
+  tags: Tag[];
 }
 
 interface WorkspaceStore {
@@ -44,8 +58,18 @@ interface WorkspaceStore {
   deleteWorkspace: (id: string) => void;
   setActiveWorkspace: (id: string) => void;
 
+  // Folder CRUD
+  createFolder: (wsId: string, name: string) => void;
+  deleteFolder: (wsId: string, folderId: string) => void;
+  renameFolder: (wsId: string, folderId: string, newName: string) => void;
+
+  // Tag CRUD
+  createTag: (wsId: string, name: string) => string;
+  deleteTag: (wsId: string, tagId: string) => void;
+  renameTag: (wsId: string, tagId: string, newName: string) => void;
+
   // Document CRUD
-  createDoc: (workspaceId?: string) => string;
+  createDoc: (workspaceId?: string, folderId?: string) => string;
   deleteDoc: (id: string) => void;
   setActiveDoc: (id: string | null) => void;
   updateDocMeta: (id: string, updates: Partial<Omit<DocMeta, "id" | "createdAt">>) => void;
@@ -60,7 +84,7 @@ function genId(): string {
 const DEFAULT_WS_ID = "default";
 
 export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
-  workspaces: [{ id: DEFAULT_WS_ID, name: "My Space", icon: "📋", createdAt: Date.now(), docOrder: [] }],
+  workspaces: [{ id: DEFAULT_WS_ID, name: "My Space", icon: "📋", createdAt: Date.now(), docOrder: [], folders: [], tags: [] }],
   activeWorkspaceId: DEFAULT_WS_ID,
   docs: [],
   activeDocId: null,
@@ -72,11 +96,16 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       idbGet<DocMeta[]>(DOCS_KEY),
       idbGet<string>(ACTIVE_WS_KEY),
     ]);
+    
+    // Ensure backwards compatibility by initializing missing fields
+    const migratedWorkspaces = workspaces?.map(w => ({ ...w, folders: w.folders || [], tags: w.tags || [] }));
+    const migratedDocs = docs?.map(d => ({ ...d, tags: d.tags || [], folder: d.folder || "root", viewedAt: d.viewedAt || d.updatedAt }));
+
     set({
-      workspaces: workspaces && workspaces.length > 0
-        ? workspaces
-        : [{ id: DEFAULT_WS_ID, name: "My Space", icon: "📋", createdAt: Date.now(), docOrder: [] }],
-      docs: docs ?? [],
+      workspaces: migratedWorkspaces && migratedWorkspaces.length > 0
+        ? migratedWorkspaces
+        : [{ id: DEFAULT_WS_ID, name: "My Space", icon: "📋", createdAt: Date.now(), docOrder: [], folders: [], tags: [] }],
+      docs: migratedDocs ?? [],
       activeWorkspaceId: activeWs ?? DEFAULT_WS_ID,
       loaded: true,
     });
@@ -96,6 +125,8 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       icon: "📁",
       createdAt: Date.now(),
       docOrder: [],
+      folders: [],
+      tags: [],
     };
     set((s) => ({ workspaces: [...s.workspaces, ws], activeWorkspaceId: ws.id }));
     get().persist();
@@ -132,7 +163,85 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
     get().persist();
   },
 
-  createDoc: (workspaceId) => {
+  createFolder: (wsId, name) => {
+    set((s) => ({
+      workspaces: s.workspaces.map((w) => 
+        w.id === wsId ? { ...w, folders: [...w.folders, { id: genId(), name: name.trim() || "New Folder" }] } : w
+      )
+    }));
+    get().persist();
+  },
+
+  deleteFolder: (wsId, folderId) => {
+    set((s) => {
+      // Move all docs in this folder to root
+      const newDocs = s.docs.map(d => 
+        d.id.startsWith(`${wsId}:`) && d.folder === folderId ? { ...d, folder: "root" } : d
+      );
+      
+      return {
+        docs: newDocs,
+        workspaces: s.workspaces.map((w) => 
+          w.id === wsId ? { ...w, folders: w.folders.filter(f => f.id !== folderId) } : w
+        )
+      };
+    });
+    get().persist();
+  },
+
+  renameFolder: (wsId, folderId, newName) => {
+    set((s) => ({
+      workspaces: s.workspaces.map((w) => 
+        w.id === wsId ? {
+          ...w, 
+          folders: w.folders.map(f => f.id === folderId ? { ...f, name: newName.trim() || "Unnamed" } : f)
+        } : w
+      )
+    }));
+    get().persist();
+  },
+
+  createTag: (wsId, name) => {
+    const newId = genId();
+    set((s) => ({
+      workspaces: s.workspaces.map((w) => 
+        w.id === wsId ? { ...w, tags: [...w.tags, { id: newId, name: name.trim() || "New Tag" }] } : w
+      )
+    }));
+    get().persist();
+    return newId;
+  },
+
+  deleteTag: (wsId, tagId) => {
+    set((s) => {
+      // Remove tag from all docs in this workspace
+      const newDocs = s.docs.map(d => 
+        d.id.startsWith(`${wsId}:`) ? { ...d, tags: d.tags.filter(t => t !== tagId) } : d
+      );
+      
+      return {
+        docs: newDocs,
+        workspaces: s.workspaces.map((w) => 
+          w.id === wsId ? { ...w, tags: w.tags.filter(t => t.id !== tagId) } : w
+        )
+      };
+    });
+    get().persist();
+  },
+
+  renameTag: (wsId, tagId, newName) => {
+    set((s) => ({
+      workspaces: s.workspaces.map((w) => 
+        w.id === wsId ? {
+          ...w, 
+          tags: w.tags.map(t => t.id === tagId ? { ...t, name: newName.trim() || "Unnamed" } : t)
+        } : w
+      )
+    }));
+    get().persist();
+  },
+
+  createDoc: (workspaceId, folderId) => {
     const wsId = workspaceId ?? get().activeWorkspaceId;
     const docId = `${wsId}:${genId()}`;
     const doc: DocMeta = {
@@ -141,13 +250,15 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       starred: false,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      folder: "Unsorted",
+      viewedAt: Date.now(),
+      folder: folderId || "root",
+      tags: [],
       pageBg: "#1f1f1f",
       font: "default",
       fontSize: "Ss",
       widePage: false,
       coverImage: null,
-      separator: "line",
+      separator: "line"
     };
     set((s) => ({
       docs: [doc, ...s.docs],
@@ -175,7 +286,12 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   },
 
   setActiveDoc: (id) => {
-    set({ activeDocId: id });
+    set((s) => {
+      // Update viewedAt when document is opened
+      const docs = id ? s.docs.map(d => d.id === id ? { ...d, viewedAt: Date.now() } : d) : s.docs;
+      return { activeDocId: id, docs };
+    });
+    get().persist();
   },
 
   updateDocMeta: (id, updates) => {

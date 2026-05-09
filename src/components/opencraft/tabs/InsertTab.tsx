@@ -15,6 +15,7 @@ import {
   Camera,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
+import { toast } from "sonner";
 
 type Item = {
   label: string;
@@ -56,7 +57,7 @@ export function InsertTab() {
       label: "File Attachment",
       icon: <Paperclip className="h-3.5 w-3.5" />,
       tint: "bg-rose-500/20 text-rose-300",
-      action: () => alert("File attachments stored locally only — coming soon."),
+      action: () => toast.info("Coming Soon", { description: "File attachments are stored locally and will be fully enabled soon." }),
     },
     {
       label: "Image",

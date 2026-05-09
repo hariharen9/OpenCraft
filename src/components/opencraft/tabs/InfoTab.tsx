@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Calendar,
   User,
@@ -11,9 +11,13 @@ import {
   Trash2,
   Inbox,
   Circle,
+  Tag,
+  Folder as FolderIcon
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
+import { Select } from "@/components/ui/custom-select";
+import { toast } from "sonner";
 
 function timeAgo(ts: number) {
   const diff = Math.floor((Date.now() - ts) / 1000);
@@ -32,14 +36,24 @@ export function InfoTab() {
   const docs = useWorkspaceStore((s) => s.docs);
   const updateDocMeta = useWorkspaceStore((s) => s.updateDocMeta);
   const deleteDoc = useWorkspaceStore((s) => s.deleteDoc);
+  const createTag = useWorkspaceStore((s) => s.createTag);
+  const workspaces = useWorkspaceStore((s) => s.workspaces);
+  const activeWorkspaceId = useWorkspaceStore((s) => s.activeWorkspaceId);
+
+  const activeWs = workspaces.find(w => w.id === activeWorkspaceId);
+  const folders = activeWs?.folders ?? [];
+  const wsTags = activeWs?.tags ?? [];
 
   const activeDoc = docs.find((d) => d.id === activeDocId) ?? null;
   const createdAt = activeDoc?.createdAt ?? Date.now();
   const updatedAt = activeDoc?.updatedAt ?? Date.now();
   const starred = activeDoc?.starred ?? false;
+  const folder = activeDoc?.folder ?? "root";
+  const tags = activeDoc?.tags ?? [];
 
   const [section, setSection] = useState<"info" | "actions">("info");
   const [reviewOpen, setReviewOpen] = useState(true);
+  const [tagInput, setTagInput] = useState("");
 
   const toggleStar = () => {
     if (activeDocId) updateDocMeta(activeDocId, { starred: !starred });
@@ -91,6 +105,98 @@ export function InfoTab() {
             <PropRow icon={<User className="h-3.5 w-3.5" />} label="Author" value="OpenCraft User" />
           </Section>
 
+          <Section label="Organization">
+            <div className="flex items-center justify-between py-1.5">
+              <span className="flex items-center gap-2 text-[12px] text-[#888]">
+                <FolderIcon className="h-3.5 w-3.5" /> Folder
+              </span>
+              <div className="w-[120px]">
+                <Select
+                  value={folder}
+                  onChange={(val) => { if (activeDocId) updateDocMeta(activeDocId, { folder: val }); }}
+                  options={[
+                    { value: "root", label: "No Folder" },
+                    ...folders.map(f => ({ value: f.id, label: f.name }))
+                  ]}
+                />
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-1.5 py-1.5">
+              <span className="flex items-center gap-2 text-[12px] text-[#888]">
+                <Tag className="h-3.5 w-3.5" /> Tags
+              </span>
+              
+              {/* Active Tags */}
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 pb-1">
+                  {tags.map(tagId => {
+                    const tag = wsTags.find(t => t.id === tagId);
+                    if (!tag) return null;
+                    return (
+                      <span key={tag.id} className="flex items-center gap-1 rounded bg-[#333] pl-1.5 pr-1 py-0.5 text-[10px] text-[#ddd]">
+                        {tag.name}
+                        <button 
+                          onClick={() => {
+                            if (activeDocId) updateDocMeta(activeDocId, { tags: tags.filter(t => t !== tag.id) });
+                          }}
+                          className="rounded hover:bg-[#555] text-[#aaa] hover:text-white p-0.5"
+                        >
+                          <Trash2 className="h-2.5 w-2.5" />
+                        </button>
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Add Tag Input */}
+              <div className="relative mt-0.5">
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && tagInput.trim()) {
+                      const lowerInput = tagInput.trim().toLowerCase();
+                      const existingTag = wsTags.find(t => t.name.toLowerCase() === lowerInput);
+                      
+                      let tagIdToAdd = existingTag?.id;
+                      
+                      if (!existingTag) {
+                        tagIdToAdd = createTag(activeWorkspaceId, tagInput.trim());
+                      }
+                      
+                      if (tagIdToAdd && activeDocId && !tags.includes(tagIdToAdd)) {
+                        updateDocMeta(activeDocId, { tags: [...tags, tagIdToAdd] });
+                      }
+                      setTagInput("");
+                    }
+                  }}
+                  placeholder="Type a tag & press Enter..."
+                  className="w-full rounded bg-[#1f1f1f] px-2 py-1.5 text-[11px] text-[#ccc] ring-1 ring-[#333] transition-colors focus:bg-[#2a2a2a] focus:outline-none focus:ring-[#555]"
+                />
+              </div>
+
+              {/* Available Tags */}
+              {wsTags.filter(t => !tags.includes(t.id)).length > 0 && (
+                <div className="flex flex-wrap gap-1 pt-1">
+                  {wsTags.filter(t => !tags.includes(t.id)).map(t => (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        if (activeDocId) updateDocMeta(activeDocId, { tags: [...tags, t.id] });
+                      }}
+                      className="rounded bg-[#2a2a2a] px-1.5 py-0.5 text-[9px] text-[#888] hover:bg-[#333] hover:text-[#ccc]"
+                    >
+                      +{t.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Section>
+
           <div>
             <button
               onClick={() => setReviewOpen((v) => !v)}
@@ -112,7 +218,7 @@ export function InfoTab() {
                   (t) => (
                     <button
                       key={t}
-                      onClick={() => alert("Local-only build — review action stubbed.")}
+                      onClick={() => toast.info("Coming Soon", { description: "Local review actions are currently stubbed for this build." })}
                       className="flex w-full items-center gap-2 rounded-md px-1 py-1.5 text-left text-[13px] text-[#d0d0d0] hover:bg-[#262626] active:scale-[0.99]"
                     >
                       <span className="h-3.5 w-3.5 rounded-full border border-dashed border-[#666]" />
@@ -152,10 +258,6 @@ export function InfoTab() {
           />
         </Section>
       )}
-
-      <Section label="Location">
-        <ActionRow icon={<Inbox className="h-3.5 w-3.5" />} label={activeDoc?.folder ?? "Unsorted"} />
-      </Section>
     </div>
   );
 }

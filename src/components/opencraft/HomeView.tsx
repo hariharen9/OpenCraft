@@ -36,7 +36,7 @@ export function HomeView() {
   );
 
   const recentDocs = useMemo(
-    () => [...wsDocs].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 8),
+    () => [...wsDocs].sort((a, b) => (b.viewedAt || b.updatedAt) - (a.viewedAt || a.updatedAt)).slice(0, 8),
     [wsDocs],
   );
 
@@ -228,10 +228,19 @@ export function HomeView() {
                     <div className="truncate text-[14px] font-medium text-[#e0e0e0]">
                       {doc.title || "Untitled Page"}
                     </div>
-                    <div className="mt-0.5 text-[12px] text-[#666]">
-                      {doc.updatedAt
-                        ? `Edited ${format(doc.updatedAt, "MMM d, yyyy 'at' h:mm a")}`
-                        : "No edits yet"}
+                    <div className="mt-1.5 space-y-0.5 text-[11px] text-[#666]">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="h-3 w-3 shrink-0" />
+                        <span>Opened {doc.viewedAt ? format(doc.viewedAt, "MMM d, h:mm a") : "Never"}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <PenSquare className="h-3 w-3 shrink-0" />
+                        <span>Updated {format(doc.updatedAt, "MMM d, h:mm a")}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 opacity-50">
+                        <Plus className="h-3 w-3 shrink-0" />
+                        <span>Created {format(doc.createdAt, "MMM d, yyyy")}</span>
+                      </div>
                     </div>
                   </div>
                   <ArrowRight className="h-4 w-4 shrink-0 text-[#555]" />
