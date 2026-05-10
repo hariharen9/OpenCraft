@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && npm rebuild lightningcss || true && npm run build"
+  command = "npm install && npm run build"
   publish = "dist/client"
 
 [build.environment]
