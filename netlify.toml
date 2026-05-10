@@ -3,5 +3,5 @@
   publish = "dist/client"
 
 [build.environment]
+  NODE_VERSION = "22.20.0"
   NPM_FLAGS = "--include=optional"
-  NODE_VERSION = "22"

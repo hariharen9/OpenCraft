@@ -9,10 +9,10 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "postinstall": "npm rebuild lightningcss @rollup/rollup-linux-x64-gnu || true"
   },
   "dependencies": {
-    "@cloudflare/vite-plugin": "^1.25.5",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -116,7 +116,8 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.60.3",
-    "lightningcss": "1.32.0"
+    "lightningcss": "1.32.0",
+    "lightningcss-linux-x64-gnu": "1.32.0"
   },
   "supportedArchitectures": {
     "os": [
