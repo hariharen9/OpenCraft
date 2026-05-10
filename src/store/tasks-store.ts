@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { get as idbGet, set as idbSet } from "idb-keyval";
+import { scheduleTasksSync } from "@/lib/storage/sync";
 
 const TASKS_KEY = "opencraft:tasks";
 
@@ -47,6 +48,7 @@ function scheduleSave(tasks: Task[]) {
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     idbSet(TASKS_KEY, tasks);
+    scheduleTasksSync();
   }, 200);
 }
 

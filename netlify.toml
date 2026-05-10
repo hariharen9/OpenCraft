@@ -1,0 +1,7 @@
+[build]
+  command = "npm install && npm run build"
+  publish = "dist/client"
+
+[build.environment]
+  NPM_FLAGS = "--include=optional"
+  NODE_VERSION = "22"

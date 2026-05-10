@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
+import { useAuthStore } from "@/store/auth-store";
 import { toast } from "sonner";
 import { LocalStorageProvider } from "@/lib/storage/local";
 import { getHistory } from "@/lib/storage/history";
@@ -41,6 +42,7 @@ function timeAgo(ts: number) {
 export function InfoTab() {
   const editor = useEditorStore((s) => s.editor);
   const tick = useEditorStore((s) => s.tick);
+  const { user } = useAuthStore();
 
   const activeDocId = useWorkspaceStore((s) => s.activeDocId);
   const docs = useWorkspaceStore((s) => s.docs);
@@ -256,7 +258,7 @@ export function InfoTab() {
           <Section label="Properties">
             <PropRow icon={<Calendar className="h-3.5 w-3.5" />} label="Created" value={timeAgo(createdAt)} />
             <PropRow icon={<Calendar className="h-3.5 w-3.5" />} label="Updated" value={timeAgo(updatedAt)} />
-            <PropRow icon={<User className="h-3.5 w-3.5" />} label="Author" value="OpenCraft User" />
+            <PropRow icon={<User className="h-3.5 w-3.5" />} label="Author" value={user?.displayName || user?.email || "OpenCraft User"} />
           </Section>
 
           <Section label="Organization">

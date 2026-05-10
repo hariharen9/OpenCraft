@@ -43,6 +43,8 @@ import {
 import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
 import { LocalStorageProvider } from "@/lib/storage/local";
+import { FirebaseStorageProvider } from "@/lib/storage/firebase";
+import { auth } from "@/lib/firebase";
 import { addHistorySnapshot } from "@/lib/storage/history";
 import { toast } from "sonner";
 import { EditorToolbar } from "./EditorToolbar";
@@ -173,7 +175,12 @@ export function EditorPane() {
       saveTimer.current = setTimeout(() => {
         const json = ed.getJSON();
         const md = (ed.storage as any).markdown?.getMarkdown?.() ?? "";
-        LocalStorageProvider.save(docId, { json, markdown: md, updatedAt: Date.now() });
+        const payload = { json, markdown: md, updatedAt: Date.now() };
+        LocalStorageProvider.save(docId, payload);
+        // Also save to Firebase if signed in
+        if (auth.currentUser) {
+          FirebaseStorageProvider.save(docId, payload);
+        }
         addHistorySnapshot(docId, json, md);
       }, 500);
     },
@@ -198,13 +205,24 @@ export function EditorPane() {
     }
 
     let cancelled = false;
-    LocalStorageProvider.load(activeDocId).then((doc) => {
+    LocalStorageProvider.load(activeDocId).then(async (doc) => {
       if (cancelled) return;
-      if (doc) {
+      
+      let finalDoc = doc;
+      if (!finalDoc && auth.currentUser) {
+        finalDoc = await FirebaseStorageProvider.load(activeDocId);
+        if (finalDoc) {
+          LocalStorageProvider.save(activeDocId, finalDoc);
+        }
+      }
+
+      if (cancelled) return;
+
+      if (finalDoc) {
         try {
-          editor.commands.setContent(doc.json as never);
+          editor.commands.setContent(finalDoc.json as never);
         } catch {
-          editor.commands.setContent(doc.markdown);
+          editor.commands.setContent(finalDoc.markdown);
         }
       } else {
         editor.commands.clearContent(true);

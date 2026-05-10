@@ -72,6 +72,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "firebase": "^12.13.0",
     "framer-motion": "^12.38.0",
     "idb-keyval": "^6.2.2",
     "input-otp": "^1.4.2",
@@ -112,5 +113,18 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.60.3"
+  },
+  "supportedArchitectures": {
+    "os": [
+      "win32",
+      "linux"
+    ],
+    "cpu": [
+      "x64",
+      "arm64"
+    ]
   }
 }

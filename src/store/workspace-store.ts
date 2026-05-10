@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { get as idbGet, set as idbSet } from "idb-keyval";
+import { scheduleWorkspaceSync } from "@/lib/storage/sync";
 
 const WS_KEY = "opencraft:workspaces";
 const ACTIVE_WS_KEY = "opencraft:active-workspace";
@@ -116,6 +117,8 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
     idbSet(WS_KEY, workspaces);
     idbSet(DOCS_KEY, docs);
     idbSet(ACTIVE_WS_KEY, activeWorkspaceId);
+    // Also sync to cloud if signed in
+    scheduleWorkspaceSync();
   },
 
   addWorkspace: (name) => {
