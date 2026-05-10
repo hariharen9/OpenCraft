@@ -27,6 +27,8 @@ import {
 import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
 import { LocalStorageProvider } from "@/lib/storage/local";
+import { addHistorySnapshot } from "@/lib/storage/history";
+import { toast } from "sonner";
 import { EditorToolbar } from "./EditorToolbar";
 import { EditorBubbleMenu } from "./EditorBubbleMenu";
 
@@ -37,6 +39,8 @@ export function EditorPane() {
   const inspectorOpen = useEditorStore((s) => s.inspectorOpen);
   const toggleSidebar = useEditorStore((s) => s.toggleSidebar);
   const toggleInspector = useEditorStore((s) => s.toggleInspector);
+  const presenting = useEditorStore((s) => s.presenting);
+  const setPresenting = useEditorStore((s) => s.setPresenting);
 
   const activeDocId = useWorkspaceStore((s) => s.activeDocId);
   const docs = useWorkspaceStore((s) => s.docs);
@@ -93,6 +97,14 @@ export function EditorPane() {
       attributes: {
         class: "opencraft-prose focus:outline-none min-h-[60vh]",
       },
+      handleKeyDown: (_, event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key === "s") {
+          event.preventDefault();
+          toast.success("Changes saved", { style: { background: "#16a34a", color: "#fff", border: "1px solid #15803d" } });
+          return true;
+        }
+        return false;
+      },
     },
     onSelectionUpdate: () => bump(),
     onTransaction: () => bump(),
@@ -103,12 +115,10 @@ export function EditorPane() {
       useWorkspaceStore.getState().updateDocMeta(docId, { updatedAt: Date.now() });
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => {
+        const json = ed.getJSON();
         const md = (ed.storage as any).markdown?.getMarkdown?.() ?? "";
-        LocalStorageProvider.save(docId, {
-          json: ed.getJSON(),
-          markdown: md,
-          updatedAt: Date.now(),
-        });
+        LocalStorageProvider.save(docId, { json, markdown: md, updatedAt: Date.now() });
+        addHistorySnapshot(docId, json, md);
       }, 500);
     },
     immediatelyRender: false,
@@ -149,6 +159,22 @@ export function EditorPane() {
     };
   }, [editor, activeDocId]);
 
+  // Sync presenting state when user exits fullscreen via Escape
+  useEffect(() => {
+    const handler = () => {
+      if (!document.fullscreenElement) {
+        setPresenting(false);
+      }
+    };
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, [setPresenting]);
+
+  const stopPresenting = () => {
+    setPresenting(false);
+    document.exitFullscreen();
+  };
+
   const fontClass =
     font === "serif" ? "font-serif" : font === "mono" ? "font-mono" : "font-sans";
   const sizeClass =
@@ -184,6 +210,21 @@ export function EditorPane() {
       className="relative flex h-full min-w-0 flex-1 flex-col"
       style={{ backgroundColor: pageBg }}
     >
+      {/* Stop presenting button */}
+      {presenting && (
+        <div className="fixed right-4 top-4 z-[9999]">
+          <button
+            onClick={stopPresenting}
+            className="group flex items-center gap-2 rounded-full bg-red-600/80 px-3 py-2 text-white shadow-lg backdrop-blur-sm transition-all hover:bg-red-600"
+          >
+            <span className="h-3 w-3 animate-pulse rounded-full bg-white" />
+            <span className="max-w-0 overflow-hidden whitespace-nowrap text-[12px] transition-all duration-200 group-hover:max-w-[120px]">
+              Stop Presenting
+            </span>
+          </button>
+        </div>
+      )}
+
       {/* Top header */}
       <header className="absolute inset-x-0 top-0 z-10 flex h-[44px] shrink-0 items-center justify-between px-3">
         <div className="flex items-center gap-1">

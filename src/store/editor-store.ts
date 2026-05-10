@@ -32,6 +32,8 @@ interface EditorStore {
   setActiveView: (v: ActiveView) => void;
   accentColor: string;
   setAccentColor: (c: string) => void;
+  presenting: boolean;
+  setPresenting: (v: boolean) => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
@@ -61,4 +63,6 @@ export const useEditorStore = create<EditorStore>((set) => ({
   setActiveView: (v) => set({ activeView: v }),
   accentColor: "#ff8a4c",
   setAccentColor: (c) => set({ accentColor: c }),
+  presenting: false,
+  setPresenting: (v) => set({ presenting: v }),
 }));
