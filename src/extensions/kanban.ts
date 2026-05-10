@@ -10,11 +10,18 @@ export const KanbanBlock = Node.create({
 
   addAttributes() {
     return {
-      columns: { 
+      columns: {
         default: [
-          { id: 'todo', title: 'To Do', cards: [{ id: '1', title: 'Research' }, { id: '2', title: 'Draft' }] },
-          { id: 'doing', title: 'In Progress', cards: [] },
-          { id: 'done', title: 'Done', cards: [] }
+          {
+            id: "todo",
+            title: "To Do",
+            cards: [
+              { id: "1", title: "Research" },
+              { id: "2", title: "Draft" },
+            ],
+          },
+          { id: "doing", title: "In Progress", cards: [] },
+          { id: "done", title: "Done", cards: [] },
         ],
       },
     };

@@ -25,10 +25,20 @@ const greeting = () => {
 export function HomeView() {
   const setActiveView = useEditorStore((s) => s.setActiveView);
 
-  const { docs, activeWorkspaceId, createDoc, setActiveDoc, loaded: wsLoaded, load: loadWs } = useWorkspaceStore();
+  const {
+    docs,
+    activeWorkspaceId,
+    createDoc,
+    setActiveDoc,
+    loaded: wsLoaded,
+    load: loadWs,
+  } = useWorkspaceStore();
   const { tasks, loaded: tasksLoaded, loadTasks } = useTasksStore();
 
-  useEffect(() => { loadWs(); loadTasks(); }, [loadWs, loadTasks]);
+  useEffect(() => {
+    loadWs();
+    loadTasks();
+  }, [loadWs, loadTasks]);
 
   const wsDocs = useMemo(
     () => docs.filter((d) => d.id.startsWith(`${activeWorkspaceId}:`)),
@@ -36,19 +46,16 @@ export function HomeView() {
   );
 
   const recentDocs = useMemo(
-    () => [...wsDocs].sort((a, b) => (b.viewedAt || b.updatedAt) - (a.viewedAt || a.updatedAt)).slice(0, 8),
+    () =>
+      [...wsDocs]
+        .sort((a, b) => (b.viewedAt || b.updatedAt) - (a.viewedAt || a.updatedAt))
+        .slice(0, 8),
     [wsDocs],
   );
 
-  const starredDocs = useMemo(
-    () => wsDocs.filter((d) => d.starred),
-    [wsDocs],
-  );
+  const starredDocs = useMemo(() => wsDocs.filter((d) => d.starred), [wsDocs]);
 
-  const incompleteTasks = useMemo(
-    () => tasks.filter((t) => !t.completed).length,
-    [tasks],
-  );
+  const incompleteTasks = useMemo(() => tasks.filter((t) => !t.completed).length, [tasks]);
 
   const todayTasks = useMemo(
     () =>
@@ -115,12 +122,8 @@ export function HomeView() {
           transition={{ duration: 0.3 }}
           className="mb-12 text-center"
         >
-          <h1 className="text-[32px] font-bold tracking-[-0.02em] text-[#e8e8e8]">
-            {greeting()}
-          </h1>
-          <p className="mt-1 text-[14px] text-[#888]">
-            {format(new Date(), "EEEE, MMMM d, yyyy")}
-          </p>
+          <h1 className="text-[32px] font-bold tracking-[-0.02em] text-[#e8e8e8]">{greeting()}</h1>
+          <p className="mt-1 text-[14px] text-[#888]">{format(new Date(), "EEEE, MMMM d, yyyy")}</p>
         </motion.div>
 
         {/* Stats grid */}
@@ -138,7 +141,11 @@ export function HomeView() {
               onClick={s.onClick}
               className="flex items-center gap-3 rounded-xl bg-[#262626] p-4 text-left ring-1 ring-[#333] transition-colors hover:bg-[#2c2c2c]"
             >
-              <div className={"flex h-9 w-9 items-center justify-center rounded-lg " + s.bg + " " + s.color}>
+              <div
+                className={
+                  "flex h-9 w-9 items-center justify-center rounded-lg " + s.bg + " " + s.color
+                }
+              >
                 {s.icon}
               </div>
               <div className="min-w-0 flex-1">
@@ -231,7 +238,9 @@ export function HomeView() {
                     <div className="mt-1.5 space-y-0.5 text-[11px] text-[#666]">
                       <div className="flex items-center gap-1.5">
                         <Clock className="h-3 w-3 shrink-0" />
-                        <span>Opened {doc.viewedAt ? format(doc.viewedAt, "MMM d, h:mm a") : "Never"}</span>
+                        <span>
+                          Opened {doc.viewedAt ? format(doc.viewedAt, "MMM d, h:mm a") : "Never"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <PenSquare className="h-3 w-3 shrink-0" />

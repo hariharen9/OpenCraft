@@ -5,7 +5,7 @@ import "katex/dist/katex.min.css";
 
 export function MathView({ node, updateAttributes, selected }: NodeViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (containerRef.current) {
       try {
@@ -22,12 +22,12 @@ export function MathView({ node, updateAttributes, selected }: NodeViewProps) {
   return (
     <NodeViewWrapper
       data-type="math"
-      className={`my-4 rounded-lg border ${selected ? 'border-[#ff8a4c] ring-1 ring-[#ff8a4c]' : 'border-[#333]'} bg-[#1a1a1a] p-4 shadow-sm transition-all`}
+      className={`my-4 rounded-lg border ${selected ? "border-[#ff8a4c] ring-1 ring-[#ff8a4c]" : "border-[#333]"} bg-[#1a1a1a] p-4 shadow-sm transition-all`}
     >
       <div className="mb-2 flex items-center justify-between text-[11px] text-[#666]">
         <span className="font-semibold uppercase tracking-wider text-[#888]">TeX Formula</span>
       </div>
-      
+
       {selected && (
         <input
           value={node.attrs.formula}
@@ -37,10 +37,10 @@ export function MathView({ node, updateAttributes, selected }: NodeViewProps) {
           autoFocus
         />
       )}
-      
-      <div 
-        ref={containerRef} 
-        className={`min-h-[40px] text-center ${!node.attrs.formula ? 'text-[#555]' : 'text-[#e0e0e0]'}`}
+
+      <div
+        ref={containerRef}
+        className={`min-h-[40px] text-center ${!node.attrs.formula ? "text-[#555]" : "text-[#e0e0e0]"}`}
       >
         {!node.attrs.formula && "Empty formula"}
       </div>

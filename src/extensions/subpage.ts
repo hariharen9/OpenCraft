@@ -24,8 +24,7 @@ export const Subpage = Node.create({
       "div",
       mergeAttributes(HTMLAttributes, {
         "data-type": "subpage",
-        class:
-          "subpage-root my-6 rounded-lg border border-[#4a4a5a] bg-[#1c1c2e] p-4 shadow-md",
+        class: "subpage-root my-6 rounded-lg border border-[#4a4a5a] bg-[#1c1c2e] p-4 shadow-md",
       }),
       0,
     ];

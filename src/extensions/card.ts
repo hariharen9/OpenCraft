@@ -22,8 +22,7 @@ export const Card = Node.create({
       "div",
       mergeAttributes(HTMLAttributes, {
         "data-type": "card",
-        class:
-          "my-4 rounded-xl border border-[#333] bg-[#1a1a2e] p-4 shadow-sm",
+        class: "my-4 rounded-xl border border-[#333] bg-[#1a1a2e] p-4 shadow-sm",
       }),
       0,
     ];

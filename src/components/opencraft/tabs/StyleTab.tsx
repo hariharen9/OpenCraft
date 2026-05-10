@@ -4,9 +4,16 @@ import { useEditorStore, type SeparatorStyle } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
 
 const BACKDROP_SOLIDS = [
-  "#1c1c1c", "#0e0e0e", "#1a1f2c", "#1f1a1a",
-  "#161d1a", "#201a24", "#2d1b1b", "#1b2d2d",
-  "#2a2a2a", "#3a3a3a",
+  "#1c1c1c",
+  "#0e0e0e",
+  "#1a1f2c",
+  "#1f1a1a",
+  "#161d1a",
+  "#201a24",
+  "#2d1b1b",
+  "#1b2d2d",
+  "#2a2a2a",
+  "#3a3a3a",
 ];
 
 const BACKDROP_GRADIENTS = [
@@ -20,9 +27,20 @@ const BACKDROP_GRADIENTS = [
   "linear-gradient(180deg, #1a1a2e, #16213e, #0f3460)",
 ];
 
-const TEXT_COLORS = ["#e0e0e0", "#ffffff", "#9a9a9a", "#ff8a4c", "#4cc2ff", "#a78bfa", "#22c55e", "#ef4444"];
+const TEXT_COLORS = [
+  "#e0e0e0",
+  "#ffffff",
+  "#9a9a9a",
+  "#ff8a4c",
+  "#4cc2ff",
+  "#a78bfa",
+  "#22c55e",
+  "#ef4444",
+];
 
-function isGradient(v: string) { return v.startsWith("linear-gradient") || v.startsWith("radial-gradient"); }
+function isGradient(v: string) {
+  return v.startsWith("linear-gradient") || v.startsWith("radial-gradient");
+}
 
 export function StyleTab() {
   const editor = useEditorStore((s) => s.editor);
@@ -71,13 +89,19 @@ export function StyleTab() {
           <div className="flex gap-1 rounded-md bg-[#262626] p-0.5 text-[11px]">
             <button
               onClick={() => setTab("solid")}
-              className={"flex-1 rounded px-2 py-1 transition-colors " + (tab === "solid" ? "bg-[#1a1a1a] text-white" : "text-[#888]")}
+              className={
+                "flex-1 rounded px-2 py-1 transition-colors " +
+                (tab === "solid" ? "bg-[#1a1a1a] text-white" : "text-[#888]")
+              }
             >
               Solid
             </button>
             <button
               onClick={() => setTab("gradient")}
-              className={"flex-1 rounded px-2 py-1 transition-colors " + (tab === "gradient" ? "bg-[#1a1a1a] text-white" : "text-[#888]")}
+              className={
+                "flex-1 rounded px-2 py-1 transition-colors " +
+                (tab === "gradient" ? "bg-[#1a1a1a] text-white" : "text-[#888]")
+              }
             >
               Gradient
             </button>
@@ -90,15 +114,15 @@ export function StyleTab() {
                 <button
                   key={c}
                   onClick={() => setDocStyle({ pageBg: c })}
-                  className={"h-8 w-full rounded-md ring-1 transition-all active:scale-90 " + (pageBg === c ? "ring-2 ring-white scale-110" : "ring-[#555]")}
+                  className={
+                    "h-8 w-full rounded-md ring-1 transition-all active:scale-90 " +
+                    (pageBg === c ? "ring-2 ring-white scale-110" : "ring-[#555]")
+                  }
                   style={{ backgroundColor: c }}
                   title={c}
                 />
               ))}
-              <ColorPickerButton
-                value={pageBg}
-                onChange={(c) => setDocStyle({ pageBg: c })}
-              />
+              <ColorPickerButton value={pageBg} onChange={(c) => setDocStyle({ pageBg: c })} />
             </div>
           )}
 
@@ -109,7 +133,10 @@ export function StyleTab() {
                 <button
                   key={g}
                   onClick={() => setDocStyle({ pageBg: g })}
-                  className={"h-10 w-full rounded-md ring-1 transition-all active:scale-95 " + (pageBg === g ? "ring-2 ring-white" : "ring-[#555]")}
+                  className={
+                    "h-10 w-full rounded-md ring-1 transition-all active:scale-95 " +
+                    (pageBg === g ? "ring-2 ring-white" : "ring-[#555]")
+                  }
                   style={{ background: g }}
                   title={g}
                 />
@@ -137,15 +164,13 @@ export function StyleTab() {
                 setTextColor(c);
                 if (editor) {
                   const sel = editor.state.selection;
-                  editor
-                    .chain()
-                    .selectAll()
-                    .setColor(c)
-                    .setTextSelection(sel.from)
-                    .run();
+                  editor.chain().selectAll().setColor(c).setTextSelection(sel.from).run();
                 }
               }}
-              className={"h-7 w-full rounded-md ring-1 transition-all active:scale-90 " + (textColor === c ? "ring-2 ring-white scale-110" : "ring-[#555]")}
+              className={
+                "h-7 w-full rounded-md ring-1 transition-all active:scale-90 " +
+                (textColor === c ? "ring-2 ring-white scale-110" : "ring-[#555]")
+              }
               style={{ backgroundColor: c }}
               title={c}
             />
@@ -208,7 +233,6 @@ export function StyleTab() {
           </button>
         </Row>
       </Section>
-
     </div>
   );
 }
@@ -258,7 +282,12 @@ function ColorPickerButton({ value, onChange }: { value: string; onChange: (c: s
 const SIZE_LABELS: Record<string, string> = { Ss: "M", "00": "S", Rr: "L" };
 
 const FONTS = [
-  { id: "default" as const, label: "Default", fam: "ui-sans-serif, system-ui, sans-serif", cls: "font-sans" },
+  {
+    id: "default" as const,
+    label: "Default",
+    fam: "ui-sans-serif, system-ui, sans-serif",
+    cls: "font-sans",
+  },
   { id: "serif" as const, label: "Serif", fam: "'Cormorant Garamond', serif", cls: "font-serif" },
   { id: "mono" as const, label: "Mono", fam: "ui-monospace, SF Mono, monospace", cls: "font-mono" },
 ];
@@ -294,7 +323,8 @@ function FontShortcut({
               (font === f.id
                 ? "bg-[#0e3a72] text-white"
                 : "bg-[#262626] text-[#bcbcbc] hover:bg-[#2c2c2c]") +
-              " " + f.cls
+              " " +
+              f.cls
             }
           >
             <div className="text-[16px]">Aa</div>

@@ -2,11 +2,31 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home, CheckCircle2, Calendar, ChevronDown, Download, PenSquare,
-  Settings, Plus, FileText, Star, Trash2, Folder as FolderIcon, Tag, Upload,
+  Home,
+  CheckCircle2,
+  Calendar,
+  ChevronDown,
+  Download,
+  PenSquare,
+  Settings,
+  Plus,
+  FileText,
+  Star,
+  Trash2,
+  Folder as FolderIcon,
+  Tag,
+  Upload,
   Pencil,
 } from "lucide-react";
-import { DndContext, DragOverlay, useDraggable, useDroppable, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  useDraggable,
+  useDroppable,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useEditorStore, type ActiveView } from "@/store/editor-store";
 import { useWorkspaceStore, type DocMeta, type Folder } from "@/store/workspace-store";
 import { SettingsDialog } from "./SettingsDialog";
@@ -33,11 +53,25 @@ export function Sidebar() {
 
   const store = useWorkspaceStore();
   const {
-    workspaces, activeWorkspaceId, docs, activeDocId, load,
-    addWorkspace, setActiveWorkspace, deleteWorkspace,
-    renameWorkspace, renameFolder, renameTag,
-    createDoc, deleteDoc, setActiveDoc, updateDocMeta,
-    createFolder, deleteFolder, createTag, deleteTag,
+    workspaces,
+    activeWorkspaceId,
+    docs,
+    activeDocId,
+    load,
+    addWorkspace,
+    setActiveWorkspace,
+    deleteWorkspace,
+    renameWorkspace,
+    renameFolder,
+    renameTag,
+    createDoc,
+    deleteDoc,
+    setActiveDoc,
+    updateDocMeta,
+    createFolder,
+    deleteFolder,
+    createTag,
+    deleteTag,
   } = store;
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -67,7 +101,9 @@ export function Sidebar() {
 
   const [draggedDoc, setDraggedDoc] = useState<DocMeta | null>(null);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const activeWs = workspaces.find((w) => w.id === activeWorkspaceId);
   const wsDocs = docs.filter((d) => d.id.startsWith(`${activeWorkspaceId}:`));
@@ -180,9 +216,7 @@ export function Sidebar() {
     }
   };
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-  );
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   const handleDragEnd = useCallback(
     (event: any) => {
@@ -215,7 +249,11 @@ export function Sidebar() {
       <div className="h-[20px] shrink-0" />
 
       <div className="px-5 pb-3 pt-2">
-        <img src={opencraftLogo} alt="OpenCraft Logo" className="h-9 w-auto object-contain opacity-90" />
+        <img
+          src={opencraftLogo}
+          alt="OpenCraft Logo"
+          className="h-9 w-auto object-contain opacity-90"
+        />
       </div>
 
       {/* Workspace switcher */}
@@ -226,7 +264,10 @@ export function Sidebar() {
         >
           <span className="text-[16px]">{activeWs?.icon ?? "📋"}</span>
           <span className="flex-1 truncate text-left">{activeWs?.name ?? "My Space"}</span>
-          <ChevronDown className="h-3.5 w-3.5 text-[#888] transition-transform" style={{ rotate: spaceOpen ? "180deg" : "0deg" }} />
+          <ChevronDown
+            className="h-3.5 w-3.5 text-[#888] transition-transform"
+            style={{ rotate: spaceOpen ? "180deg" : "0deg" }}
+          />
         </button>
 
         <AnimatePresence>
@@ -248,7 +289,9 @@ export function Sidebar() {
                         <input
                           autoFocus
                           value={renamingItem.name}
-                          onChange={(e) => setRenamingItem({ ...renamingItem, name: e.target.value })}
+                          onChange={(e) =>
+                            setRenamingItem({ ...renamingItem, name: e.target.value })
+                          }
                           onKeyDown={(e) => {
                             if (e.key === "Enter") saveRename();
                             if (e.key === "Escape") cancelRename();
@@ -270,16 +313,26 @@ export function Sidebar() {
                             {
                               label: "Delete",
                               icon: <Trash2 className="h-3.5 w-3.5" />,
-                              onClick: () => { deleteWorkspace(ws.id); closeContextMenu(); },
+                              onClick: () => {
+                                deleteWorkspace(ws.id);
+                                closeContextMenu();
+                              },
                               destructive: true,
                             },
                           ]);
                         }}
                       >
                         <button
-                          onClick={() => { setActiveWorkspace(ws.id); setSpaceOpen(false); }}
-                          className={"flex w-full items-center gap-2.5 px-3 py-2 text-[13px] transition-colors hover:bg-[#2f2f2f] active:scale-[0.99] " +
-                            (ws.id === activeWorkspaceId ? "text-white bg-[#333]" : "text-[#c8c8c8]")}
+                          onClick={() => {
+                            setActiveWorkspace(ws.id);
+                            setSpaceOpen(false);
+                          }}
+                          className={
+                            "flex w-full items-center gap-2.5 px-3 py-2 text-[13px] transition-colors hover:bg-[#2f2f2f] active:scale-[0.99] " +
+                            (ws.id === activeWorkspaceId
+                              ? "text-white bg-[#333]"
+                              : "text-[#c8c8c8]")
+                          }
                         >
                           <span className="text-[14px]">{ws.icon}</span>
                           <span className="flex-1 truncate text-left">{ws.name}</span>
@@ -298,11 +351,20 @@ export function Sidebar() {
                     autoFocus
                     value={newWsName}
                     onChange={(e) => setNewWsName(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter") handleCreateWorkspace(); if (e.key === "Escape") { setShowNewWs(false); setNewWsName(""); } }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleCreateWorkspace();
+                      if (e.key === "Escape") {
+                        setShowNewWs(false);
+                        setNewWsName("");
+                      }
+                    }}
                     placeholder="Workspace name..."
                     className="min-w-0 flex-1 bg-transparent text-[12px] text-[#e0e0e0] outline-none placeholder:text-[#555]"
                   />
-                  <button onClick={handleCreateWorkspace} className="rounded px-2 py-0.5 text-[11px] text-[#e0e0e0] bg-[#444] hover:bg-[#555]">
+                  <button
+                    onClick={handleCreateWorkspace}
+                    className="rounded px-2 py-0.5 text-[11px] text-[#e0e0e0] bg-[#444] hover:bg-[#555]"
+                  >
                     Create
                   </button>
                 </div>
@@ -342,21 +404,31 @@ export function Sidebar() {
               <div key={doc.id} className="group relative">
                 <button
                   onClick={() => handleOpenDoc(doc.id)}
-                  className={doc.id === activeDocId && activeView === "editor" ? itemActive + " pr-12" : item + " pr-12"}
+                  className={
+                    doc.id === activeDocId && activeView === "editor"
+                      ? itemActive + " pr-12"
+                      : item + " pr-12"
+                  }
                 >
                   <Star className="h-3.5 w-3.5 fill-current text-yellow-400 shrink-0" />
                   <span className="flex-1 truncate text-left">{doc.title || "Untitled"}</span>
                 </button>
                 <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
-                    onClick={(e) => { e.stopPropagation(); updateDocMeta(doc.id, { starred: false }); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateDocMeta(doc.id, { starred: false });
+                    }}
                     className="rounded p-0.5 text-[#555] hover:text-[#aaa]"
                     title="Unstar"
                   >
                     <Star className="h-3 w-3 fill-current text-[#555]" />
                   </button>
                   <button
-                    onClick={(e) => { e.stopPropagation(); deleteDoc(doc.id); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteDoc(doc.id);
+                    }}
                     className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
                     title="Delete"
                   >
@@ -370,10 +442,14 @@ export function Sidebar() {
       </div>
 
       {/* DnD Context */}
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragStart={(e) => {
-        const doc = wsDocs.find((d) => d.id === e.active.id);
-        setDraggedDoc(doc ?? null);
-      }}>
+      <DndContext
+        sensors={sensors}
+        onDragEnd={handleDragEnd}
+        onDragStart={(e) => {
+          const doc = wsDocs.find((d) => d.id === e.active.id);
+          setDraggedDoc(doc ?? null);
+        }}
+      >
         {/* Folders */}
         <div className="mt-5 px-3">
           <div className="flex items-center justify-between px-1 pb-1.5">
@@ -402,7 +478,9 @@ export function Sidebar() {
                     if (e.key === "Enter") handleCreateFolder();
                     if (e.key === "Escape") setShowNewFolder(false);
                   }}
-                  onBlur={() => { if (!newFolderName.trim()) setShowNewFolder(false); }}
+                  onBlur={() => {
+                    if (!newFolderName.trim()) setShowNewFolder(false);
+                  }}
                   placeholder="Folder name..."
                   className="w-full rounded bg-[#2a2a2a] px-2 py-1 text-[12px] text-white outline-none ring-1 ring-[#444] focus:ring-[#666]"
                 />
@@ -412,7 +490,9 @@ export function Sidebar() {
 
           <div className="space-y-1">
             {folders.length === 0 ? (
-              <div className="px-3 text-[12px] italic text-[#666]">Create Folders to organize docs</div>
+              <div className="px-3 text-[12px] italic text-[#666]">
+                Create Folders to organize docs
+              </div>
             ) : (
               folders.map((folder) => {
                 const folderDocs = unstarredDocs.filter((d) => d.folder === folder.id);
@@ -423,22 +503,29 @@ export function Sidebar() {
                     folderDocCount={folderDocs.length}
                     isRenaming={renamingItem?.type === "folder" && renamingItem.id === folder.id}
                     renamingName={renamingItem?.type === "folder" ? renamingItem.name : ""}
-                    onRenamingNameChange={(name) => setRenamingItem(renamingItem ? { ...renamingItem, name } : null)}
+                    onRenamingNameChange={(name) =>
+                      setRenamingItem(renamingItem ? { ...renamingItem, name } : null)
+                    }
                     isExpanded={!!expandedFolders[folder.id]}
                     onToggle={() => toggleFolder(folder.id)}
-                    onContextMenu={(e) => handleContextMenu(e, [
-                      {
-                        label: "Rename",
-                        icon: <Pencil className="h-3.5 w-3.5" />,
-                        onClick: () => startRename("folder", folder.id, folder.name),
-                      },
-                      {
-                        label: "Delete",
-                        icon: <Trash2 className="h-3.5 w-3.5" />,
-                        onClick: () => { deleteFolder(activeWorkspaceId, folder.id); closeContextMenu(); },
-                        destructive: true,
-                      },
-                    ])}
+                    onContextMenu={(e) =>
+                      handleContextMenu(e, [
+                        {
+                          label: "Rename",
+                          icon: <Pencil className="h-3.5 w-3.5" />,
+                          onClick: () => startRename("folder", folder.id, folder.name),
+                        },
+                        {
+                          label: "Delete",
+                          icon: <Trash2 className="h-3.5 w-3.5" />,
+                          onClick: () => {
+                            deleteFolder(activeWorkspaceId, folder.id);
+                            closeContextMenu();
+                          },
+                          destructive: true,
+                        },
+                      ])
+                    }
                     onDeleteFolder={() => deleteFolder(activeWorkspaceId, folder.id)}
                     onSaveRename={saveRename}
                     onCancelRename={cancelRename}
@@ -452,19 +539,29 @@ export function Sidebar() {
                           className="overflow-hidden pl-4 pr-1 mt-0.5 space-y-0.5"
                         >
                           {folderDocs.length === 0 ? (
-                            <div className="px-3 py-1 text-[11px] italic text-[#666]">Empty folder</div>
+                            <div className="px-3 py-1 text-[11px] italic text-[#666]">
+                              Empty folder
+                            </div>
                           ) : (
-                            folderDocs.sort((a, b) => b.updatedAt - a.updatedAt).map((doc) => (
-                              <DraggableDocItem
-                                key={doc.id}
-                                doc={doc}
-                                compact
-                                isActive={doc.id === activeDocId && activeView === "editor"}
-                                onOpen={handleOpenDoc}
-                                onStar={(e) => { e.stopPropagation(); updateDocMeta(doc.id, { starred: !doc.starred }); }}
-                                onDelete={(e) => { e.stopPropagation(); deleteDoc(doc.id); }}
-                              />
-                            ))
+                            folderDocs
+                              .sort((a, b) => b.updatedAt - a.updatedAt)
+                              .map((doc) => (
+                                <DraggableDocItem
+                                  key={doc.id}
+                                  doc={doc}
+                                  compact
+                                  isActive={doc.id === activeDocId && activeView === "editor"}
+                                  onOpen={handleOpenDoc}
+                                  onStar={(e) => {
+                                    e.stopPropagation();
+                                    updateDocMeta(doc.id, { starred: !doc.starred });
+                                  }}
+                                  onDelete={(e) => {
+                                    e.stopPropagation();
+                                    deleteDoc(doc.id);
+                                  }}
+                                />
+                              ))
                           )}
                         </motion.div>
                       )}
@@ -495,23 +592,30 @@ export function Sidebar() {
                 {tags.map((tag) => (
                   <button
                     key={tag.id}
-                    onContextMenu={(e) => handleContextMenu(e, [
-                      {
-                        label: "Rename",
-                        icon: <Pencil className="h-3.5 w-3.5" />,
-                        onClick: () => startRename("tag", tag.id, tag.name),
-                      },
-                      {
-                        label: "Delete",
-                        icon: <Trash2 className="h-3.5 w-3.5" />,
-                        onClick: () => { deleteTag(activeWorkspaceId, tag.id); if (activeTagFilter === tag.id) setActiveTagFilter(null); closeContextMenu(); },
-                        destructive: true,
-                      },
-                    ])}
+                    onContextMenu={(e) =>
+                      handleContextMenu(e, [
+                        {
+                          label: "Rename",
+                          icon: <Pencil className="h-3.5 w-3.5" />,
+                          onClick: () => startRename("tag", tag.id, tag.name),
+                        },
+                        {
+                          label: "Delete",
+                          icon: <Trash2 className="h-3.5 w-3.5" />,
+                          onClick: () => {
+                            deleteTag(activeWorkspaceId, tag.id);
+                            if (activeTagFilter === tag.id) setActiveTagFilter(null);
+                            closeContextMenu();
+                          },
+                          destructive: true,
+                        },
+                      ])
+                    }
                     onClick={() => setActiveTagFilter(tag.id)}
                     className={`flex items-center gap-1 whitespace-nowrap rounded-full pl-2 pr-1 py-0.5 text-[10px] font-medium transition-colors ${activeTagFilter === tag.id ? "bg-[#4cc2ff] text-black" : "bg-[#2a2a2a] text-[#888] hover:bg-[#333]"}`}
                   >
-                    #{renamingItem?.type === "tag" && renamingItem.id === tag.id ? (
+                    #
+                    {renamingItem?.type === "tag" && renamingItem.id === tag.id ? (
                       <input
                         autoFocus
                         value={renamingItem.name}
@@ -528,7 +632,11 @@ export function Sidebar() {
                       tag.name
                     )}
                     <div
-                      onClick={(e) => { e.stopPropagation(); deleteTag(activeWorkspaceId, tag.id); if (activeTagFilter === tag.id) setActiveTagFilter(null); }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteTag(activeWorkspaceId, tag.id);
+                        if (activeTagFilter === tag.id) setActiveTagFilter(null);
+                      }}
                       className={`rounded-full p-0.5 ${activeTagFilter === tag.id ? "hover:bg-black/20 text-black/60 hover:text-black" : "hover:bg-[#444] text-[#888] hover:text-[#ccc]"}`}
                     >
                       <Trash2 className="h-2.5 w-2.5" />
@@ -583,8 +691,14 @@ export function Sidebar() {
                     doc={doc}
                     isActive={doc.id === activeDocId && activeView === "editor"}
                     onOpen={handleOpenDoc}
-                    onStar={(e) => { e.stopPropagation(); updateDocMeta(doc.id, { starred: !doc.starred }); }}
-                    onDelete={(e) => { e.stopPropagation(); deleteDoc(doc.id); }}
+                    onStar={(e) => {
+                      e.stopPropagation();
+                      updateDocMeta(doc.id, { starred: !doc.starred });
+                    }}
+                    onDelete={(e) => {
+                      e.stopPropagation();
+                      deleteDoc(doc.id);
+                    }}
                   />
                 ))
             )}
@@ -603,17 +717,35 @@ export function Sidebar() {
 
       {/* Bottom toolbar */}
       <div className="flex items-center gap-1 px-3 pb-3 pt-2">
-        <button onClick={handleExport} title="Export as Markdown" className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95">
+        <button
+          onClick={handleExport}
+          title="Export as Markdown"
+          className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95"
+        >
           <Download className="h-4 w-4" />
         </button>
-        <button onClick={() => fileRef.current?.click()} title="Import Markdown" className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95">
+        <button
+          onClick={() => fileRef.current?.click()}
+          title="Import Markdown"
+          className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95"
+        >
           <Upload className="h-4 w-4" />
         </button>
         <div className="flex-1" />
-        <button onClick={() => setSettingsOpen(true)} className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95" title="Settings">
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95"
+          title="Settings"
+        >
           <Settings className="h-4 w-4" />
         </button>
-        <input ref={fileRef} type="file" accept=".md,text/markdown" className="hidden" onChange={handleImport} />
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".md,text/markdown"
+          className="hidden"
+          onChange={handleImport}
+        />
       </div>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
@@ -709,10 +841,18 @@ function DraggableDocItem({
         <span className="flex-1 truncate text-left">{doc.title || "Untitled"}</span>
       </button>
       <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button onClick={onStar} className="rounded p-0.5 text-[#555] hover:text-yellow-400" title={doc.starred ? "Unstar" : "Star"}>
+        <button
+          onClick={onStar}
+          className="rounded p-0.5 text-[#555] hover:text-yellow-400"
+          title={doc.starred ? "Unstar" : "Star"}
+        >
           <Star className={"h-3 w-3 " + (doc.starred ? "fill-current text-yellow-400" : "")} />
         </button>
-        <button onClick={onDelete} className="rounded p-0.5 text-[#555] hover:text-[#ef4444]" title="Delete">
+        <button
+          onClick={onDelete}
+          className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
+          title="Delete"
+        >
           <Trash2 className="h-3 w-3" />
         </button>
       </div>
@@ -778,7 +918,9 @@ function DroppableFolderRow({
             onClick={onToggle}
             className="flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-[12px] font-medium text-[#aaa] hover:bg-[#2f2f2f] transition-colors"
           >
-            <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isExpanded ? "" : "-rotate-90"}`} />
+            <ChevronDown
+              className={`h-3.5 w-3.5 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
+            />
             <FolderIcon className="h-3.5 w-3.5" />
             <span className="flex-1 truncate text-left">{folder.name}</span>
             <span className="text-[10px] text-[#666]">{folderDocCount}</span>
@@ -787,7 +929,10 @@ function DroppableFolderRow({
         {!isRenaming && (
           <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
-              onClick={(e) => { e.stopPropagation(); onDeleteFolder(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteFolder();
+              }}
               className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
               title="Delete Folder"
             >

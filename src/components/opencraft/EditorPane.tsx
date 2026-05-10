@@ -29,6 +29,13 @@ import { CustomDivider } from "@/extensions/divider";
 import { PageBreakBlock } from "@/extensions/page-break";
 import { GalleryBlock } from "@/extensions/gallery";
 import { KanbanBlock } from "@/extensions/kanban";
+import { SlashCommand } from "@/extensions/slash-command";
+import { getSuggestionItems } from "@/extensions/slash-command-items";
+import { SlashCommandList } from "./SlashCommandList";
+import { ReactRenderer } from "@tiptap/react";
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
+import Lenis from "lenis";
 
 const lowlight = createLowlight(common);
 import {
@@ -149,6 +156,64 @@ export function EditorPane() {
       GalleryBlock,
       KanbanBlock,
       Markdown.configure({ html: false, breaks: true, transformPastedText: true }),
+      SlashCommand.configure({
+        suggestion: {
+          items: getSuggestionItems,
+          render: () => {
+            let component: any;
+            let popup: any;
+
+            return {
+              onStart: (props: any) => {
+                component = new ReactRenderer(SlashCommandList, {
+                  props,
+                  editor: props.editor,
+                });
+
+                if (!props.clientRect) {
+                  return;
+                }
+
+                popup = tippy("body", {
+                  getReferenceClientRect: props.clientRect,
+                  appendTo: () => document.body,
+                  content: component.element,
+                  showOnCreate: true,
+                  interactive: true,
+                  trigger: "manual",
+                  placement: "bottom-start",
+                });
+              },
+
+              onUpdate(props: any) {
+                component.updateProps(props);
+
+                if (!props.clientRect) {
+                  return;
+                }
+
+                popup[0].setProps({
+                  getReferenceClientRect: props.clientRect,
+                });
+              },
+
+              onKeyDown(props: any) {
+                if (props.event.key === "Escape") {
+                  popup[0].hide();
+                  return true;
+                }
+
+                return component.ref?.onKeyDown(props);
+              },
+
+              onExit() {
+                popup[0].destroy();
+                component.destroy();
+              },
+            };
+          },
+        },
+      }),
     ],
     content: "",
     editorProps: {
@@ -158,7 +223,9 @@ export function EditorPane() {
       handleKeyDown: (_, event) => {
         if ((event.metaKey || event.ctrlKey) && event.key === "s") {
           event.preventDefault();
-          toast.success("Changes saved", { style: { background: "#16a34a", color: "#fff", border: "1px solid #15803d" } });
+          toast.success("Changes saved", {
+            style: { background: "#16a34a", color: "#fff", border: "1px solid #15803d" },
+          });
           return true;
         }
         return false;
@@ -207,7 +274,7 @@ export function EditorPane() {
     let cancelled = false;
     LocalStorageProvider.load(activeDocId).then(async (doc) => {
       if (cancelled) return;
-      
+
       let finalDoc = doc;
       if (!finalDoc && auth.currentUser) {
         finalDoc = await FirebaseStorageProvider.load(activeDocId);
@@ -249,15 +316,41 @@ export function EditorPane() {
     document.exitFullscreen();
   };
 
-  const fontClass =
-    font === "serif" ? "font-serif" : font === "mono" ? "font-mono" : "font-sans";
+  const fontClass = font === "serif" ? "font-serif" : font === "mono" ? "font-mono" : "font-sans";
   const sizeClass =
     fontSize === "00" ? "text-[15px]" : fontSize === "Rr" ? "text-[17px]" : "text-[16px]";
+
+  // Smooth scroll with Lenis
+  useEffect(() => {
+    if (!scrollRef.current || !activeDocId) return;
+
+    const lenis = new Lenis({
+      wrapper: scrollRef.current,
+      lerp: 0.1,
+      duration: 1.2,
+      smoothWheel: true,
+    });
+
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+      cancelAnimationFrame(rafId);
+    };
+  }, [activeDocId]);
 
   // No active document — show placeholder
   if (!activeDocId) {
     return (
-      <main className="relative flex h-full min-w-0 flex-1 flex-col items-center justify-center" style={pageBgStyle(pageBg)}>
+      <main
+        className="relative flex h-full min-w-0 flex-1 flex-col items-center justify-center"
+        style={pageBgStyle(pageBg)}
+      >
         <header className="absolute inset-x-0 top-0 z-10 flex h-[44px] shrink-0 items-center justify-between px-3">
           <div className="flex items-center gap-1">
             <IconBtn label="Toggle sidebar" onClick={toggleSidebar} active={sidebarOpen}>
@@ -273,17 +366,16 @@ export function EditorPane() {
         </header>
         <div className="text-center">
           <p className="text-[14px] text-[#666]">No document selected</p>
-          <p className="mt-1 text-[12px] text-[#444]">Create or select a document from the sidebar</p>
+          <p className="mt-1 text-[12px] text-[#444]">
+            Create or select a document from the sidebar
+          </p>
         </div>
       </main>
     );
   }
 
   return (
-    <main
-      className="relative flex h-full min-w-0 flex-1 flex-col"
-      style={pageBgStyle(pageBg)}
-    >
+    <main className="relative flex h-full min-w-0 flex-1 flex-col" style={pageBgStyle(pageBg)}>
       {/* Stop presenting button */}
       {presenting && (
         <div className="fixed right-4 top-4 z-[9999]">
@@ -315,16 +407,10 @@ export function EditorPane() {
           </IconBtn>
         </div>
 
-        <div className="truncate text-[13px] text-[#9a9a9a]">
-          {title || "Untitled Page"}
-        </div>
+        <div className="truncate text-[13px] text-[#9a9a9a]">{title || "Untitled Page"}</div>
 
         <div className="flex items-center gap-1.5">
-          <IconBtn
-            label="Toggle inspector"
-            onClick={toggleInspector}
-            active={inspectorOpen}
-          >
+          <IconBtn label="Toggle inspector" onClick={toggleInspector} active={inspectorOpen}>
             <PanelRight className="h-4 w-4" />
           </IconBtn>
         </div>
@@ -332,11 +418,7 @@ export function EditorPane() {
 
       {/* Scrollable canvas */}
       <div className="relative min-h-0 flex-1">
-        <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="h-full overflow-y-auto pt-[44px]"
-        >
+        <div ref={scrollRef} onScroll={handleScroll} className="h-full overflow-y-auto pt-[44px]">
           {coverImage && (
             <div
               className="h-[180px] w-full bg-cover bg-center"

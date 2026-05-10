@@ -10,14 +10,14 @@ export const MermaidBlock = Node.create({
 
   addAttributes() {
     return {
-      code: { 
+      code: {
         default: "graph TD;\n  A-->B;\n  B-->C;",
-        parseHTML: element => element.getAttribute('data-code'),
-        renderHTML: attributes => {
+        parseHTML: (element) => element.getAttribute("data-code"),
+        renderHTML: (attributes) => {
           return {
-            'data-code': attributes.code,
-          }
-        }
+            "data-code": attributes.code,
+          };
+        },
       },
     };
   },
@@ -27,10 +27,7 @@ export const MermaidBlock = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      "div",
-      mergeAttributes(HTMLAttributes, { "data-type": "mermaid" }),
-    ];
+    return ["div", mergeAttributes(HTMLAttributes, { "data-type": "mermaid" })];
   },
 
   addNodeView() {

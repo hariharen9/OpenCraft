@@ -3,10 +3,7 @@ import { LandingPage } from "@/components/opencraft/LandingPage";
 
 export const Route = createFileRoute("/")({
   beforeLoad: () => {
-    if (
-      typeof window !== "undefined" &&
-      localStorage.getItem("opencraft_visited") === "true"
-    ) {
+    if (typeof window !== "undefined" && localStorage.getItem("opencraft_visited") === "true") {
       throw redirect({ to: "/app", replace: true });
     }
   },

@@ -10,12 +10,12 @@ export const WhiteboardBlock = Node.create({
 
   addAttributes() {
     return {
-      snapshot: { 
+      snapshot: {
         default: null,
       },
       height: {
         default: 400,
-      }
+      },
     };
   },
 
@@ -24,10 +24,7 @@ export const WhiteboardBlock = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      "div",
-      mergeAttributes(HTMLAttributes, { "data-type": "whiteboard" }),
-    ];
+    return ["div", mergeAttributes(HTMLAttributes, { "data-type": "whiteboard" })];
   },
 
   addNodeView() {

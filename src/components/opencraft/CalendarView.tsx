@@ -1,21 +1,55 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronLeft, ChevronRight, Plus, X, Clock,
-  CalendarDays, ListTodo, Sparkles, ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  X,
+  Clock,
+  CalendarDays,
+  ListTodo,
+  Sparkles,
+  ChevronDown,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
 import { useTasksStore, type Task } from "@/store/tasks-store";
 import { useSettingsStore } from "@/store/settings-store";
 import {
-  format, startOfMonth, endOfMonth, eachDayOfInterval,
-  startOfWeek, endOfWeek, isSameMonth, isSameDay, isToday,
-  addMonths, subMonths, parseISO, isValid, getDay, isPast,
-  addWeeks, subWeeks, startOfDay,
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  startOfWeek,
+  endOfWeek,
+  isSameMonth,
+  isSameDay,
+  isToday,
+  addMonths,
+  subMonths,
+  parseISO,
+  isValid,
+  getDay,
+  isPast,
+  addWeeks,
+  subWeeks,
+  startOfDay,
 } from "date-fns";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 type ViewMode = "month" | "week";
 
@@ -31,7 +65,10 @@ export function CalendarView() {
   const [showMiniStats, setShowMiniStats] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { loadTasks(); loadSettings(); }, [loadTasks, loadSettings]);
+  useEffect(() => {
+    loadTasks();
+    loadSettings();
+  }, [loadTasks, loadSettings]);
 
   // Build task lookup
   const tasksByDate = useMemo(() => {
@@ -64,11 +101,11 @@ export function CalendarView() {
   // Navigation
   const goPrev = () => {
     setDir(-1);
-    setCursor((d) => viewMode === "month" ? subMonths(d, 1) : subWeeks(d, 1));
+    setCursor((d) => (viewMode === "month" ? subMonths(d, 1) : subWeeks(d, 1)));
   };
   const goNext = () => {
     setDir(1);
-    setCursor((d) => viewMode === "month" ? addMonths(d, 1) : addWeeks(d, 1));
+    setCursor((d) => (viewMode === "month" ? addMonths(d, 1) : addWeeks(d, 1)));
   };
   const goToday = () => {
     setDir(0);
@@ -87,7 +124,9 @@ export function CalendarView() {
   // Mini stats for the month
   const monthStats = useMemo(() => {
     const monthStr = format(cursor, "yyyy-MM");
-    let total = 0, completed = 0, overdue = 0;
+    let total = 0,
+      completed = 0,
+      overdue = 0;
     for (const t of tasks) {
       if (!t.dueDate || !t.dueDate.startsWith(monthStr)) continue;
       total++;
@@ -109,9 +148,10 @@ export function CalendarView() {
     return 3;
   };
 
-  const navLabel = viewMode === "month"
-    ? format(cursor, "MMMM yyyy")
-    : `${format(startOfWeek(cursor), "MMM d")} – ${format(endOfWeek(cursor), "MMM d, yyyy")}`;
+  const navLabel =
+    viewMode === "month"
+      ? format(cursor, "MMMM yyyy")
+      : `${format(startOfWeek(cursor), "MMM d")} – ${format(endOfWeek(cursor), "MMM d, yyyy")}`;
 
   return (
     <div className="flex h-full w-full flex-col bg-[#1f1f1f]">
@@ -130,8 +170,12 @@ export function CalendarView() {
               <button
                 key={m}
                 onClick={() => setViewMode(m)}
-                className={"rounded-md px-3 py-1 text-[11px] font-medium transition-all " +
-                  (viewMode === m ? "bg-[#333] text-[#e0e0e0] shadow-sm" : "text-[#666] hover:text-[#aaa]")}
+                className={
+                  "rounded-md px-3 py-1 text-[11px] font-medium transition-all " +
+                  (viewMode === m
+                    ? "bg-[#333] text-[#e0e0e0] shadow-sm"
+                    : "text-[#666] hover:text-[#aaa]")
+                }
               >
                 {m === "month" ? "Month" : "Week"}
               </button>
@@ -152,11 +196,17 @@ export function CalendarView() {
         <div className="flex min-w-0 flex-1 flex-col px-8 pb-4">
           {/* Month nav */}
           <div className="flex items-center justify-between py-3">
-            <button onClick={goPrev} className="rounded-lg p-1.5 text-[#888] transition-colors hover:bg-[#2a2a2a] hover:text-[#e0e0e0] active:scale-90">
+            <button
+              onClick={goPrev}
+              className="rounded-lg p-1.5 text-[#888] transition-colors hover:bg-[#2a2a2a] hover:text-[#e0e0e0] active:scale-90"
+            >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <h2 className="text-[16px] font-semibold text-[#e0e0e0]">{navLabel}</h2>
-            <button onClick={goNext} className="rounded-lg p-1.5 text-[#888] transition-colors hover:bg-[#2a2a2a] hover:text-[#e0e0e0] active:scale-90">
+            <button
+              onClick={goNext}
+              className="rounded-lg p-1.5 text-[#888] transition-colors hover:bg-[#2a2a2a] hover:text-[#e0e0e0] active:scale-90"
+            >
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
@@ -164,7 +214,10 @@ export function CalendarView() {
           {/* Day headers */}
           <div className="mb-1 grid grid-cols-7">
             {DAYS.map((d) => (
-              <div key={d} className="py-2 text-center text-[11px] font-semibold uppercase tracking-wider text-[#555]">
+              <div
+                key={d}
+                className="py-2 text-center text-[11px] font-semibold uppercase tracking-wider text-[#555]"
+              >
                 {d}
               </div>
             ))}
@@ -195,14 +248,27 @@ export function CalendarView() {
                     <button
                       key={key}
                       onClick={() => setSelected(day)}
-                      className={"relative flex flex-col items-start border-b border-r border-[#2a2a2a] p-2 text-left transition-all " +
+                      className={
+                        "relative flex flex-col items-start border-b border-r border-[#2a2a2a] p-2 text-left transition-all " +
                         (sameMonth ? "" : "opacity-30 ") +
-                        (isSel ? "bg-[#262626]" : "hover:bg-[#242424]")}
-                      style={isSel ? { outline: `1px solid ${accent}40`, outlineOffset: "-1px" } : undefined}
+                        (isSel ? "bg-[#262626]" : "hover:bg-[#242424]")
+                      }
+                      style={
+                        isSel
+                          ? { outline: `1px solid ${accent}40`, outlineOffset: "-1px" }
+                          : undefined
+                      }
                     >
                       {/* Day number */}
-                      <span className={"flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-medium transition-all " +
-                        (isCur ? "text-white font-bold" : sameMonth ? "text-[#c0c0c0]" : "text-[#555]")}
+                      <span
+                        className={
+                          "flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-medium transition-all " +
+                          (isCur
+                            ? "text-white font-bold"
+                            : sameMonth
+                              ? "text-[#c0c0c0]"
+                              : "text-[#555]")
+                        }
                         style={isCur ? { backgroundColor: accent } : undefined}
                       >
                         {format(day, "d")}
@@ -214,15 +280,19 @@ export function CalendarView() {
                           {dayTasks.slice(0, viewMode === "week" ? 5 : 2).map((t) => (
                             <div
                               key={t.id}
-                              className={"truncate rounded px-1 py-0.5 text-[9px] leading-tight " +
-                                (t.completed ? "text-[#555] line-through" : "text-[#ccc]")}
+                              className={
+                                "truncate rounded px-1 py-0.5 text-[9px] leading-tight " +
+                                (t.completed ? "text-[#555] line-through" : "text-[#ccc]")
+                              }
                               style={{ backgroundColor: t.completed ? "#2a2a2a" : accent + "15" }}
                             >
                               {t.title}
                             </div>
                           ))}
                           {dayTasks.length > (viewMode === "week" ? 5 : 2) && (
-                            <span className="text-[9px] text-[#666]">+{dayTasks.length - (viewMode === "week" ? 5 : 2)} more</span>
+                            <span className="text-[9px] text-[#666]">
+                              +{dayTasks.length - (viewMode === "week" ? 5 : 2)} more
+                            </span>
                           )}
                         </div>
                       )}
@@ -251,7 +321,10 @@ export function CalendarView() {
                 {format(selected, "EEEE")}
               </h3>
               {isToday(selected) && (
-                <span className="rounded-full px-2 py-0.5 text-[10px] font-medium" style={{ backgroundColor: accent + "20", color: accent }}>
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                  style={{ backgroundColor: accent + "20", color: accent }}
+                >
                   Today
                 </span>
               )}
@@ -281,7 +354,10 @@ export function CalendarView() {
                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#262626] to-[#1a1a1a] shadow-md ring-1 ring-[#333]">
                     <CalendarDays className="h-7 w-7 text-[#444]" />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full" style={{ backgroundColor: accent + '40' }} />
+                  <div
+                    className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full"
+                    style={{ backgroundColor: accent + "40" }}
+                  />
                 </div>
                 <p className="text-[14px] font-medium text-[#666]">No agenda</p>
                 <p className="mt-1 text-[12px] text-[#444]">Add a task below</p>
@@ -308,17 +384,42 @@ export function CalendarView() {
                         }}
                       >
                         {task.completed && (
-                          <svg viewBox="0 0 16 16" className="h-2.5 w-2.5" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                          <svg
+                            viewBox="0 0 16 16"
+                            className="h-2.5 w-2.5"
+                            fill="none"
+                            stroke="white"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <path d="M3 8 L7 12 L13 4" />
                           </svg>
                         )}
                       </button>
                       <div className="min-w-0 flex-1">
-                        <span className={"block truncate text-[12px] " + (task.completed ? "text-[#555] line-through" : "text-[#d0d0d0]")}>
+                        <span
+                          className={
+                            "block truncate text-[12px] " +
+                            (task.completed ? "text-[#555] line-through" : "text-[#d0d0d0]")
+                          }
+                        >
                           {task.title}
                         </span>
                         {task.priority !== "none" && (
-                          <span className="text-[10px]" style={{ color: task.priority === "urgent" ? "#ef4444" : task.priority === "high" ? "#f97316" : task.priority === "medium" ? "#eab308" : "#22c55e" }}>
+                          <span
+                            className="text-[10px]"
+                            style={{
+                              color:
+                                task.priority === "urgent"
+                                  ? "#ef4444"
+                                  : task.priority === "high"
+                                    ? "#f97316"
+                                    : task.priority === "medium"
+                                      ? "#eab308"
+                                      : "#22c55e",
+                            }}
+                          >
                             {task.priority}
                           </span>
                         )}
@@ -339,14 +440,19 @@ export function CalendarView() {
           {/* Quick add for selected day */}
           <div className="border-t border-[#2a2a2a] p-4">
             <div className="flex items-center gap-2 rounded-lg bg-[#222] px-3 py-2 ring-1 ring-[#333] transition-all focus-within:ring-[#555]">
-              <button onClick={handleAdd} className="rounded p-0.5 text-[#666] transition-colors hover:text-[#e0e0e0] active:scale-90">
+              <button
+                onClick={handleAdd}
+                className="rounded p-0.5 text-[#666] transition-colors hover:text-[#e0e0e0] active:scale-90"
+              >
                 <Plus className="h-3.5 w-3.5" />
               </button>
               <input
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAdd();
+                }}
                 placeholder={`Add for ${format(selected, "MMM d")}...`}
                 className="min-w-0 flex-1 bg-transparent text-[12px] text-[#e0e0e0] outline-none placeholder:text-[#444]"
               />
@@ -365,7 +471,9 @@ export function CalendarView() {
                   <div className="text-[9px] text-[#666]">Total</div>
                 </div>
                 <div className="rounded-lg bg-[#222] p-2 text-center">
-                  <div className="text-[14px] font-bold" style={{ color: accent }}>{monthStats.completed}</div>
+                  <div className="text-[14px] font-bold" style={{ color: accent }}>
+                    {monthStats.completed}
+                  </div>
                   <div className="text-[9px] text-[#666]">Done</div>
                 </div>
                 <div className="rounded-lg bg-[#222] p-2 text-center">

@@ -2,7 +2,21 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, startOfWeek, endOfWeek, parseISO, isValid } from "date-fns";
+import {
+  format,
+  addMonths,
+  subMonths,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isSameMonth,
+  isSameDay,
+  isToday,
+  startOfWeek,
+  endOfWeek,
+  parseISO,
+  isValid,
+} from "date-fns";
 
 interface DatePickerProps {
   value: string | null;
@@ -11,9 +25,14 @@ interface DatePickerProps {
   placeholder?: string;
 }
 
-export function DatePicker({ value, onChange, className = "", placeholder = "No date" }: DatePickerProps) {
+export function DatePicker({
+  value,
+  onChange,
+  className = "",
+  placeholder = "No date",
+}: DatePickerProps) {
   const [open, setOpen] = useState(false);
-  const [cursor, setCursor] = useState(() => value ? parseISO(value) : new Date());
+  const [cursor, setCursor] = useState(() => (value ? parseISO(value) : new Date()));
   const triggerRef = useRef<HTMLDivElement>(null);
   const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
 
@@ -32,9 +51,9 @@ export function DatePicker({ value, onChange, className = "", placeholder = "No 
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (
-        triggerRef.current && 
+        triggerRef.current &&
         !triggerRef.current.contains(target) &&
-        !target.closest('.custom-datepicker-dropdown')
+        !target.closest(".custom-datepicker-dropdown")
       ) {
         setOpen(false);
       }
@@ -61,7 +80,7 @@ export function DatePicker({ value, onChange, className = "", placeholder = "No 
       >
         <CalendarIcon className="h-3 w-3 shrink-0 text-[#888]" />
         <span className="truncate">
-            {isValidDate ? format(selectedDate, "MMM d, yyyy") : placeholder}
+          {isValidDate ? format(selectedDate, "MMM d, yyyy") : placeholder}
         </span>
       </button>
 
@@ -74,9 +93,9 @@ export function DatePicker({ value, onChange, className = "", placeholder = "No 
               exit={{ opacity: 0, y: -4, scale: 0.98 }}
               transition={{ duration: 0.15 }}
               className="custom-datepicker-dropdown fixed z-[9999] mt-1 w-60 rounded-xl bg-[#262626] p-3 shadow-xl ring-1 ring-[#333]"
-              style={{ 
-                top: coords.top, 
-                left: Math.min(coords.left, window.innerWidth - 250) // Basic edge detection
+              style={{
+                top: coords.top,
+                left: Math.min(coords.left, window.innerWidth - 250), // Basic edge detection
               }}
             >
               <div className="mb-3 flex items-center justify-between">
@@ -100,7 +119,9 @@ export function DatePicker({ value, onChange, className = "", placeholder = "No 
               </div>
 
               <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-medium text-[#777]">
-                {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => <div key={d}>{d}</div>)}
+                {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
+                  <div key={d}>{d}</div>
+                ))}
               </div>
 
               <div className="mt-1 grid grid-cols-7 gap-1">
@@ -128,20 +149,23 @@ export function DatePicker({ value, onChange, className = "", placeholder = "No 
                   );
                 })}
               </div>
-              
+
               {value && (
-                 <button
-                   type="button"
-                   onClick={() => { onChange(null); setOpen(false); }}
-                   className="mt-2 w-full rounded-md py-1.5 text-center text-[10px] text-[#888] hover:bg-[#333] hover:text-[#ccc]"
-                 >
-                   Clear Date
-                 </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(null);
+                    setOpen(false);
+                  }}
+                  className="mt-2 w-full rounded-md py-1.5 text-center text-[10px] text-[#888] hover:bg-[#333] hover:text-[#ccc]"
+                >
+                  Clear Date
+                </button>
               )}
             </motion.div>
           )}
         </AnimatePresence>,
-        document.body
+        document.body,
       )}
     </div>
   );

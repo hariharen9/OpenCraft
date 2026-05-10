@@ -1,13 +1,33 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Plus, X, Calendar as CalendarIcon, ChevronDown, ChevronRight,
-  Trash2, Flag, Circle, CheckCircle2, Clock, Tag, StickyNote,
-  Sparkles, ListFilter, MoreHorizontal, ArrowUpDown, GripVertical,
-  Inbox, Repeat,
+  Plus,
+  X,
+  Calendar as CalendarIcon,
+  ChevronDown,
+  ChevronRight,
+  Trash2,
+  Flag,
+  Circle,
+  CheckCircle2,
+  Clock,
+  Tag,
+  StickyNote,
+  Sparkles,
+  ListFilter,
+  MoreHorizontal,
+  ArrowUpDown,
+  GripVertical,
+  Inbox,
+  Repeat,
 } from "lucide-react";
 import {
-  DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors,
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
   type DragEndEvent,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
@@ -15,10 +35,18 @@ import { CSS } from "@dnd-kit/utilities";
 import { useEditorStore } from "@/store/editor-store";
 import { useTasksStore, type Task, type Priority } from "@/store/tasks-store";
 import { useSettingsStore } from "@/store/settings-store";
-import { format, isToday, isTomorrow, isPast, isFuture, parseISO, isValid, isThisWeek } from "date-fns";
+import {
+  format,
+  isToday,
+  isTomorrow,
+  isPast,
+  isFuture,
+  parseISO,
+  isValid,
+  isThisWeek,
+} from "date-fns";
 import { Select } from "@/components/ui/custom-select";
 import { DatePicker } from "@/components/ui/custom-date-picker";
-
 
 type Filter = "all" | "today" | "upcoming" | "completed" | "overdue";
 type SortMode = "manual" | "priority" | "dueDate" | "created";
@@ -35,7 +63,20 @@ const CATEGORIES = ["Inbox", "Work", "Personal", "Ideas", "Errands"];
 
 export function TasksView() {
   const accent = useEditorStore((s) => s.accentColor);
-  const { tasks, loaded, loadTasks, addTask, toggleTask, deleteTask, editTask, clearCompleted, addSubtask, toggleSubtask, deleteSubtask, reorderTasks } = useTasksStore();
+  const {
+    tasks,
+    loaded,
+    loadTasks,
+    addTask,
+    toggleTask,
+    deleteTask,
+    editTask,
+    clearCompleted,
+    addSubtask,
+    toggleSubtask,
+    deleteSubtask,
+    reorderTasks,
+  } = useTasksStore();
   const { syncCalendarTasks, loadSettings } = useSettingsStore();
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<SortMode>("manual");
@@ -48,8 +89,13 @@ export function TasksView() {
   const [showSortMenu, setShowSortMenu] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { loadTasks(); loadSettings(); }, [loadTasks, loadSettings]);
-  useEffect(() => { if (showAddForm) inputRef.current?.focus(); }, [showAddForm]);
+  useEffect(() => {
+    loadTasks();
+    loadSettings();
+  }, [loadTasks, loadSettings]);
+  useEffect(() => {
+    if (showAddForm) inputRef.current?.focus();
+  }, [showAddForm]);
 
   const filtered = useMemo(() => {
     let result = tasks.filter((t) => {
@@ -102,7 +148,10 @@ export function TasksView() {
 
   const incompleteCount = tasks.filter((t) => !t.completed).length;
   const completedCount = tasks.filter((t) => t.completed).length;
-  const todayCount = tasks.filter((t) => t.dueDate && isValid(parseISO(t.dueDate)) && isToday(parseISO(t.dueDate)) && !t.completed).length;
+  const todayCount = tasks.filter(
+    (t) =>
+      t.dueDate && isValid(parseISO(t.dueDate)) && isToday(parseISO(t.dueDate)) && !t.completed,
+  ).length;
   const overdueCount = tasks.filter((t) => {
     if (!t.dueDate || t.completed) return false;
     const d = parseISO(t.dueDate);
@@ -148,10 +197,22 @@ export function TasksView() {
                 {(["manual", "priority", "dueDate", "created"] as SortMode[]).map((m) => (
                   <button
                     key={m}
-                    onClick={() => { setSort(m); setShowSortMenu(false); }}
-                    className={"flex w-full items-center px-3 py-1.5 text-[12px] transition-colors hover:bg-[#333] " + (sort === m ? "text-[#e0e0e0]" : "text-[#888]")}
+                    onClick={() => {
+                      setSort(m);
+                      setShowSortMenu(false);
+                    }}
+                    className={
+                      "flex w-full items-center px-3 py-1.5 text-[12px] transition-colors hover:bg-[#333] " +
+                      (sort === m ? "text-[#e0e0e0]" : "text-[#888]")
+                    }
                   >
-                    {m === "manual" ? "Manual" : m === "priority" ? "Priority" : m === "dueDate" ? "Due Date" : "Created"}
+                    {m === "manual"
+                      ? "Manual"
+                      : m === "priority"
+                        ? "Priority"
+                        : m === "dueDate"
+                          ? "Due Date"
+                          : "Created"}
                   </button>
                 ))}
               </motion.div>
@@ -203,14 +264,21 @@ export function TasksView() {
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
-            className={"flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium transition-all active:scale-95 " +
+            className={
+              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium transition-all active:scale-95 " +
               (filter === f.key
                 ? "bg-[#333] text-[#e0e0e0] shadow-sm"
-                : "text-[#666] hover:bg-[#262626] hover:text-[#aaa]")}
+                : "text-[#666] hover:bg-[#262626] hover:text-[#aaa]")
+            }
           >
             {f.label}
             {f.count !== undefined && f.count > 0 && (
-              <span className={"rounded-full px-1.5 py-0.5 text-[10px] " + (filter === f.key ? "bg-[#444] text-[#ccc]" : "bg-[#2a2a2a] text-[#777]")}>
+              <span
+                className={
+                  "rounded-full px-1.5 py-0.5 text-[10px] " +
+                  (filter === f.key ? "bg-[#444] text-[#ccc]" : "bg-[#2a2a2a] text-[#777]")
+                }
+              >
                 {f.count}
               </span>
             )}
@@ -233,7 +301,10 @@ export function TasksView() {
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); if (e.key === "Escape") setShowAddForm(false); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAdd();
+                  if (e.key === "Escape") setShowAddForm(false);
+                }}
                 placeholder="What needs to be done?"
                 className="w-full bg-transparent text-[14px] text-[#e0e0e0] outline-none placeholder:text-[#555]"
               />
@@ -252,7 +323,7 @@ export function TasksView() {
                     options={(Object.keys(PRIORITY_CONFIG) as Priority[]).map((p) => ({
                       value: p,
                       label: PRIORITY_CONFIG[p].label,
-                      icon: <span className="mr-1">{PRIORITY_CONFIG[p].icon}</span>
+                      icon: <span className="mr-1">{PRIORITY_CONFIG[p].icon}</span>,
                     }))}
                   />
                 </div>
@@ -304,7 +375,10 @@ export function TasksView() {
                 {filter === "overdue" && <Sparkles className="h-9 w-9 text-emerald-800" />}
                 {filter === "completed" && <CheckCircle2 className="h-9 w-9 text-[#444]" />}
               </div>
-              <div className="absolute -right-1 -top-1 h-4 w-4 rounded-full" style={{ backgroundColor: accent + '30' }} />
+              <div
+                className="absolute -right-1 -top-1 h-4 w-4 rounded-full"
+                style={{ backgroundColor: accent + "30" }}
+              />
             </div>
             <p className="text-[15px] font-semibold text-[#666]">
               {filter === "all" && "No tasks yet"}
@@ -314,7 +388,9 @@ export function TasksView() {
               {filter === "completed" && "No completed tasks"}
             </p>
             <p className="mt-1.5 text-[13px] text-[#444]">
-              {filter === "all" ? "Hit the button above to create your first task" : "Try switching to a different filter"}
+              {filter === "all"
+                ? "Hit the button above to create your first task"
+                : "Try switching to a different filter"}
             </p>
             {filter === "all" && (
               <button
@@ -350,10 +426,20 @@ export function TasksView() {
 
 /* ─── Task Row ─── */
 function TaskRow({
-  task, accent, expanded, onToggleExpand, onToggle, onDelete, onEdit,
-  onAddSubtask, onToggleSubtask, onDeleteSubtask,
+  task,
+  accent,
+  expanded,
+  onToggleExpand,
+  onToggle,
+  onDelete,
+  onEdit,
+  onAddSubtask,
+  onToggleSubtask,
+  onDeleteSubtask,
 }: {
-  task: Task; accent: string; expanded: boolean;
+  task: Task;
+  accent: string;
+  expanded: boolean;
   onToggleExpand: () => void;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
@@ -377,14 +463,18 @@ function TaskRow({
       })()
     : null;
 
-  const isOverdue = task.dueDate && !task.completed && (() => {
-    const d = parseISO(task.dueDate!);
-    return isValid(d) && isPast(d) && !isToday(d);
-  })();
+  const isOverdue =
+    task.dueDate &&
+    !task.completed &&
+    (() => {
+      const d = parseISO(task.dueDate!);
+      return isValid(d) && isPast(d) && !isToday(d);
+    })();
 
-  const subtaskProgress = task.subtasks.length > 0
-    ? Math.round((task.subtasks.filter((s) => s.completed).length / task.subtasks.length) * 100)
-    : 0;
+  const subtaskProgress =
+    task.subtasks.length > 0
+      ? Math.round((task.subtasks.filter((s) => s.completed).length / task.subtasks.length) * 100)
+      : 0;
 
   return (
     <motion.div
@@ -393,7 +483,10 @@ function TaskRow({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, x: -30, scale: 0.95 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className={"rounded-xl transition-colors " + (expanded ? "bg-[#262626] ring-1 ring-[#333]" : "hover:bg-[#242424]")}
+      className={
+        "rounded-xl transition-colors " +
+        (expanded ? "bg-[#262626] ring-1 ring-[#333]" : "hover:bg-[#242424]")
+      }
     >
       {/* Main row */}
       <div className="flex items-center gap-3 px-4 py-3">
@@ -402,7 +495,11 @@ function TaskRow({
           onClick={() => onToggle(task.id)}
           className="relative flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all hover:scale-110 active:scale-90"
           style={{
-            borderColor: task.completed ? accent : pConfig.color !== "#555" ? pConfig.color : "#555",
+            borderColor: task.completed
+              ? accent
+              : pConfig.color !== "#555"
+                ? pConfig.color
+                : "#555",
             backgroundColor: task.completed ? accent : "transparent",
           }}
         >
@@ -413,8 +510,13 @@ function TaskRow({
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                viewBox="0 0 16 16" className="h-3 w-3" fill="none"
-                stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                viewBox="0 0 16 16"
+                className="h-3 w-3"
+                fill="none"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
                 <motion.path
                   initial={{ pathLength: 0 }}
@@ -429,13 +531,20 @@ function TaskRow({
 
         {/* Content */}
         <button onClick={onToggleExpand} className="min-w-0 flex-1 text-left">
-          <span className={"block truncate text-[13px] transition-all " + (task.completed ? "text-[#555] line-through" : "text-[#d8d8d8]")}>
+          <span
+            className={
+              "block truncate text-[13px] transition-all " +
+              (task.completed ? "text-[#555] line-through" : "text-[#d8d8d8]")
+            }
+          >
             {task.title}
           </span>
           {(task.subtasks.length > 0 || task.notes) && (
             <span className="mt-0.5 flex items-center gap-2 text-[11px] text-[#555]">
               {task.subtasks.length > 0 && (
-                <span>{task.subtasks.filter((s) => s.completed).length}/{task.subtasks.length} subtasks</span>
+                <span>
+                  {task.subtasks.filter((s) => s.completed).length}/{task.subtasks.length} subtasks
+                </span>
               )}
               {task.notes && <StickyNote className="h-3 w-3" />}
             </span>
@@ -445,7 +554,10 @@ function TaskRow({
         {/* Meta badges */}
         <div className="flex shrink-0 items-center gap-1.5">
           {task.priority !== "none" && (
-            <span className="rounded-md px-1.5 py-0.5 text-[10px] font-medium" style={{ backgroundColor: pConfig.color + "18", color: pConfig.color }}>
+            <span
+              className="rounded-md px-1.5 py-0.5 text-[10px] font-medium"
+              style={{ backgroundColor: pConfig.color + "18", color: pConfig.color }}
+            >
               {pConfig.label}
             </span>
           )}
@@ -455,7 +567,12 @@ function TaskRow({
             </span>
           )}
           {dueLabel && (
-            <span className={"flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] " + (isOverdue ? "bg-[#ef444418] text-[#ef4444]" : "bg-[#2a2a2a] text-[#888]")}>
+            <span
+              className={
+                "flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] " +
+                (isOverdue ? "bg-[#ef444418] text-[#ef4444]" : "bg-[#2a2a2a] text-[#888]")
+              }
+            >
               <CalendarIcon className="h-2.5 w-2.5" />
               {dueLabel}
             </span>
@@ -503,16 +620,36 @@ function TaskRow({
                   <button
                     onClick={() => onToggleSubtask(task.id, st.id)}
                     className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border border-[#555] transition-colors hover:border-[#888]"
-                    style={st.completed ? { backgroundColor: accent, borderColor: accent } : undefined}
+                    style={
+                      st.completed ? { backgroundColor: accent, borderColor: accent } : undefined
+                    }
                   >
                     {st.completed && (
-                      <svg viewBox="0 0 16 16" className="h-2.5 w-2.5" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <svg
+                        viewBox="0 0 16 16"
+                        className="h-2.5 w-2.5"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <path d="M3 8 L7 12 L13 4" />
                       </svg>
                     )}
                   </button>
-                  <span className={"flex-1 text-[12px] " + (st.completed ? "text-[#555] line-through" : "text-[#bbb]")}>{st.title}</span>
-                  <button onClick={() => onDeleteSubtask(task.id, st.id)} className="text-[#444] hover:text-[#ef4444]">
+                  <span
+                    className={
+                      "flex-1 text-[12px] " +
+                      (st.completed ? "text-[#555] line-through" : "text-[#bbb]")
+                    }
+                  >
+                    {st.title}
+                  </span>
+                  <button
+                    onClick={() => onDeleteSubtask(task.id, st.id)}
+                    className="text-[#444] hover:text-[#ef4444]"
+                  >
                     <X className="h-3 w-3" />
                   </button>
                 </div>
@@ -554,7 +691,7 @@ function TaskRow({
                     options={(Object.keys(PRIORITY_CONFIG) as Priority[]).map((p) => ({
                       value: p,
                       label: PRIORITY_CONFIG[p].label,
-                      icon: <span className="mr-1">{PRIORITY_CONFIG[p].icon}</span>
+                      icon: <span className="mr-1">{PRIORITY_CONFIG[p].icon}</span>,
                     }))}
                   />
                 </div>
@@ -583,22 +720,35 @@ function TaskRow({
 
 /* ─── Drag and Drop Wrappers ─── */
 function DndTaskList({
-  tasks, sort, accent, expandedTask, setExpandedTask, toggleTask, deleteTask, editTask,
-  addSubtask, toggleSubtask, deleteSubtask, reorderTasks,
+  tasks,
+  sort,
+  accent,
+  expandedTask,
+  setExpandedTask,
+  toggleTask,
+  deleteTask,
+  editTask,
+  addSubtask,
+  toggleSubtask,
+  deleteSubtask,
+  reorderTasks,
 }: any) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor),
   );
 
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = tasks.findIndex((t: Task) => t.id === active.id);
-      const newIndex = tasks.findIndex((t: Task) => t.id === over.id);
-      reorderTasks(oldIndex, newIndex);
-    }
-  }, [tasks, reorderTasks]);
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (over && active.id !== over.id) {
+        const oldIndex = tasks.findIndex((t: Task) => t.id === active.id);
+        const newIndex = tasks.findIndex((t: Task) => t.id === over.id);
+        reorderTasks(oldIndex, newIndex);
+      }
+    },
+    [tasks, reorderTasks],
+  );
 
   // If we are not in manual sort mode, we shouldn't allow drag-and-drop reordering
   if (sort !== "manual") {
@@ -653,7 +803,9 @@ function DndTaskList({
 }
 
 function SortableTaskRow(props: any) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: props.task.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: props.task.id,
+  });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -664,7 +816,11 @@ function SortableTaskRow(props: any) {
 
   return (
     <div ref={setNodeRef} style={style}>
-      <div className="absolute left-[-20px] top-4 opacity-0 transition-opacity hover:opacity-100 cursor-grab" {...attributes} {...listeners}>
+      <div
+        className="absolute left-[-20px] top-4 opacity-0 transition-opacity hover:opacity-100 cursor-grab"
+        {...attributes}
+        {...listeners}
+      >
         <GripVertical className="h-4 w-4 text-[#555]" />
       </div>
       <TaskRow {...props} />

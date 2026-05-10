@@ -196,10 +196,7 @@ export const useTasksStore = create<TasksStore>((set) => ({
         t.id === taskId
           ? {
               ...t,
-              subtasks: [
-                ...t.subtasks,
-                { id: genId(), title: title.trim(), completed: false },
-              ],
+              subtasks: [...t.subtasks, { id: genId(), title: title.trim(), completed: false }],
             }
           : t,
       );
@@ -228,9 +225,7 @@ export const useTasksStore = create<TasksStore>((set) => ({
   deleteSubtask: (taskId, subtaskId) => {
     set((s) => {
       const tasks = s.tasks.map((t) =>
-        t.id === taskId
-          ? { ...t, subtasks: t.subtasks.filter((st) => st.id !== subtaskId) }
-          : t,
+        t.id === taskId ? { ...t, subtasks: t.subtasks.filter((st) => st.id !== subtaskId) } : t,
       );
       scheduleSave(tasks);
       return { tasks };

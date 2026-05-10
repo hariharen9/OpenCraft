@@ -10,14 +10,14 @@ export const MathBlock = Node.create({
 
   addAttributes() {
     return {
-      formula: { 
+      formula: {
         default: "E = mc^2",
-        parseHTML: element => element.getAttribute('data-formula'),
-        renderHTML: attributes => {
+        parseHTML: (element) => element.getAttribute("data-formula"),
+        renderHTML: (attributes) => {
           return {
-            'data-formula': attributes.formula,
-          }
-        }
+            "data-formula": attributes.formula,
+          };
+        },
       },
     };
   },
@@ -27,10 +27,7 @@ export const MathBlock = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      "div",
-      mergeAttributes(HTMLAttributes, { "data-type": "math" }),
-    ];
+    return ["div", mergeAttributes(HTMLAttributes, { "data-type": "math" })];
   },
 
   addNodeView() {

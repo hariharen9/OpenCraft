@@ -32,7 +32,13 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
 
   setSyncCalendarTasks: (v) => {
     set({ syncCalendarTasks: v });
-    const { syncCalendarTasks: _, loaded: __, loadSettings: ___, setSyncCalendarTasks: ____, ...rest } = get();
+    const {
+      syncCalendarTasks: _,
+      loaded: __,
+      loadSettings: ___,
+      setSyncCalendarTasks: ____,
+      ...rest
+    } = get();
     persist({ syncCalendarTasks: v, ...rest });
   },
 }));

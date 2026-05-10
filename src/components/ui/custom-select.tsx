@@ -37,9 +37,9 @@ export function Select({ value, onChange, options, className = "", placeholder }
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (
-        triggerRef.current && 
+        triggerRef.current &&
         !triggerRef.current.contains(target) &&
-        !target.closest('.custom-select-dropdown')
+        !target.closest(".custom-select-dropdown")
       ) {
         setOpen(false);
       }
@@ -61,7 +61,9 @@ export function Select({ value, onChange, options, className = "", placeholder }
           {selected?.icon}
           {selected ? selected.label : placeholder || "Select..."}
         </div>
-        <ChevronDown className={`h-3 w-3 shrink-0 text-[#888] transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`h-3 w-3 shrink-0 text-[#888] transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {createPortal(
@@ -73,10 +75,10 @@ export function Select({ value, onChange, options, className = "", placeholder }
               exit={{ opacity: 0, y: -4, scale: 0.98 }}
               transition={{ duration: 0.15 }}
               className="custom-select-dropdown fixed z-[9999] mt-1 max-h-48 overflow-y-auto rounded-lg bg-[#262626] p-1 shadow-xl ring-1 ring-[#333]"
-              style={{ 
-                top: coords.top, 
-                left: coords.left, 
-                width: Math.max(coords.width, 140) 
+              style={{
+                top: coords.top,
+                left: coords.left,
+                width: Math.max(coords.width, 140),
               }}
             >
               {options.map((opt) => (
@@ -98,7 +100,7 @@ export function Select({ value, onChange, options, className = "", placeholder }
             </motion.div>
           )}
         </AnimatePresence>,
-        document.body
+        document.body,
       )}
     </div>
   );

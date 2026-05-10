@@ -31,8 +31,17 @@ const TEXT_STYLES = [
 ];
 
 const COLORS = [
-  "#9a9a9a", "#5b5b5b", "#cfcfcf", "#7a78ff", "#3b82f6", "#22d3ee",
-  "#22c55e", "#a855f7", "#ef4444", "#f59e0b", "#a16207",
+  "#9a9a9a",
+  "#5b5b5b",
+  "#cfcfcf",
+  "#7a78ff",
+  "#3b82f6",
+  "#22d3ee",
+  "#22c55e",
+  "#a855f7",
+  "#ef4444",
+  "#f59e0b",
+  "#a16207",
 ];
 
 export function FormatTab() {
@@ -44,33 +53,95 @@ export function FormatTab() {
   if (!editor) return null;
 
   const inlineBtns = [
-    { label: "Bold", icon: <Bold className="h-3.5 w-3.5" />, active: editor.isActive("bold"), run: () => editor.chain().focus().toggleBold().run() },
-    { label: "Italic", icon: <Italic className="h-3.5 w-3.5" />, active: editor.isActive("italic"), run: () => editor.chain().focus().toggleItalic().run() },
-    { label: "Strike", icon: <Strikethrough className="h-3.5 w-3.5" />, active: editor.isActive("strike"), run: () => editor.chain().focus().toggleStrike().run() },
-    { label: "Code", icon: <Code className="h-3.5 w-3.5" />, active: editor.isActive("code"), run: () => editor.chain().focus().toggleCode().run() },
+    {
+      label: "Bold",
+      icon: <Bold className="h-3.5 w-3.5" />,
+      active: editor.isActive("bold"),
+      run: () => editor.chain().focus().toggleBold().run(),
+    },
+    {
+      label: "Italic",
+      icon: <Italic className="h-3.5 w-3.5" />,
+      active: editor.isActive("italic"),
+      run: () => editor.chain().focus().toggleItalic().run(),
+    },
+    {
+      label: "Strike",
+      icon: <Strikethrough className="h-3.5 w-3.5" />,
+      active: editor.isActive("strike"),
+      run: () => editor.chain().focus().toggleStrike().run(),
+    },
+    {
+      label: "Code",
+      icon: <Code className="h-3.5 w-3.5" />,
+      active: editor.isActive("code"),
+      run: () => editor.chain().focus().toggleCode().run(),
+    },
   ];
 
   const listBtns = [
-    { label: "Tasks", icon: <CheckSquare className="h-3.5 w-3.5" />, active: editor.isActive("taskList"), run: () => editor.chain().focus().toggleTaskList().run() },
-    { label: "Bullet", icon: <List className="h-3.5 w-3.5" />, active: editor.isActive("bulletList"), run: () => editor.chain().focus().toggleBulletList().run() },
-    { label: "Ordered", icon: <ListOrdered className="h-3.5 w-3.5" />, active: editor.isActive("orderedList"), run: () => editor.chain().focus().toggleOrderedList().run() },
+    {
+      label: "Tasks",
+      icon: <CheckSquare className="h-3.5 w-3.5" />,
+      active: editor.isActive("taskList"),
+      run: () => editor.chain().focus().toggleTaskList().run(),
+    },
+    {
+      label: "Bullet",
+      icon: <List className="h-3.5 w-3.5" />,
+      active: editor.isActive("bulletList"),
+      run: () => editor.chain().focus().toggleBulletList().run(),
+    },
+    {
+      label: "Ordered",
+      icon: <ListOrdered className="h-3.5 w-3.5" />,
+      active: editor.isActive("orderedList"),
+      run: () => editor.chain().focus().toggleOrderedList().run(),
+    },
   ];
 
   const indentBtns = [
-    { label: "Outdent", icon: <Outdent className="h-3.5 w-3.5" />, run: () => editor.chain().focus().liftListItem("listItem").run() },
-    { label: "Indent", icon: <Indent className="h-3.5 w-3.5" />, run: () => editor.chain().focus().sinkListItem("listItem").run() },
+    {
+      label: "Outdent",
+      icon: <Outdent className="h-3.5 w-3.5" />,
+      run: () => editor.chain().focus().liftListItem("listItem").run(),
+    },
+    {
+      label: "Indent",
+      icon: <Indent className="h-3.5 w-3.5" />,
+      run: () => editor.chain().focus().sinkListItem("listItem").run(),
+    },
   ];
 
   const alignBtns = [
-    { label: "Left", icon: <AlignLeft className="h-3.5 w-3.5" />, active: editor.isActive({ textAlign: "left" }), run: () => editor.chain().focus().setTextAlign("left").run() },
-    { label: "Center", icon: <AlignCenter className="h-3.5 w-3.5" />, active: editor.isActive({ textAlign: "center" }), run: () => editor.chain().focus().setTextAlign("center").run() },
-    { label: "Right", icon: <AlignRight className="h-3.5 w-3.5" />, active: editor.isActive({ textAlign: "right" }), run: () => editor.chain().focus().setTextAlign("right").run() },
-    { label: "Justify", icon: <AlignJustify className="h-3.5 w-3.5" />, active: editor.isActive({ textAlign: "justify" }), run: () => editor.chain().focus().setTextAlign("justify").run() },
+    {
+      label: "Left",
+      icon: <AlignLeft className="h-3.5 w-3.5" />,
+      active: editor.isActive({ textAlign: "left" }),
+      run: () => editor.chain().focus().setTextAlign("left").run(),
+    },
+    {
+      label: "Center",
+      icon: <AlignCenter className="h-3.5 w-3.5" />,
+      active: editor.isActive({ textAlign: "center" }),
+      run: () => editor.chain().focus().setTextAlign("center").run(),
+    },
+    {
+      label: "Right",
+      icon: <AlignRight className="h-3.5 w-3.5" />,
+      active: editor.isActive({ textAlign: "right" }),
+      run: () => editor.chain().focus().setTextAlign("right").run(),
+    },
+    {
+      label: "Justify",
+      icon: <AlignJustify className="h-3.5 w-3.5" />,
+      active: editor.isActive({ textAlign: "justify" }),
+      run: () => editor.chain().focus().setTextAlign("justify").run(),
+    },
   ];
 
   const applyTextStyle = (s: (typeof TEXT_STYLES)[number]) => {
-    if ("level" in s && s.level)
-      editor.chain().focus().toggleHeading({ level: s.level }).run();
+    if ("level" in s && s.level) editor.chain().focus().toggleHeading({ level: s.level }).run();
     else if ("mark" in s && s.mark === "bold") editor.chain().focus().toggleBold().run();
     else editor.chain().focus().setParagraph().run();
   };
@@ -155,7 +226,12 @@ export function FormatTab() {
           </button>
           <button
             onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-            className={"flex items-center justify-center gap-2 rounded-md px-3 py-2 text-[13px] transition-colors active:scale-95 " + (editor.isActive("codeBlock") ? "bg-[#3a3a3a] text-white" : "bg-[#262626] text-[#cfcfcf] hover:bg-[#2c2c2c]")}
+            className={
+              "flex items-center justify-center gap-2 rounded-md px-3 py-2 text-[13px] transition-colors active:scale-95 " +
+              (editor.isActive("codeBlock")
+                ? "bg-[#3a3a3a] text-white"
+                : "bg-[#262626] text-[#cfcfcf] hover:bg-[#2c2c2c]")
+            }
           >
             <Code2 className="h-3.5 w-3.5" />
             Code
@@ -219,9 +295,7 @@ function ToolButton({
       onClick={run}
       className={
         "flex h-9 items-center justify-center rounded-md transition-colors active:scale-90 focus:outline-none focus:ring-2 focus:ring-[#444] " +
-        (active
-          ? "bg-[#3a3a3a] text-white"
-          : "bg-[#262626] text-[#bcbcbc] hover:bg-[#2c2c2c]")
+        (active ? "bg-[#3a3a3a] text-white" : "bg-[#262626] text-[#bcbcbc] hover:bg-[#2c2c2c]")
       }
     >
       {icon}
@@ -229,7 +303,13 @@ function ToolButton({
   );
 }
 
-function ColorContent({ editor, setTextColor }: { editor: any; setTextColor: (c: string) => void }) {
+function ColorContent({
+  editor,
+  setTextColor,
+}: {
+  editor: any;
+  setTextColor: (c: string) => void;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -254,15 +334,30 @@ function ColorContent({ editor, setTextColor }: { editor: any; setTextColor: (c:
           background: "conic-gradient(red, orange, yellow, green, cyan, blue, magenta, red)",
         }}
       >
-        <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow">+</span>
+        <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow">
+          +
+        </span>
       </button>
-      <input ref={inputRef} type="color" className="sr-only" onChange={(e) => { setTextColor(e.target.value); editor.chain().focus().setColor(e.target.value).run(); }} />
+      <input
+        ref={inputRef}
+        type="color"
+        className="sr-only"
+        onChange={(e) => {
+          setTextColor(e.target.value);
+          editor.chain().focus().setColor(e.target.value).run();
+        }}
+      />
     </div>
   );
 }
 
 const FONTS = [
-  { id: "default" as const, label: "Default", fam: "ui-sans-serif, system-ui, sans-serif", cls: "font-sans" },
+  {
+    id: "default" as const,
+    label: "Default",
+    fam: "ui-sans-serif, system-ui, sans-serif",
+    cls: "font-sans",
+  },
   { id: "serif" as const, label: "Serif", fam: "'Cormorant Garamond', serif", cls: "font-serif" },
   { id: "mono" as const, label: "Mono", fam: "ui-monospace, SF Mono, monospace", cls: "font-mono" },
 ];
@@ -294,7 +389,8 @@ function FontPicker() {
               (font === f.id
                 ? "bg-[#0e3a72] text-white"
                 : "bg-[#262626] text-[#bcbcbc] hover:bg-[#2c2c2c]") +
-              " " + f.cls
+              " " +
+              f.cls
             }
           >
             <div className="text-[16px]">Aa</div>

@@ -15,8 +15,7 @@ export const Route = createFileRoute("/app")({
       { title: "OpenCraft — A focused writing space" },
       {
         name: "description",
-        content:
-          "OpenCraft is an open-source, local-first markdown writing app inspired by Craft.",
+        content: "OpenCraft is an open-source, local-first markdown writing app inspired by Craft.",
       },
     ],
   }),
@@ -40,12 +39,7 @@ function OpenCraft() {
         <div className="relative flex min-w-0 flex-1 overflow-hidden rounded-xl bg-[#1f1f1f] shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset,0_20px_40px_-20px_rgba(0,0,0,0.6),0_8px_16px_-12px_rgba(0,0,0,0.5)] ring-1 ring-black/40">
           <div className="relative flex min-w-0 flex-1">
             {/* Editor - always mounted so TipTap state is preserved */}
-            <div
-              className={
-                "flex min-w-0 flex-1 " +
-                (activeView !== "editor" ? "hidden" : "")
-              }
-            >
+            <div className={"flex min-w-0 flex-1 " + (activeView !== "editor" ? "hidden" : "")}>
               <EditorPane />
             </div>
 
@@ -90,7 +84,10 @@ function OpenCraft() {
           </div>
         </div>
       </div>
-      {inspectorOpen && activeView !== "tasks" && activeView !== "calendar" && activeView !== "home" && <Inspector />}
+      {inspectorOpen &&
+        activeView !== "tasks" &&
+        activeView !== "calendar" &&
+        activeView !== "home" && <Inspector />}
     </div>
   );
 }

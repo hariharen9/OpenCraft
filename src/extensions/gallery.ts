@@ -10,7 +10,7 @@ export const GalleryBlock = Node.create({
 
   addAttributes() {
     return {
-      images: { 
+      images: {
         default: [],
       },
     };

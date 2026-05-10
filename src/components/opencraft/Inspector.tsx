@@ -6,12 +6,7 @@ import { FormatTab } from "./tabs/FormatTab";
 import { StyleTab } from "./tabs/StyleTab";
 import { InfoTab } from "./tabs/InfoTab";
 import { useAuthStore } from "@/store/auth-store";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const TABS = ["Insert", "Format", "Style", "Info"] as const;
 type Tab = (typeof TABS)[number];
@@ -57,44 +52,48 @@ export function Inspector() {
               Welcome to OpenCraft
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-6 pt-2">
             <div className="text-[14px] leading-relaxed text-[#aaa]">
-              OpenCraft is a focused, local-first markdown writing space designed for speed and clarity. Your documents stay on your device, with optional secure cloud sync via Firebase.
+              OpenCraft is a focused, local-first markdown writing space designed for speed and
+              clarity. Your documents stay on your device, with optional secure cloud sync via
+              Firebase.
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <HelpItem 
-                icon={<Zap className="h-4 w-4 text-amber-400" />} 
-                title="Lightning Fast" 
-                desc="Instant loading and smooth animations." 
+              <HelpItem
+                icon={<Zap className="h-4 w-4 text-amber-400" />}
+                title="Lightning Fast"
+                desc="Instant loading and smooth animations."
               />
-              <HelpItem 
-                icon={<Info className="h-4 w-4 text-blue-400" />} 
-                title="Markdown First" 
-                desc="Full support for GFM and custom blocks." 
+              <HelpItem
+                icon={<Info className="h-4 w-4 text-blue-400" />}
+                title="Markdown First"
+                desc="Full support for GFM and custom blocks."
               />
-              <HelpItem 
-                icon={<Keyboard className="h-4 w-4 text-emerald-400" />} 
-                title="Shortcuts" 
-                desc="Heavy focus on keyboard-driven workflows." 
+              <HelpItem
+                icon={<Keyboard className="h-4 w-4 text-emerald-400" />}
+                title="Shortcuts"
+                desc="Heavy focus on keyboard-driven workflows."
               />
-              <HelpItem 
-                icon={<Cloud className="h-4 w-4 text-[#ff8a4c]" /> as any} 
-                title="Cloud Sync" 
-                desc="Seamless sync across all your devices." 
+              <HelpItem
+                icon={(<Cloud className="h-4 w-4 text-[#ff8a4c]" />) as any}
+                title="Cloud Sync"
+                desc="Seamless sync across all your devices."
               />
             </div>
 
             <div className="rounded-lg bg-[#222] p-4 border border-[#333]">
               <h4 className="text-[13px] font-semibold text-white mb-2">Editor Blocks</h4>
               <p className="text-[12px] text-[#888]">
-                Press <code className="bg-[#333] px-1 rounded text-[#ccc]">/</code> or use the **Insert** tab to add complex blocks like **Kanban boards**, **Gallery grids**, **TeX formulas**, and **Mermaid diagrams**.
+                Press <code className="bg-[#333] px-1 rounded text-[#ccc]">/</code> or use the
+                **Insert** tab to add complex blocks like **Kanban boards**, **Gallery grids**,
+                **TeX formulas**, and **Mermaid diagrams**.
               </p>
             </div>
 
             <div className="flex justify-center pt-2">
-              <button 
+              <button
                 onClick={() => setHelpOpen(false)}
                 className="rounded-md bg-white px-6 py-2 text-[13px] font-bold text-black hover:bg-[#eee] transition-colors"
               >
@@ -182,10 +181,7 @@ function HelpItem({ icon, title, desc }: { icon: React.ReactNode; title: string;
         {icon}
         {title}
       </div>
-      <div className="text-[11px] text-[#777] leading-relaxed">
-        {desc}
-      </div>
+      <div className="text-[11px] text-[#777] leading-relaxed">{desc}</div>
     </div>
   );
 }
-

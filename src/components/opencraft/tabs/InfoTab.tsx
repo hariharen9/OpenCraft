@@ -23,12 +23,7 @@ import { LocalStorageProvider } from "@/lib/storage/local";
 import { getHistory } from "@/lib/storage/history";
 import type { DocVersion } from "@/lib/storage/history";
 import { Select } from "@/components/ui/custom-select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 function timeAgo(ts: number) {
   const diff = Math.floor((Date.now() - ts) / 1000);
@@ -52,7 +47,7 @@ export function InfoTab() {
   const workspaces = useWorkspaceStore((s) => s.workspaces);
   const activeWorkspaceId = useWorkspaceStore((s) => s.activeWorkspaceId);
 
-  const activeWs = workspaces.find(w => w.id === activeWorkspaceId);
+  const activeWs = workspaces.find((w) => w.id === activeWorkspaceId);
   const folders = activeWs?.folders ?? [];
   const wsTags = activeWs?.tags ?? [];
 
@@ -78,7 +73,7 @@ export function InfoTab() {
   const [historyVersions, setHistoryVersions] = useState<DocVersion[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
-  const currentFolder = folders.find(f => f.id === folder);
+  const currentFolder = folders.find((f) => f.id === folder);
 
   const startEditTitle = () => {
     setTitleDraft(docTitle);
@@ -133,7 +128,10 @@ export function InfoTab() {
 
     const content = await LocalStorageProvider.load(activeDocId);
     const newId = useWorkspaceStore.getState().createDoc(activeWorkspaceId, activeDoc.folder);
-    await LocalStorageProvider.save(newId, content ?? { json: {}, markdown: "", updatedAt: Date.now() });
+    await LocalStorageProvider.save(
+      newId,
+      content ?? { json: {}, markdown: "", updatedAt: Date.now() },
+    );
     updateDocMeta(newId, {
       title: activeDoc.title ? `${activeDoc.title} (copy)` : "",
       starred: false,
@@ -163,7 +161,11 @@ export function InfoTab() {
     try {
       editor.commands.setContent(version.json as never);
       const md = (editor.storage as any).markdown?.getMarkdown?.() ?? "";
-      await LocalStorageProvider.save(activeDocId, { json: version.json, markdown: md, updatedAt: Date.now() });
+      await LocalStorageProvider.save(activeDocId, {
+        json: version.json,
+        markdown: md,
+        updatedAt: Date.now(),
+      });
       toast.success(`Restored version from ${timeAgo(version.savedAt)}`);
       setHistoryDialogOpen(false);
     } catch {
@@ -174,7 +176,9 @@ export function InfoTab() {
   const moveTo = (folderId: string) => {
     if (activeDocId) {
       updateDocMeta(activeDocId, { folder: folderId, updatedAt: Date.now() });
-      toast.success(`Moved to ${folderId === "root" ? "No Folder" : (folders.find(f => f.id === folderId)?.name ?? "folder")}`);
+      toast.success(
+        `Moved to ${folderId === "root" ? "No Folder" : (folders.find((f) => f.id === folderId)?.name ?? "folder")}`,
+      );
       setMoveDialogOpen(false);
     }
   };
@@ -229,7 +233,9 @@ export function InfoTab() {
                 onBlur={saveTitle}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") saveTitle();
-                  if (e.key === "Escape") { setEditingTitle(false); }
+                  if (e.key === "Escape") {
+                    setEditingTitle(false);
+                  }
                 }}
                 className="w-full rounded-md bg-[#1f1f1f] px-2 py-1 text-[15px] font-semibold text-[#e8e8e8] ring-1 ring-[#444] transition-colors focus:bg-[#2a2a2a] focus:outline-none focus:ring-[#666]"
               />
@@ -247,7 +253,9 @@ export function InfoTab() {
           {/* Path breadcrumb */}
           {activeWs && (
             <div className="flex items-center gap-1.5 text-[11px] text-[#666]">
-              <span>{activeWs.icon} {activeWs.name}</span>
+              <span>
+                {activeWs.icon} {activeWs.name}
+              </span>
               <ChevronDown className="h-2.5 w-2.5 -rotate-90" />
               <span>{currentFolder?.name ?? "No Folder"}</span>
               <ChevronDown className="h-2.5 w-2.5 -rotate-90" />
@@ -256,9 +264,21 @@ export function InfoTab() {
           )}
 
           <Section label="Properties">
-            <PropRow icon={<Calendar className="h-3.5 w-3.5" />} label="Created" value={timeAgo(createdAt)} />
-            <PropRow icon={<Calendar className="h-3.5 w-3.5" />} label="Updated" value={timeAgo(updatedAt)} />
-            <PropRow icon={<User className="h-3.5 w-3.5" />} label="Author" value={user?.displayName || user?.email || "OpenCraft User"} />
+            <PropRow
+              icon={<Calendar className="h-3.5 w-3.5" />}
+              label="Created"
+              value={timeAgo(createdAt)}
+            />
+            <PropRow
+              icon={<Calendar className="h-3.5 w-3.5" />}
+              label="Updated"
+              value={timeAgo(updatedAt)}
+            />
+            <PropRow
+              icon={<User className="h-3.5 w-3.5" />}
+              label="Author"
+              value={user?.displayName || user?.email || "OpenCraft User"}
+            />
           </Section>
 
           <Section label="Organization">
@@ -269,10 +289,12 @@ export function InfoTab() {
               <div className="w-[120px]">
                 <Select
                   value={folder}
-                  onChange={(val) => { if (activeDocId) updateDocMeta(activeDocId, { folder: val }); }}
+                  onChange={(val) => {
+                    if (activeDocId) updateDocMeta(activeDocId, { folder: val });
+                  }}
                   options={[
                     { value: "root", label: "No Folder" },
-                    ...folders.map(f => ({ value: f.id, label: f.name }))
+                    ...folders.map((f) => ({ value: f.id, label: f.name })),
                   ]}
                 />
               </div>
@@ -285,15 +307,21 @@ export function InfoTab() {
 
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pb-1">
-                  {tags.map(tagId => {
-                    const tag = wsTags.find(t => t.id === tagId);
+                  {tags.map((tagId) => {
+                    const tag = wsTags.find((t) => t.id === tagId);
                     if (!tag) return null;
                     return (
-                      <span key={tag.id} className="flex items-center gap-1 rounded bg-[#333] pl-1.5 pr-1 py-0.5 text-[10px] text-[#ddd]">
+                      <span
+                        key={tag.id}
+                        className="flex items-center gap-1 rounded bg-[#333] pl-1.5 pr-1 py-0.5 text-[10px] text-[#ddd]"
+                      >
                         {tag.name}
                         <button
                           onClick={() => {
-                            if (activeDocId) updateDocMeta(activeDocId, { tags: tags.filter(t => t !== tag.id) });
+                            if (activeDocId)
+                              updateDocMeta(activeDocId, {
+                                tags: tags.filter((t) => t !== tag.id),
+                              });
                           }}
                           className="rounded hover:bg-[#555] text-[#aaa] hover:text-white p-0.5"
                         >
@@ -313,7 +341,7 @@ export function InfoTab() {
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && tagInput.trim()) {
                       const lowerInput = tagInput.trim().toLowerCase();
-                      const existingTag = wsTags.find(t => t.name.toLowerCase() === lowerInput);
+                      const existingTag = wsTags.find((t) => t.name.toLowerCase() === lowerInput);
                       let tagIdToAdd = existingTag?.id;
                       if (!existingTag) {
                         tagIdToAdd = createTag(activeWorkspaceId, tagInput.trim());
@@ -329,19 +357,21 @@ export function InfoTab() {
                 />
               </div>
 
-              {wsTags.filter(t => !tags.includes(t.id)).length > 0 && (
+              {wsTags.filter((t) => !tags.includes(t.id)).length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-1">
-                  {wsTags.filter(t => !tags.includes(t.id)).map(t => (
-                    <button
-                      key={t.id}
-                      onClick={() => {
-                        if (activeDocId) updateDocMeta(activeDocId, { tags: [...tags, t.id] });
-                      }}
-                      className="rounded bg-[#2a2a2a] px-1.5 py-0.5 text-[9px] text-[#888] hover:bg-[#333] hover:text-[#ccc]"
-                    >
-                      +{t.name}
-                    </button>
-                  ))}
+                  {wsTags
+                    .filter((t) => !tags.includes(t.id))
+                    .map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => {
+                          if (activeDocId) updateDocMeta(activeDocId, { tags: [...tags, t.id] });
+                        }}
+                        className="rounded bg-[#2a2a2a] px-1.5 py-0.5 text-[9px] text-[#888] hover:bg-[#333] hover:text-[#ccc]"
+                      >
+                        +{t.name}
+                      </button>
+                    ))}
                 </div>
               )}
             </div>
@@ -359,20 +389,40 @@ export function InfoTab() {
       {/* ─── Actions ─── */}
       {section === "actions" && (
         <Section label="Actions">
-          <ActionRow icon={<Maximize2 className="h-3.5 w-3.5" />} label="Present" onClick={present} />
-          <ActionRow icon={<FolderInput className="h-3.5 w-3.5" />} label="Move to..." onClick={() => setMoveDialogOpen(true)} />
-          <ActionRow icon={<Copy className="h-3.5 w-3.5" />} label="Duplicate" onClick={handleDuplicate} />
           <ActionRow
-            icon={<Star className={"h-3.5 w-3.5 " + (starred ? "fill-current text-yellow-400" : "")} />}
+            icon={<Maximize2 className="h-3.5 w-3.5" />}
+            label="Present"
+            onClick={present}
+          />
+          <ActionRow
+            icon={<FolderInput className="h-3.5 w-3.5" />}
+            label="Move to..."
+            onClick={() => setMoveDialogOpen(true)}
+          />
+          <ActionRow
+            icon={<Copy className="h-3.5 w-3.5" />}
+            label="Duplicate"
+            onClick={handleDuplicate}
+          />
+          <ActionRow
+            icon={
+              <Star className={"h-3.5 w-3.5 " + (starred ? "fill-current text-yellow-400" : "")} />
+            }
             label={starred ? "Unstar Document" : "Star Document"}
             onClick={toggleStar}
           />
-          <ActionRow icon={<Clock className="h-3.5 w-3.5" />} label="History" onClick={openHistory} />
+          <ActionRow
+            icon={<Clock className="h-3.5 w-3.5" />}
+            label="History"
+            onClick={openHistory}
+          />
           <ActionRow
             icon={<Trash2 className="h-3.5 w-3.5" />}
             label="Delete"
             destructive
-            onClick={() => { if (activeDocId) deleteDoc(activeDocId); }}
+            onClick={() => {
+              if (activeDocId) deleteDoc(activeDocId);
+            }}
           />
         </Section>
       )}
@@ -386,16 +436,22 @@ export function InfoTab() {
           <div className="space-y-0.5 pt-2">
             <button
               onClick={() => moveTo("root")}
-              className={"flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] transition-colors hover:bg-[#262626] " + (folder === "root" ? "bg-[#262626] text-white" : "text-[#aaa]")}
+              className={
+                "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] transition-colors hover:bg-[#262626] " +
+                (folder === "root" ? "bg-[#262626] text-white" : "text-[#aaa]")
+              }
             >
               <Inbox className="h-3.5 w-3.5" />
               No Folder
             </button>
-            {folders.map(f => (
+            {folders.map((f) => (
               <button
                 key={f.id}
                 onClick={() => moveTo(f.id)}
-                className={"flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] transition-colors hover:bg-[#262626] " + (folder === f.id ? "bg-[#262626] text-white" : "text-[#aaa]")}
+                className={
+                  "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] transition-colors hover:bg-[#262626] " +
+                  (folder === f.id ? "bg-[#262626] text-white" : "text-[#aaa]")
+                }
               >
                 <FolderIcon className="h-3.5 w-3.5" />
                 {f.name}
@@ -413,19 +469,28 @@ export function InfoTab() {
           </DialogHeader>
           <div className="space-y-2 pt-2">
             {historyLoading ? (
-              <div className="flex items-center justify-center py-8 text-[13px] text-[#666]">Loading...</div>
+              <div className="flex items-center justify-center py-8 text-[13px] text-[#666]">
+                Loading...
+              </div>
             ) : historyVersions.length === 0 ? (
               <div className="flex flex-col items-center gap-2 rounded-lg bg-[#222] px-4 py-6 text-center">
                 <Clock className="h-8 w-8 text-[#555]" />
                 <p className="text-[13px] text-[#888]">No history yet</p>
-                <p className="text-[11px] text-[#555]">Versions are saved automatically as you edit (up to 10).</p>
+                <p className="text-[11px] text-[#555]">
+                  Versions are saved automatically as you edit (up to 10).
+                </p>
               </div>
             ) : (
               <div className="max-h-[300px] space-y-1 overflow-y-auto pr-1">
                 {[...historyVersions].reverse().map((v, i) => (
-                  <div key={v.id} className="flex items-center justify-between rounded-md bg-[#222] px-3 py-2">
+                  <div
+                    key={v.id}
+                    className="flex items-center justify-between rounded-md bg-[#222] px-3 py-2"
+                  >
                     <div className="flex flex-col">
-                      <span className="text-[12px] text-[#ccc]">Version {historyVersions.length - i}</span>
+                      <span className="text-[12px] text-[#ccc]">
+                        Version {historyVersions.length - i}
+                      </span>
                       <span className="text-[10px] text-[#666]">{timeAgo(v.savedAt)}</span>
                     </div>
                     <button

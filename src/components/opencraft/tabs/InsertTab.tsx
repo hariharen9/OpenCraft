@@ -14,7 +14,13 @@ import {
   GripVertical,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 
@@ -86,19 +92,19 @@ export function InsertTab() {
       label: "TeX Formula",
       icon: <Sigma className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () => editor.chain().focus().insertContent({ type: 'mathBlock' }).run(),
+      action: () => editor.chain().focus().insertContent({ type: "mathBlock" }).run(),
     },
     {
       label: "Mermaid Diagram",
       icon: <GitBranch className="h-3.5 w-3.5" />,
       tint: "bg-amber-500/20 text-amber-300",
-      action: () => editor.chain().focus().insertContent({ type: 'mermaidBlock' }).run(),
+      action: () => editor.chain().focus().insertContent({ type: "mermaidBlock" }).run(),
     },
     {
       label: "Whiteboard",
       icon: <PenLine className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () => editor.chain().focus().insertContent({ type: 'whiteboardBlock' }).run(),
+      action: () => editor.chain().focus().insertContent({ type: "whiteboardBlock" }).run(),
     },
   ];
 
@@ -108,23 +114,19 @@ export function InsertTab() {
       icon: <TableIcon className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
       action: () =>
-        editor
-          .chain()
-          .focus()
-          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-          .run(),
+        editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
     },
     {
       label: "Gallery",
       icon: <LayoutGrid className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () => editor.chain().focus().insertContent({ type: 'galleryBlock' }).run(),
+      action: () => editor.chain().focus().insertContent({ type: "galleryBlock" }).run(),
     },
     {
       label: "Kanban",
       icon: <Columns3 className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () => editor.chain().focus().insertContent({ type: 'kanbanBlock' }).run(),
+      action: () => editor.chain().focus().insertContent({ type: "kanbanBlock" }).run(),
     },
   ];
 
@@ -138,7 +140,7 @@ export function InsertTab() {
           ))}
         </div>
       ),
-      action: () => editor.chain().focus().setCustomDivider({ variant: 'dotted' }).run(),
+      action: () => editor.chain().focus().setCustomDivider({ variant: "dotted" }).run(),
     },
     {
       label: "Dashed",
@@ -149,17 +151,17 @@ export function InsertTab() {
           ))}
         </div>
       ),
-      action: () => editor.chain().focus().setCustomDivider({ variant: 'dashed' }).run(),
+      action: () => editor.chain().focus().setCustomDivider({ variant: "dashed" }).run(),
     },
     {
       label: "Thin",
       svg: <div className="h-[1px] w-full bg-[#888]" />,
-      action: () => editor.chain().focus().setCustomDivider({ variant: 'thin' }).run(),
+      action: () => editor.chain().focus().setCustomDivider({ variant: "thin" }).run(),
     },
     {
       label: "Thick",
       svg: <div className="h-[3px] w-full bg-[#cfcfcf]" />,
-      action: () => editor.chain().focus().setCustomDivider({ variant: 'thick' }).run(),
+      action: () => editor.chain().focus().setCustomDivider({ variant: "thick" }).run(),
     },
   ];
 
@@ -199,7 +201,7 @@ export function InsertTab() {
       <div>
         <SectionLabel>Insert Page Break</SectionLabel>
         <button
-          onClick={() => editor.chain().focus().insertContent({ type: 'pageBreakBlock' }).run()}
+          onClick={() => editor.chain().focus().insertContent({ type: "pageBreakBlock" }).run()}
           className="group flex w-full items-center justify-between gap-2 rounded-md bg-[#262626] px-3 py-3 hover:bg-[#2c2c2c] active:scale-[0.99]"
         >
           <span className="flex-1 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-[#777]">
@@ -312,9 +314,7 @@ function Row({ item }: { item: Item }) {
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mb-2 text-[12px] font-semibold text-[#e0e0e0]">{children}</div>
-  );
+  return <div className="mb-2 text-[12px] font-semibold text-[#e0e0e0]">{children}</div>;
 }
 
 function TableGrid() {
@@ -340,9 +340,7 @@ function TableGrid() {
               }
               onMouseEnter={() => setHover({ r, c })}
               onMouseLeave={() => setHover(null)}
-              className={`aspect-square rounded-[3px] ${
-                active ? "bg-[#5a7aff]" : "bg-[#2a2a2a]"
-              }`}
+              className={`aspect-square rounded-[3px] ${active ? "bg-[#5a7aff]" : "bg-[#2a2a2a]"}`}
               title={`${r}×${c}`}
             />
           );

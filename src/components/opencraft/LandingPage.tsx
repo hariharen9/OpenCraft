@@ -36,7 +36,7 @@ export function LandingPage() {
             }
           });
         },
-        { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+        { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
       );
 
       els.forEach((el) => obs.observe(el));
@@ -66,17 +66,26 @@ export function LandingPage() {
         </div>
         <ul className="nav-links">
           <li>
-            <a onClick={() => goPage("features")} className={activePage === "features" ? "active" : ""}>
+            <a
+              onClick={() => goPage("features")}
+              className={activePage === "features" ? "active" : ""}
+            >
               Features
             </a>
           </li>
           <li>
-            <a onClick={() => goPage("writing")} className={activePage === "writing" ? "active" : ""}>
+            <a
+              onClick={() => goPage("writing")}
+              className={activePage === "writing" ? "active" : ""}
+            >
               Writing
             </a>
           </li>
           <li>
-            <a onClick={() => goPage("organize")} className={activePage === "organize" ? "active" : ""}>
+            <a
+              onClick={() => goPage("organize")}
+              className={activePage === "organize" ? "active" : ""}
+            >
               Organize
             </a>
           </li>
@@ -87,7 +96,10 @@ export function LandingPage() {
           </li>
         </ul>
         <div className="nav-right">
-          <button className="btn btn-ghost" onClick={() => window.open("https://github.com/hariharen9/OpenCraft", "_blank")}>
+          <button
+            className="btn btn-ghost"
+            onClick={() => window.open("https://github.com/hariharen9/OpenCraft", "_blank")}
+          >
             GitHub
           </button>
           <button className="btn btn-dark" onClick={enterApp}>
@@ -115,8 +127,8 @@ export function LandingPage() {
               The&nbsp;Noise
             </h1>
             <p className="body-lg hero-sub">
-              No AI. No collaboration bloat. No subscription. Just a beautiful, fast note editor that gets out of your way — and stays
-              that way.
+              No AI. No collaboration bloat. No subscription. Just a beautiful, fast note editor
+              that gets out of your way — and stays that way.
             </p>
             <div className="hero-actions">
               <button className="btn btn-dark-lg" onClick={() => goPage("features")}>
@@ -147,7 +159,15 @@ export function LandingPage() {
                 <span className="hs-label">Platforms</span>
               </div>
             </div>
-            <div style={{ display: "flex", gap: "10px", marginTop: "28px", flexWrap: "wrap", animation: "landingFadeUp .7s .48s ease both" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                marginTop: "28px",
+                flexWrap: "wrap",
+                animation: "landingFadeUp .7s .48s ease both",
+              }}
+            >
               <span className="st-badge st-green">✕ No AI</span>
               <span className="st-badge st-blue">✕ No Account</span>
               <span className="st-badge st-rust">✓ Open Source</span>
@@ -231,7 +251,10 @@ export function LandingPage() {
                 <div className="nc-line short"></div>
                 <div className="nc-line full"></div>
                 <div className="nc-line shorter"></div>
-                <div className="nc-tag" style={{ background: "rgba(123,47,190,.12)", color: "#7B2FBE" }}>
+                <div
+                  className="nc-tag"
+                  style={{ background: "rgba(123,47,190,.12)", color: "#7B2FBE" }}
+                >
                   💡 Ideas
                 </div>
               </div>
@@ -313,7 +336,10 @@ export function LandingPage() {
                 <br />
                 real&nbsp;thinking
               </h2>
-              <p className="body-lg fade-up delay-2" style={{ maxWidth: "480px", margin: "0 auto" }}>
+              <p
+                className="body-lg fade-up delay-2"
+                style={{ maxWidth: "480px", margin: "0 auto" }}
+              >
                 Rich, beautiful, keyboard-driven. Every pixel earns its place.
               </p>
             </div>
@@ -330,14 +356,26 @@ export function LandingPage() {
                     Spaces
                   </div>
                   <div className="ew-sitem on">
-                    <svg className="ew-sicon" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4">
+                    <svg
+                      className="ew-sicon"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                    >
                       <rect x="1" y="1" width="12" height="12" rx="2" />
                       <path d="M4 5h6M4 8h4" />
                     </svg>
                     Personal
                   </div>
                   <div className="ew-sitem">
-                    <svg className="ew-sicon" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4">
+                    <svg
+                      className="ew-sicon"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                    >
                       <path d="M7 1l1.6 3.9H13l-3.6 2.7 1.4 4.3L7 9.4l-3.8 2.5 1.4-4.3L1 4.9h4.4z" />
                     </svg>
                     Work
@@ -345,19 +383,37 @@ export function LandingPage() {
                   <div className="ew-gap"></div>
                   <div className="ew-slabel">Notes</div>
                   <div className="ew-sitem">
-                    <svg className="ew-sicon" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4">
+                    <svg
+                      className="ew-sicon"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                    >
                       <path d="M2 2h10v10H2zM5 5h4M5 8h2" />
                     </svg>
                     Ideas
                   </div>
                   <div className="ew-sitem on">
-                    <svg className="ew-sicon" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4">
+                    <svg
+                      className="ew-sicon"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                    >
                       <path d="M1 4h12M1 7h9M1 10h6" />
                     </svg>
                     Tokyo Trip
                   </div>
                   <div className="ew-sitem">
-                    <svg className="ew-sicon" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4">
+                    <svg
+                      className="ew-sicon"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                    >
                       <circle cx="7" cy="7" r="6" />
                       <path d="M7 4v3l2 2" />
                     </svg>
@@ -369,8 +425,9 @@ export function LandingPage() {
                   <div className="ew-doc-meta">Last edited moments ago · 847 words</div>
                   <div className="ew-h2">Overview</div>
                   <p className="ew-p">
-                    Two weeks through Japan — <span className="ew-mark">starting in Tokyo</span>, south to Kyoto, then a few still days
-                    in Hakone before flying home from Osaka. The plan is loose by design.
+                    Two weeks through Japan — <span className="ew-mark">starting in Tokyo</span>,
+                    south to Kyoto, then a few still days in Hakone before flying home from Osaka.
+                    The plan is loose by design.
                   </p>
                   <div className="ew-h2">Must-do in Tokyo</div>
                   <div className="ew-li">Senso-ji at dawn before the crowds arrive</div>
@@ -379,7 +436,9 @@ export function LandingPage() {
                   <div className="ew-li">
                     Ramen at Fuunji — arrive 30 min before opening<span className="cursor"></span>
                   </div>
-                  <div className="ew-callout">✦ Pack light. Everything fits in a carry-on. Laundry every 4 days.</div>
+                  <div className="ew-callout">
+                    ✦ Pack light. Everything fits in a carry-on. Laundry every 4 days.
+                  </div>
                 </div>
               </div>
             </div>
@@ -499,7 +558,10 @@ export function LandingPage() {
           <div className="inner">
             <div style={{ marginBottom: "52px" }}>
               <div className="eyebrow fade-up">What's inside</div>
-              <h2 className="display-lg fade-up delay-1" style={{ maxWidth: "560px", marginBottom: "14px" }}>
+              <h2
+                className="display-lg fade-up delay-1"
+                style={{ maxWidth: "560px", marginBottom: "14px" }}
+              >
                 Everything you need.
                 <br />
                 Nothing&nbsp;you&nbsp;don't.
@@ -513,40 +575,48 @@ export function LandingPage() {
                 <span className="feat-ico">✍️</span>
                 <div className="feat-t">Block Editor</div>
                 <p className="feat-d">
-                  Rich blocks — text, headings, images, code, callouts, dividers. Craft your notes exactly the way you think.
+                  Rich blocks — text, headings, images, code, callouts, dividers. Craft your notes
+                  exactly the way you think.
                 </p>
               </div>
               <div className="feat-card fade-up delay-1">
                 <span className="feat-ico">🗂️</span>
                 <div className="feat-t">Spaces &amp; Folders</div>
-                <p className="feat-d">Separate spaces for work and life. Nested folders. Tags that work across everything.</p>
+                <p className="feat-d">
+                  Separate spaces for work and life. Nested folders. Tags that work across
+                  everything.
+                </p>
               </div>
               <div className="feat-card fade-up delay-2">
                 <span className="feat-ico">🎨</span>
                 <div className="feat-t">Beautiful Themes</div>
                 <p className="feat-d">
-                  Light, dark, sepia, midnight. Rich cover images. Typography obsessed-over so you don't have to be.
+                  Light, dark, sepia, midnight. Rich cover images. Typography obsessed-over so you
+                  don't have to be.
                 </p>
               </div>
               <div className="feat-card fade-up delay-3">
                 <span className="feat-ico">📁</span>
                 <div className="feat-t">Local First</div>
                 <p className="feat-d">
-                  Your notes live on your disk as real files. No cloud required. iCloud or Syncthing sync, your choice.
+                  Your notes live on your disk as real files. No cloud required. iCloud or Syncthing
+                  sync, your choice.
                 </p>
               </div>
               <div className="feat-card fade-up delay-4">
                 <span className="feat-ico">↗️</span>
                 <div className="feat-t">Export Anywhere</div>
                 <p className="feat-d">
-                  Markdown, PDF, HTML. Your writing is never locked in a proprietary format. Take it anywhere.
+                  Markdown, PDF, HTML. Your writing is never locked in a proprietary format. Take it
+                  anywhere.
                 </p>
               </div>
               <div className="feat-card fade-up delay-5">
                 <span className="feat-ico">⌨️</span>
                 <div className="feat-t">Keyboard First</div>
                 <p className="feat-d">
-                  Full shortcuts for everything. Slash commands. Quick switcher. Write without lifting your hands.
+                  Full shortcuts for everything. Slash commands. Quick switcher. Write without
+                  lifting your hands.
                 </p>
               </div>
             </div>
@@ -571,7 +641,8 @@ export function LandingPage() {
                   <span style={{ color: "rgba(246,242,235,.25)" }}>final form</span>
                 </h2>
                 <p className="body-lg fade-up delay-2" style={{ marginBottom: "28px" }}>
-                  OpenCraft gives your writing room to breathe. Beautiful defaults, powerful formatting, a canvas that feels like paper.
+                  OpenCraft gives your writing room to breathe. Beautiful defaults, powerful
+                  formatting, a canvas that feels like paper.
                 </p>
                 <div className="pills fade-up delay-3">
                   <div className="pill on">Rich Blocks</div>
@@ -597,10 +668,12 @@ export function LandingPage() {
                   <div className="wd-meta">Daily Notes · May 9, 2026</div>
                   <div className="wd-divider"></div>
                   <p className="wd-p">
-                    There's something about writing before the world starts. Coffee, an open window, no agenda. Just whatever rises to the
-                    surface.
+                    There's something about writing before the world starts. Coffee, an open window,
+                    no agenda. Just whatever rises to the surface.
                   </p>
-                  <div className="wd-quote">The morning belongs to no one until you claim it for yourself.</div>
+                  <div className="wd-quote">
+                    The morning belongs to no one until you claim it for yourself.
+                  </div>
                   <p className="wd-p">
                     Three months of notes now. Some days a paragraph. Some days three pages.
                     <span className="cursor" style={{ background: "rgba(246,242,235,.7)" }}></span>
@@ -632,7 +705,15 @@ export function LandingPage() {
 
         <section className="sec">
           <div className="inner">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "end", marginBottom: "52px" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "60px",
+                alignItems: "end",
+                marginBottom: "52px",
+              }}
+            >
               <div>
                 <div className="eyebrow fade-up">Organize</div>
                 <h2 className="display-lg fade-up delay-1" style={{ marginBottom: "0" }}>
@@ -645,7 +726,8 @@ export function LandingPage() {
               </div>
               <div>
                 <p className="body-lg fade-up" style={{ marginBottom: "22px" }}>
-                  Spaces, folders, and tags. No forced hierarchy. Just the structure your brain actually uses.
+                  Spaces, folders, and tags. No forced hierarchy. Just the structure your brain
+                  actually uses.
                 </p>
                 <button className="btn btn-dark fade-up delay-1" onClick={() => goPage("organize")}>
                   Learn more →
@@ -656,7 +738,9 @@ export function LandingPage() {
               <div className="org-card fade-up">
                 <div className="org-tag t-blue">🏠 Spaces</div>
                 <div className="org-t">Switch contexts instantly</div>
-                <p className="org-d">Separate spaces for work and life — each with its own colours, folders, and feel.</p>
+                <p className="org-d">
+                  Separate spaces for work and life — each with its own colours, folders, and feel.
+                </p>
                 <div className="tree">
                   <div className="t-row">📁 Personal</div>
                   <div className="t-row ind">📄 Journaling</div>
@@ -668,7 +752,9 @@ export function LandingPage() {
               <div className="org-card fade-up delay-1">
                 <div className="org-tag t-green">🏷️ Tags</div>
                 <div className="org-t">Cross-link ideas</div>
-                <p className="org-d">Tag any note and pull everything together across folders and spaces in one click.</p>
+                <p className="org-d">
+                  Tag any note and pull everything together across folders and spaces in one click.
+                </p>
                 <div className="tree">
                   <div className="t-row">🏷️ #idea</div>
                   <div className="t-row">🏷️ #reference</div>
@@ -679,7 +765,9 @@ export function LandingPage() {
               <div className="org-card fade-up delay-2">
                 <div className="org-tag t-rust">⚡ Quick Find</div>
                 <div className="org-t">Find anything fast</div>
-                <p className="org-d">Full-text search across all notes in milliseconds. Press ⌘K and start typing.</p>
+                <p className="org-d">
+                  Full-text search across all notes in milliseconds. Press ⌘K and start typing.
+                </p>
                 <div className="tree">
                   <div className="t-row">🔍 "tokyo"</div>
                   <div className="t-row ind hi">📄 Tokyo Trip 2026</div>
@@ -694,7 +782,10 @@ export function LandingPage() {
         <section className="sec" style={{ background: "var(--paper)" }}>
           <div className="inner">
             <div style={{ textAlign: "center", marginBottom: "52px" }}>
-              <div className="mit-badge fade-up" style={{ marginBottom: "18px", display: "inline-flex" }}>
+              <div
+                className="mit-badge fade-up"
+                style={{ marginBottom: "18px", display: "inline-flex" }}
+              >
                 <div className="mit-dot"></div> MIT Licensed
               </div>
               <h2 className="display-lg fade-up delay-1" style={{ marginBottom: "14px" }}>
@@ -702,7 +793,10 @@ export function LandingPage() {
                 <br />
                 Owned by&nbsp;no&nbsp;one.
               </h2>
-              <p className="body-lg fade-up delay-2" style={{ maxWidth: "460px", margin: "0 auto" }}>
+              <p
+                className="body-lg fade-up delay-2"
+                style={{ maxWidth: "460px", margin: "0 auto" }}
+              >
                 Free software, forever. Read the code, fork it, improve it, ship it.
               </p>
             </div>
@@ -710,7 +804,9 @@ export function LandingPage() {
               <div className="oss-p fade-up">
                 <div className="oss-n">01</div>
                 <div className="oss-t">MIT License</div>
-                <p className="oss-d">Fork, build, sell. Do whatever you want with it. No restrictions.</p>
+                <p className="oss-d">
+                  Fork, build, sell. Do whatever you want with it. No restrictions.
+                </p>
               </div>
               <div className="oss-p fade-up delay-1">
                 <div className="oss-n">02</div>
@@ -720,7 +816,9 @@ export function LandingPage() {
               <div className="oss-p fade-up delay-2">
                 <div className="oss-n">03</div>
                 <div className="oss-t">Community Driven</div>
-                <p className="oss-d">Features are driven by issues and PRs, not a closed roadmap.</p>
+                <p className="oss-d">
+                  Features are driven by issues and PRs, not a closed roadmap.
+                </p>
               </div>
               <div className="oss-p fade-up delay-3">
                 <div className="oss-n">04</div>
@@ -729,7 +827,10 @@ export function LandingPage() {
               </div>
             </div>
             <div style={{ textAlign: "center" }} className="fade-up">
-              <button className="gh-btn" onClick={() => window.open("https://github.com/hariharen9/OpenCraft", "_blank")}>
+              <button
+                className="gh-btn"
+                onClick={() => window.open("https://github.com/hariharen9/OpenCraft", "_blank")}
+              >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.87 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C17.134 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z" />
                 </svg>
@@ -745,7 +846,9 @@ export function LandingPage() {
               <h2 className="display-md fade-up" style={{ marginBottom: "12px" }}>
                 Why switch?
               </h2>
-              <p className="body-lg fade-up delay-1">The note editor for people who just want to write.</p>
+              <p className="body-lg fade-up delay-1">
+                The note editor for people who just want to write.
+              </p>
             </div>
             <div className="cmp-table fade-up delay-1">
               <div className="cmp-head">
@@ -828,7 +931,11 @@ export function LandingPage() {
               </div>
             </div>
             <div style={{ textAlign: "center", marginTop: "28px" }} className="fade-up">
-              <button className="btn btn-ghost" onClick={() => goPage("why")} style={{ fontSize: "14px", color: "var(--accent)" }}>
+              <button
+                className="btn btn-ghost"
+                onClick={() => goPage("why")}
+                style={{ fontSize: "14px", color: "var(--accent)" }}
+              >
                 Read the full story of why I built this →
               </button>
             </div>
@@ -837,7 +944,9 @@ export function LandingPage() {
 
         <div className="quote-sec">
           <div className="q-deco">"</div>
-          <p className="q-text fade-up">"The best note app is the one that disappears while you write."</p>
+          <p className="q-text fade-up">
+            "The best note app is the one that disappears while you write."
+          </p>
           <p className="q-attr fade-up delay-1">— Design philosophy behind OpenCraft</p>
         </div>
 
@@ -848,34 +957,61 @@ export function LandingPage() {
           </div>
           <h2
             className="display-lg fade-up delay-1"
-            style={{ marginBottom: "14px", maxWidth: "600px", marginLeft: "auto", marginRight: "auto" }}
+            style={{
+              marginBottom: "14px",
+              maxWidth: "600px",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
           >
             Start writing today.
           </h2>
-          <p className="body-lg fade-up delay-2" style={{ maxWidth: "420px", margin: "0 auto 44px" }}>
+          <p
+            className="body-lg fade-up delay-2"
+            style={{ maxWidth: "420px", margin: "0 auto 44px" }}
+          >
             Free, open source, no account, no credit card. No catch.
           </p>
           <div className="cta-actions fade-up delay-3">
             <button className="btn btn-dark-lg" onClick={enterApp}>
               Try OpenCraft Web
             </button>
-            <button className="btn btn-outline-lg" onClick={() => window.open("https://github.com/hariharen9/OpenCraft", "_blank")}>
+            <button
+              className="btn btn-outline-lg"
+              onClick={() => window.open("https://github.com/hariharen9/OpenCraft", "_blank")}
+            >
               View Source
             </button>
           </div>
-          <p className="cta-note fade-up delay-4">Available on Web · Desktop · Mobile coming soon</p>
+          <p className="cta-note fade-up delay-4">
+            Available on Web · Desktop · Mobile coming soon
+          </p>
         </section>
 
         <footer>
           <div className="ft-inner">
             <div className="ft-top">
               <div>
-                <div className="logo-wrap" onClick={() => goPage("home")} style={{ marginBottom: "0" }}>
-                  <img src={opencraftWhite} alt="OpenCraft" style={{ height: "56px", width: "auto" }} />
+                <div
+                  className="logo-wrap"
+                  onClick={() => goPage("home")}
+                  style={{ marginBottom: "0" }}
+                >
+                  <img
+                    src={opencraftWhite}
+                    alt="OpenCraft"
+                    style={{ height: "56px", width: "auto" }}
+                  />
                 </div>
-                <p className="ft-brand-desc">The open source note editor. Beautiful, private, and free — forever.</p>
+                <p className="ft-brand-desc">
+                  The open source note editor. Beautiful, private, and free — forever.
+                </p>
                 <div className="ft-social">
-                  <a href="https://github.com/hariharen9/OpenCraft" className="ft-sl" target="_blank">
+                  <a
+                    href="https://github.com/hariharen9/OpenCraft"
+                    className="ft-sl"
+                    target="_blank"
+                  >
                     <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
                       <path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.87 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C17.134 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z" />
                     </svg>
@@ -916,7 +1052,9 @@ export function LandingPage() {
               </div>
             </div>
             <div className="ft-bottom">
-              <span className="ft-copy">© 2026 OpenCraft Contributors. Open Source under the MIT License.</span>
+              <span className="ft-copy">
+                © 2026 OpenCraft Contributors. Open Source under the MIT License.
+              </span>
               <div className="ft-legal">
                 <a href="#">Privacy</a>
                 <a href="#">License</a>
@@ -940,18 +1078,42 @@ export function LandingPage() {
               you deserve<span style={{ color: "rgba(246,242,235,.2)" }}>.</span>
             </h1>
             <p className="body-lg" style={{ maxWidth: "500px" }}>
-              Rich, beautiful, keyboard-driven. No feature bloat. No AI suggestions. Just your words, beautifully rendered.
+              Rich, beautiful, keyboard-driven. No feature bloat. No AI suggestions. Just your
+              words, beautifully rendered.
             </p>
-            <div style={{ display: "flex", gap: "24px", marginTop: "36px", flexWrap: "wrap", animation: "landingFadeUp .6s .28s ease both" }}>
-              <div><div className="sh-num light">4</div><div className="sh-label light">Themes</div></div>
+            <div
+              style={{
+                display: "flex",
+                gap: "24px",
+                marginTop: "36px",
+                flexWrap: "wrap",
+                animation: "landingFadeUp .6s .28s ease both",
+              }}
+            >
+              <div>
+                <div className="sh-num light">4</div>
+                <div className="sh-label light">Themes</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num light">50+</div><div className="sh-label light">Syntax Themes</div></div>
+              <div>
+                <div className="sh-num light">50+</div>
+                <div className="sh-label light">Syntax Themes</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num light">3</div><div className="sh-label light">Font Families</div></div>
+              <div>
+                <div className="sh-num light">3</div>
+                <div className="sh-label light">Font Families</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num light">∞</div><div className="sh-label light">Block Types</div></div>
+              <div>
+                <div className="sh-num light">∞</div>
+                <div className="sh-label light">Block Types</div>
+              </div>
             </div>
-            <div className="pills" style={{ marginTop: "24px", animation: "landingFadeUp .6s .36s ease both" }}>
+            <div
+              className="pills"
+              style={{ marginTop: "24px", animation: "landingFadeUp .6s .36s ease both" }}
+            >
               <div className="pill on">Rich Text</div>
               <div className="pill">Code Blocks</div>
               <div className="pill">Callouts</div>
@@ -979,38 +1141,50 @@ export function LandingPage() {
               <div className="wf-block fade-up">
                 <div className="wf-ico">📝</div>
                 <div className="wf-t">Text &amp; Headings</div>
-                <p className="wf-d">H1 through H3 with beautiful spacing and rhythm. Body text that's a pleasure to read at every size.</p>
+                <p className="wf-d">
+                  H1 through H3 with beautiful spacing and rhythm. Body text that's a pleasure to
+                  read at every size.
+                </p>
               </div>
               <div className="wf-block fade-up delay-1">
                 <div className="wf-ico">💡</div>
                 <div className="wf-t">Callouts &amp; Quotes</div>
                 <p className="wf-d">
-                  Block quotes with pull-out styling. Callout boxes for highlights, warnings, or anything you need to surface.
+                  Block quotes with pull-out styling. Callout boxes for highlights, warnings, or
+                  anything you need to surface.
                 </p>
               </div>
               <div className="wf-block fade-up delay-2">
                 <div className="wf-ico">🖼️</div>
                 <div className="wf-t">Images &amp; Media</div>
                 <p className="wf-d">
-                  Drag in images. Full-width or inline. Captions. Cover images that make your documents feel intentional.
+                  Drag in images. Full-width or inline. Captions. Cover images that make your
+                  documents feel intentional.
                 </p>
               </div>
               <div className="wf-block fade-up delay-3">
                 <div className="wf-ico">💻</div>
                 <div className="wf-t">Code Blocks</div>
-                <p className="wf-d">Syntax highlighted code blocks for 50+ languages. Monospace, beautiful, copyable in one click.</p>
+                <p className="wf-d">
+                  Syntax highlighted code blocks for 50+ languages. Monospace, beautiful, copyable
+                  in one click.
+                </p>
               </div>
               <div className="wf-block fade-up">
                 <div className="wf-ico">✅</div>
                 <div className="wf-t">Checklists</div>
                 <p className="wf-d">
-                  Tasks embedded right in your notes. No separate todo app needed. Check things off as you go.
+                  Tasks embedded right in your notes. No separate todo app needed. Check things off
+                  as you go.
                 </p>
               </div>
               <div className="wf-block fade-up delay-1">
                 <div className="wf-ico">📊</div>
                 <div className="wf-t">Tables</div>
-                <p className="wf-d">Clean, lightweight tables for data that needs structure. Keyboard navigable. Markdown exportable.</p>
+                <p className="wf-d">
+                  Clean, lightweight tables for data that needs structure. Keyboard navigable.
+                  Markdown exportable.
+                </p>
               </div>
             </div>
           </div>
@@ -1027,16 +1201,19 @@ export function LandingPage() {
                   feels right
                 </h2>
                 <p className="body-md fade-up delay-2" style={{ marginBottom: "20px" }}>
-                  Lora for document titles — warm, scholarly, unmistakably crafted. DM Sans for body. The combination is intentional.
+                  Lora for document titles — warm, scholarly, unmistakably crafted. DM Sans for
+                  body. The combination is intentional.
                 </p>
                 <p className="body-md fade-up delay-3">
-                  Four carefully chosen themes — Light, Dark, Sepia, and Midnight — each with their own colour temperature, tuned for that
-                  mood.
+                  Four carefully chosen themes — Light, Dark, Sepia, and Midnight — each with their
+                  own colour temperature, tuned for that mood.
                 </p>
               </div>
               <div className="fade-up delay-2">
                 <div className="write-demo">
-                  <div style={{ display: "flex", gap: "8px", marginBottom: "18px", flexWrap: "wrap" }}>
+                  <div
+                    style={{ display: "flex", gap: "8px", marginBottom: "18px", flexWrap: "wrap" }}
+                  >
                     <div
                       style={{
                         background: "rgba(246,242,235,.12)",
@@ -1074,7 +1251,8 @@ export function LandingPage() {
                   <div className="wd-title">Chapter One</div>
                   <div className="wd-divider"></div>
                   <p className="wd-p">
-                    The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.
+                    The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor
+                    jugs.
                   </p>
                   <p
                     style={{
@@ -1089,16 +1267,80 @@ export function LandingPage() {
                     Sphinx of black quartz, judge my vow.
                   </p>
                   <div style={{ display: "flex", gap: "8px", marginTop: "14px" }}>
-                    <div style={{ flex: 1, height: "28px", borderRadius: "5px", background: "#FDFAF5" }}></div>
-                    <div style={{ flex: 1, height: "28px", borderRadius: "5px", background: "#1A1714" }}></div>
-                    <div style={{ flex: 1, height: "28px", borderRadius: "5px", background: "#F5EFDE" }}></div>
-                    <div style={{ flex: 1, height: "28px", borderRadius: "5px", background: "#0F1117" }}></div>
+                    <div
+                      style={{
+                        flex: 1,
+                        height: "28px",
+                        borderRadius: "5px",
+                        background: "#FDFAF5",
+                      }}
+                    ></div>
+                    <div
+                      style={{
+                        flex: 1,
+                        height: "28px",
+                        borderRadius: "5px",
+                        background: "#1A1714",
+                      }}
+                    ></div>
+                    <div
+                      style={{
+                        flex: 1,
+                        height: "28px",
+                        borderRadius: "5px",
+                        background: "#F5EFDE",
+                      }}
+                    ></div>
+                    <div
+                      style={{
+                        flex: 1,
+                        height: "28px",
+                        borderRadius: "5px",
+                        background: "#0F1117",
+                      }}
+                    ></div>
                   </div>
                   <div style={{ display: "flex", gap: "8px", marginTop: "5px" }}>
-                    <div style={{ flex: 1, fontSize: "10px", color: "rgba(246,242,235,.3)", textAlign: "center" }}>Light</div>
-                    <div style={{ flex: 1, fontSize: "10px", color: "rgba(246,242,235,.3)", textAlign: "center" }}>Dark</div>
-                    <div style={{ flex: 1, fontSize: "10px", color: "rgba(246,242,235,.3)", textAlign: "center" }}>Sepia</div>
-                    <div style={{ flex: 1, fontSize: "10px", color: "rgba(246,242,235,.3)", textAlign: "center" }}>Midnight</div>
+                    <div
+                      style={{
+                        flex: 1,
+                        fontSize: "10px",
+                        color: "rgba(246,242,235,.3)",
+                        textAlign: "center",
+                      }}
+                    >
+                      Light
+                    </div>
+                    <div
+                      style={{
+                        flex: 1,
+                        fontSize: "10px",
+                        color: "rgba(246,242,235,.3)",
+                        textAlign: "center",
+                      }}
+                    >
+                      Dark
+                    </div>
+                    <div
+                      style={{
+                        flex: 1,
+                        fontSize: "10px",
+                        color: "rgba(246,242,235,.3)",
+                        textAlign: "center",
+                      }}
+                    >
+                      Sepia
+                    </div>
+                    <div
+                      style={{
+                        flex: 1,
+                        fontSize: "10px",
+                        color: "rgba(246,242,235,.3)",
+                        textAlign: "center",
+                      }}
+                    >
+                      Midnight
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1118,17 +1360,23 @@ export function LandingPage() {
               <div className="org-card fade-up">
                 <div className="org-tag t-blue">⌘K</div>
                 <div className="org-t">Quick Switcher</div>
-                <p className="org-d">Jump to any note, space, or command instantly. No mouse needed.</p>
+                <p className="org-d">
+                  Jump to any note, space, or command instantly. No mouse needed.
+                </p>
               </div>
               <div className="org-card fade-up delay-1">
                 <div className="org-tag t-rust">/ Slash</div>
                 <div className="org-t">Slash Commands</div>
-                <p className="org-d">Type / anywhere to insert any block — heading, image, code, callout, table.</p>
+                <p className="org-d">
+                  Type / anywhere to insert any block — heading, image, code, callout, table.
+                </p>
               </div>
               <div className="org-card fade-up delay-2">
                 <div className="org-tag t-green">⌘⇧P</div>
                 <div className="org-t">Command Palette</div>
-                <p className="org-d">Every action accessible by keyboard. Export, theme change, new space.</p>
+                <p className="org-d">
+                  Every action accessible by keyboard. Export, theme change, new space.
+                </p>
               </div>
             </div>
           </div>
@@ -1139,7 +1387,10 @@ export function LandingPage() {
           <h2 className="display-md fade-up" style={{ marginBottom: "14px" }}>
             Try the editor.
           </h2>
-          <p className="body-lg fade-up delay-1" style={{ maxWidth: "400px", margin: "0 auto 40px" }}>
+          <p
+            className="body-lg fade-up delay-1"
+            style={{ maxWidth: "400px", margin: "0 auto 40px" }}
+          >
             Free, no signup, no account. Open it and start writing.
           </p>
           <div className="cta-actions fade-up delay-2">
@@ -1156,7 +1407,11 @@ export function LandingPage() {
           <div className="ft-inner">
             <div className="ft-bottom" style={{ paddingTop: 0, borderTop: "none" }}>
               <div className="logo-wrap" onClick={() => goPage("home")}>
-                <img src={opencraftWhite} alt="OpenCraft" style={{ height: "48px", width: "auto" }} />
+                <img
+                  src={opencraftWhite}
+                  alt="OpenCraft"
+                  style={{ height: "48px", width: "auto" }}
+                />
               </div>
               <div className="ft-legal">
                 <a onClick={() => goPage("home")}>Home</a>
@@ -1185,18 +1440,47 @@ export function LandingPage() {
               <span style={{ color: "var(--ink-4)" }}>actually think</span>
             </h1>
             <p className="body-lg" style={{ maxWidth: "520px" }}>
-              Not how a product manager thinks you should think. Your brain, your hierarchy, your tags.
+              Not how a product manager thinks you should think. Your brain, your hierarchy, your
+              tags.
             </p>
-            <div style={{ display: "flex", gap: "24px", marginTop: "36px", flexWrap: "wrap", animation: "landingFadeUp .6s .28s ease both" }}>
-              <div><div className="sh-num">∞</div><div className="sh-label">Spaces</div></div>
+            <div
+              style={{
+                display: "flex",
+                gap: "24px",
+                marginTop: "36px",
+                flexWrap: "wrap",
+                animation: "landingFadeUp .6s .28s ease both",
+              }}
+            >
+              <div>
+                <div className="sh-num">∞</div>
+                <div className="sh-label">Spaces</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num">∞</div><div className="sh-label">Nested Folders</div></div>
+              <div>
+                <div className="sh-num">∞</div>
+                <div className="sh-label">Nested Folders</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num">&lt;200</div><div className="sh-label">ms Search</div></div>
+              <div>
+                <div className="sh-num">&lt;200</div>
+                <div className="sh-label">ms Search</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num">∞</div><div className="sh-label">Tags</div></div>
+              <div>
+                <div className="sh-num">∞</div>
+                <div className="sh-label">Tags</div>
+              </div>
             </div>
-            <div style={{ display: "flex", gap: "8px", marginTop: "24px", flexWrap: "wrap", animation: "landingFadeUp .6s .36s ease both" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                marginTop: "24px",
+                flexWrap: "wrap",
+                animation: "landingFadeUp .6s .36s ease both",
+              }}
+            >
               <span className="st-badge st-blue">🏠 3 Spaces</span>
               <span className="st-badge st-green">🏷️ Cross-app Tags</span>
               <span className="st-badge st-rust">⭐ Starred Notes</span>
@@ -1217,12 +1501,12 @@ export function LandingPage() {
                   <em>versions of you</em>
                 </h2>
                 <p className="body-md fade-up delay-2" style={{ marginBottom: "24px" }}>
-                  Create distinct spaces for work, personal life, side projects. Each has its own sidebar, colours, and tone. Switch with
-                  one click.
+                  Create distinct spaces for work, personal life, side projects. Each has its own
+                  sidebar, colours, and tone. Switch with one click.
                 </p>
                 <p className="body-md fade-up delay-3">
-                  Your Work space can be tight and structured. Your Personal space can be loose and exploratory. Both in the same app, never
-                  bleeding into each other.
+                  Your Work space can be tight and structured. Your Personal space can be loose and
+                  exploratory. Both in the same app, never bleeding into each other.
                 </p>
               </div>
               <div className="fade-up delay-2">
@@ -1246,7 +1530,10 @@ export function LandingPage() {
                   <div className="of-card-d">Projects, specs, meeting notes, references.</div>
                   <div className="of-demo">
                     <div className="of-drow">📁 Projects</div>
-                    <div className="of-drow act" style={{ paddingLeft: "18px", fontSize: "12.5px" }}>
+                    <div
+                      className="of-drow act"
+                      style={{ paddingLeft: "18px", fontSize: "12.5px" }}
+                    >
                       📄 OpenCraft v0.1
                     </div>
                     <div className="of-drow" style={{ paddingLeft: "18px", fontSize: "12.5px" }}>
@@ -1269,15 +1556,25 @@ export function LandingPage() {
                   <div className="of-card-d">Notes tagged across spaces, pulled into one view.</div>
                   <div className="of-demo">
                     <div className="of-drow">
-                      <span style={{ color: "var(--accent)", fontWeight: 600 }}>#idea</span> &nbsp;→ 12 notes
+                      <span style={{ color: "var(--accent)", fontWeight: 600 }}>#idea</span> &nbsp;→
+                      12 notes
                     </div>
-                    <div className="of-drow act" style={{ fontSize: "12.5px", paddingLeft: "16px" }}>
+                    <div
+                      className="of-drow act"
+                      style={{ fontSize: "12.5px", paddingLeft: "16px" }}
+                    >
                       📄 App concept notes
                     </div>
-                    <div className="of-drow act" style={{ fontSize: "12.5px", paddingLeft: "16px" }}>
+                    <div
+                      className="of-drow act"
+                      style={{ fontSize: "12.5px", paddingLeft: "16px" }}
+                    >
                       📄 Side project braindump
                     </div>
-                    <div className="of-drow act" style={{ fontSize: "12.5px", paddingLeft: "16px" }}>
+                    <div
+                      className="of-drow act"
+                      style={{ fontSize: "12.5px", paddingLeft: "16px" }}
+                    >
                       📄 Feature wishlist
                     </div>
                   </div>
@@ -1291,11 +1588,12 @@ export function LandingPage() {
                   <em>brain, indexed</em>
                 </h2>
                 <p className="body-md fade-up delay-2" style={{ marginBottom: "24px" }}>
-                  Tag any note with any word. Tags work across all spaces and folders. Click a tag and see every related note you've ever
-                  written.
+                  Tag any note with any word. Tags work across all spaces and folders. Click a tag
+                  and see every related note you've ever written.
                 </p>
                 <p className="body-md fade-up delay-3">
-                  Full-text search across every word in every note. Press ⌘K — results in under 200ms. Even notes you forgot you wrote.
+                  Full-text search across every word in every note. Press ⌘K — results in under
+                  200ms. Even notes you forgot you wrote.
                 </p>
               </div>
             </div>
@@ -1314,18 +1612,24 @@ export function LandingPage() {
               <div className="org-card fade-up">
                 <div className="org-tag t-blue">📌 Starred</div>
                 <div className="org-t">Star anything</div>
-                <p className="org-d">Star your most-used notes or folders. They pin to the top of any space for instant access.</p>
+                <p className="org-d">
+                  Star your most-used notes or folders. They pin to the top of any space for instant
+                  access.
+                </p>
               </div>
               <div className="org-card fade-up delay-1">
                 <div className="org-tag t-green">📋 Templates</div>
                 <div className="org-t">Start fast</div>
-                <p className="org-d">Create templates for meeting notes, journals, book reviews — anything you repeat.</p>
+                <p className="org-d">
+                  Create templates for meeting notes, journals, book reviews — anything you repeat.
+                </p>
               </div>
               <div className="org-card fade-up delay-2">
                 <div className="org-tag t-rust">📅 Daily Notes</div>
                 <div className="org-t">Journal built in</div>
                 <p className="org-d">
-                  One keystroke to today's daily note. Date-organised automatically. Always there when you need it.
+                  One keystroke to today's daily note. Date-organised automatically. Always there
+                  when you need it.
                 </p>
               </div>
             </div>
@@ -1337,7 +1641,10 @@ export function LandingPage() {
           <h2 className="display-md fade-up" style={{ marginBottom: "14px" }}>
             Build your system.
           </h2>
-          <p className="body-lg fade-up delay-1" style={{ maxWidth: "400px", margin: "0 auto 40px" }}>
+          <p
+            className="body-lg fade-up delay-1"
+            style={{ maxWidth: "400px", margin: "0 auto 40px" }}
+          >
             Free, no signup, no lock-in. Organize on your terms.
           </p>
           <div className="cta-actions fade-up delay-2">
@@ -1354,7 +1661,11 @@ export function LandingPage() {
           <div className="ft-inner">
             <div className="ft-bottom" style={{ paddingTop: 0, borderTop: "none" }}>
               <div className="logo-wrap" onClick={() => goPage("home")}>
-                <img src={opencraftWhite} alt="OpenCraft" style={{ height: "48px", width: "auto" }} />
+                <img
+                  src={opencraftWhite}
+                  alt="OpenCraft"
+                  style={{ height: "48px", width: "auto" }}
+                />
               </div>
               <div className="ft-legal">
                 <a onClick={() => goPage("home")}>Home</a>
@@ -1383,18 +1694,47 @@ export function LandingPage() {
               <span style={{ color: "var(--ink-4)" }}>Nothing&nbsp;you&nbsp;don't.</span>
             </h1>
             <p className="body-lg" style={{ maxWidth: "520px" }}>
-              A complete list of what OpenCraft does. No upsells. No "upgrade to unlock." Just features.
+              A complete list of what OpenCraft does. No upsells. No "upgrade to unlock." Just
+              features.
             </p>
-            <div style={{ display: "flex", gap: "24px", marginTop: "36px", flexWrap: "wrap", animation: "landingFadeUp .6s .28s ease both" }}>
-              <div><div className="sh-num">08</div><div className="sh-label">Core Features</div></div>
+            <div
+              style={{
+                display: "flex",
+                gap: "24px",
+                marginTop: "36px",
+                flexWrap: "wrap",
+                animation: "landingFadeUp .6s .28s ease both",
+              }}
+            >
+              <div>
+                <div className="sh-num">08</div>
+                <div className="sh-label">Core Features</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num">04</div><div className="sh-label">Platforms</div></div>
+              <div>
+                <div className="sh-num">04</div>
+                <div className="sh-label">Platforms</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num">100%</div><div className="sh-label">Free</div></div>
+              <div>
+                <div className="sh-num">100%</div>
+                <div className="sh-label">Free</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num">MIT</div><div className="sh-label">Licensed</div></div>
+              <div>
+                <div className="sh-num">MIT</div>
+                <div className="sh-label">Licensed</div>
+              </div>
             </div>
-            <div style={{ display: "flex", gap: "8px", marginTop: "24px", flexWrap: "wrap", animation: "landingFadeUp .6s .36s ease both" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                marginTop: "24px",
+                flexWrap: "wrap",
+                animation: "landingFadeUp .6s .36s ease both",
+              }}
+            >
               <span className="st-badge st-blue">✍️ Block Editor</span>
               <span className="st-badge st-green">📁 Local First</span>
               <span className="st-badge st-rust">⌨️ Keyboard First</span>
@@ -1417,8 +1757,8 @@ export function LandingPage() {
                 <div className="fp-num">01</div>
                 <div className="fp-t">Block-based Editor</div>
                 <p className="fp-d">
-                  Text, headings, images, code, callouts, quotes, tables, checklists, dividers. Every block you need. Drag to reorder. Nest
-                  freely.
+                  Text, headings, images, code, callouts, quotes, tables, checklists, dividers.
+                  Every block you need. Drag to reorder. Nest freely.
                 </p>
               </div>
               <div className="fp-big-card fade-up delay-1">
@@ -1426,8 +1766,8 @@ export function LandingPage() {
                 <div className="fp-num">02</div>
                 <div className="fp-t">Beautiful Defaults</div>
                 <p className="fp-d">
-                  Lora for titles, DM Sans for body. Line-height and spacing tuned for sustained reading. Four themes: Light, Dark, Sepia,
-                  Midnight.
+                  Lora for titles, DM Sans for body. Line-height and spacing tuned for sustained
+                  reading. Four themes: Light, Dark, Sepia, Midnight.
                 </p>
               </div>
               <div className="fp-big-card fade-up delay-2">
@@ -1435,8 +1775,8 @@ export function LandingPage() {
                 <div className="fp-num">03</div>
                 <div className="fp-t">Keyboard First</div>
                 <p className="fp-d">
-                  ⌘K quick switcher. / slash commands. Full keyboard navigation. Every action has a shortcut. Your hands never leave the
-                  keys.
+                  ⌘K quick switcher. / slash commands. Full keyboard navigation. Every action has a
+                  shortcut. Your hands never leave the keys.
                 </p>
               </div>
               <div className="fp-big-card fade-up delay-3">
@@ -1444,7 +1784,8 @@ export function LandingPage() {
                 <div className="fp-num">04</div>
                 <div className="fp-t">Export Everywhere</div>
                 <p className="fp-d">
-                  Markdown, PDF, HTML. Your writing is never locked in a proprietary format. Copy as Markdown in one keystroke.
+                  Markdown, PDF, HTML. Your writing is never locked in a proprietary format. Copy as
+                  Markdown in one keystroke.
                 </p>
               </div>
             </div>
@@ -1461,32 +1802,44 @@ export function LandingPage() {
               <div className="feat-card fade-up">
                 <span className="feat-ico">🏠</span>
                 <div className="feat-t">Spaces</div>
-                <p className="feat-d">Create distinct spaces for work, personal, and side projects. One-click switching.</p>
+                <p className="feat-d">
+                  Create distinct spaces for work, personal, and side projects. One-click switching.
+                </p>
               </div>
               <div className="feat-card fade-up delay-1">
                 <span className="feat-ico">📁</span>
                 <div className="feat-t">Nested Folders</div>
-                <p className="feat-d">Unlimited folder nesting. Drag and drop to reorganise. Exactly as expected.</p>
+                <p className="feat-d">
+                  Unlimited folder nesting. Drag and drop to reorganise. Exactly as expected.
+                </p>
               </div>
               <div className="feat-card fade-up delay-2">
                 <span className="feat-ico">🏷️</span>
                 <div className="feat-t">Tags</div>
-                <p className="feat-d">Tag notes across spaces. Click any tag to see every related note instantly.</p>
+                <p className="feat-d">
+                  Tag notes across spaces. Click any tag to see every related note instantly.
+                </p>
               </div>
               <div className="feat-card fade-up delay-3">
                 <span className="feat-ico">⭐</span>
                 <div className="feat-t">Starred Notes</div>
-                <p className="feat-d">Star your most-used notes for one-click access from anywhere.</p>
+                <p className="feat-d">
+                  Star your most-used notes for one-click access from anywhere.
+                </p>
               </div>
               <div className="feat-card fade-up delay-4">
                 <span className="feat-ico">📅</span>
                 <div className="feat-t">Daily Notes</div>
-                <p className="feat-d">Built-in daily notes. Auto-dated. One keystroke away, every day.</p>
+                <p className="feat-d">
+                  Built-in daily notes. Auto-dated. One keystroke away, every day.
+                </p>
               </div>
               <div className="feat-card fade-up delay-5">
                 <span className="feat-ico">🔍</span>
                 <div className="feat-t">Full-text Search</div>
-                <p className="feat-d">Search across every word in every note. Results in under 200ms.</p>
+                <p className="feat-d">
+                  Search across every word in every note. Results in under 200ms.
+                </p>
               </div>
             </div>
           </div>
@@ -1503,14 +1856,18 @@ export function LandingPage() {
                 <div className="fp-tag ft-grn">Local</div>
                 <div className="fp-num">05</div>
                 <div className="fp-t">Local First</div>
-                <p className="fp-d">Notes live on your disk as readable Markdown files. No internet connection needed. Ever.</p>
+                <p className="fp-d">
+                  Notes live on your disk as readable Markdown files. No internet connection needed.
+                  Ever.
+                </p>
               </div>
               <div className="fp-big-card fade-up delay-1">
                 <div className="fp-tag ft-blue">Sync</div>
                 <div className="fp-num">06</div>
                 <div className="fp-t">Bring Your Own Sync</div>
                 <p className="fp-d">
-                  Use iCloud, Dropbox, Syncthing, or any folder-based sync. OpenCraft doesn't care. Pick what you trust.
+                  Use iCloud, Dropbox, Syncthing, or any folder-based sync. OpenCraft doesn't care.
+                  Pick what you trust.
                 </p>
               </div>
               <div className="fp-big-card fade-up delay-2">
@@ -1518,14 +1875,18 @@ export function LandingPage() {
                 <div className="fp-num">07</div>
                 <div className="fp-t">Zero Telemetry</div>
                 <p className="fp-d">
-                  No analytics. No crash reports. No usage data sent anywhere. We literally cannot see what you write.
+                  No analytics. No crash reports. No usage data sent anywhere. We literally cannot
+                  see what you write.
                 </p>
               </div>
               <div className="fp-big-card fade-up delay-3">
                 <div className="fp-tag ft-gold">Open</div>
                 <div className="fp-num">08</div>
                 <div className="fp-t">MIT Licensed</div>
-                <p className="fp-d">Fork it, modify it, distribute it. The code is yours to read, audit, and own. No black boxes.</p>
+                <p className="fp-d">
+                  Fork it, modify it, distribute it. The code is yours to read, audit, and own. No
+                  black boxes.
+                </p>
               </div>
             </div>
           </div>
@@ -1538,8 +1899,12 @@ export function LandingPage() {
             <br />
             Free forever.
           </h2>
-          <p className="body-lg fade-up delay-1" style={{ maxWidth: "400px", margin: "0 auto 40px" }}>
-            No feature tiers. No paywalls. Every feature listed here is free, for everyone, permanently.
+          <p
+            className="body-lg fade-up delay-1"
+            style={{ maxWidth: "400px", margin: "0 auto 40px" }}
+          >
+            No feature tiers. No paywalls. Every feature listed here is free, for everyone,
+            permanently.
           </p>
           <div className="cta-actions fade-up delay-2">
             <button className="btn btn-dark-lg" onClick={enterApp}>
@@ -1555,7 +1920,11 @@ export function LandingPage() {
           <div className="ft-inner">
             <div className="ft-bottom" style={{ paddingTop: 0, borderTop: "none" }}>
               <div className="logo-wrap" onClick={() => goPage("home")}>
-                <img src={opencraftWhite} alt="OpenCraft" style={{ height: "48px", width: "auto" }} />
+                <img
+                  src={opencraftWhite}
+                  alt="OpenCraft"
+                  style={{ height: "48px", width: "auto" }}
+                />
               </div>
               <div className="ft-legal">
                 <a onClick={() => goPage("home")}>Home</a>
@@ -1583,31 +1952,119 @@ export function LandingPage() {
               frustrated<span style={{ color: "var(--rust)" }}>.</span>
             </h1>
             <p className="body-lg" style={{ maxWidth: "560px", color: "rgba(246,242,235,.55)" }}>
-              Craft is the most beautiful note app ever made. Then I hit the paywall. Notion is powerful — after three hours of
-              configuration. Apple Notes is free, then you try to format something. This is the story of why none of them were enough, and
-              why I decided to build my own.
+              Craft is the most beautiful note app ever made. Then I hit the paywall. Notion is
+              powerful — after three hours of configuration. Apple Notes is free, then you try to
+              format something. This is the story of why none of them were enough, and why I decided
+              to build my own.
             </p>
-            <div style={{ display: "flex", gap: "24px", marginTop: "36px", flexWrap: "wrap", animation: "landingFadeUp .6s .28s ease both" }}>
-              <div><div className="sh-num light">2026</div><div className="sh-label light">Built This Year</div></div>
+            <div
+              style={{
+                display: "flex",
+                gap: "24px",
+                marginTop: "36px",
+                flexWrap: "wrap",
+                animation: "landingFadeUp .6s .28s ease both",
+              }}
+            >
+              <div>
+                <div className="sh-num light">2026</div>
+                <div className="sh-label light">Built This Year</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num light">MIT</div><div className="sh-label light">License</div></div>
+              <div>
+                <div className="sh-num light">MIT</div>
+                <div className="sh-label light">License</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num light">0</div><div className="sh-label light">AI Features</div></div>
+              <div>
+                <div className="sh-num light">0</div>
+                <div className="sh-label light">AI Features</div>
+              </div>
               <div className="sh-div"></div>
-              <div><div className="sh-num light">100%</div><div className="sh-label light">Local-First</div></div>
+              <div>
+                <div className="sh-num light">100%</div>
+                <div className="sh-label light">Local-First</div>
+              </div>
             </div>
-            <div style={{ display: "flex", gap: "8px", marginTop: "24px", flexWrap: "wrap", animation: "landingFadeUp .6s .36s ease both" }}>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(43,104,69,.28)", border: "1px solid rgba(43,104,69,.44)", color: "#7EE8A2", fontSize: "11px", fontWeight: 600, padding: "3px 10px", borderRadius: "999px" }}>
-                <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#7EE8A2" }}></div>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                marginTop: "24px",
+                flexWrap: "wrap",
+                animation: "landingFadeUp .6s .36s ease both",
+              }}
+            >
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "rgba(43,104,69,.28)",
+                  border: "1px solid rgba(43,104,69,.44)",
+                  color: "#7EE8A2",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  padding: "3px 10px",
+                  borderRadius: "999px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "5px",
+                    height: "5px",
+                    borderRadius: "50%",
+                    background: "#7EE8A2",
+                  }}
+                ></div>
                 Open Source
               </div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(246,242,235,.08)", border: "1px solid rgba(246,242,235,.15)", color: "rgba(246,242,235,.7)", fontSize: "11px", fontWeight: 600, padding: "3px 10px", borderRadius: "999px" }}>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "rgba(246,242,235,.08)",
+                  border: "1px solid rgba(246,242,235,.15)",
+                  color: "rgba(246,242,235,.7)",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  padding: "3px 10px",
+                  borderRadius: "999px",
+                }}
+              >
                 No Telemetry
               </div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(246,242,235,.08)", border: "1px solid rgba(246,242,235,.15)", color: "rgba(246,242,235,.7)", fontSize: "11px", fontWeight: 600, padding: "3px 10px", borderRadius: "999px" }}>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "rgba(246,242,235,.08)",
+                  border: "1px solid rgba(246,242,235,.15)",
+                  color: "rgba(246,242,235,.7)",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  padding: "3px 10px",
+                  borderRadius: "999px",
+                }}
+              >
                 No Account
               </div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(246,242,235,.08)", border: "1px solid rgba(246,242,235,.15)", color: "rgba(246,242,235,.7)", fontSize: "11px", fontWeight: 600, padding: "3px 10px", borderRadius: "999px" }}>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "rgba(246,242,235,.08)",
+                  border: "1px solid rgba(246,242,235,.15)",
+                  color: "rgba(246,242,235,.7)",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  padding: "3px 10px",
+                  borderRadius: "999px",
+                }}
+              >
                 Free Forever
               </div>
             </div>
@@ -1624,14 +2081,19 @@ export function LandingPage() {
               <div className="rant-card rc-notion fade-up">
                 <div className="rant-app-name">Notion</div>
                 <div className="rant-verdict rv-ugly">✕ Overcomplicated</div>
-                <div className="rant-title">A database that forgot it was supposed to be a note app</div>
+                <div className="rant-title">
+                  A database that forgot it was supposed to be a note app
+                </div>
                 <p className="rant-body">
-                  Genuinely impressive software. But I don't want to set up a relational database every time I want to jot down a thought.
-                  The blank-page experience is daunting. Formatting is clunky. Slow on mobile. And everything interesting is behind a paid
+                  Genuinely impressive software. But I don't want to set up a relational database
+                  every time I want to jot down a thought. The blank-page experience is daunting.
+                  Formatting is clunky. Slow on mobile. And everything interesting is behind a paid
                   plan.
                 </p>
                 <div className="rant-gripe">
-                  <div className="rant-gripe-item">Feels like enterprise software, not a writing tool</div>
+                  <div className="rant-gripe-item">
+                    Feels like enterprise software, not a writing tool
+                  </div>
                   <div className="rant-gripe-item">Terrible offline experience</div>
                   <div className="rant-gripe-item">Interesting features sit behind paywalls</div>
                   <div className="rant-gripe-item">Massively overkill for personal notes</div>
@@ -1640,10 +2102,13 @@ export function LandingPage() {
               <div className="rant-card rc-apple fade-up delay-1">
                 <div className="rant-app-name">Apple Notes</div>
                 <div className="rant-verdict rv-ok">Decent for basics</div>
-                <div className="rant-title">The reliable Honda Civic of note apps — adequate, forgettable</div>
+                <div className="rant-title">
+                  The reliable Honda Civic of note apps — adequate, forgettable
+                </div>
                 <p className="rant-body">
-                  Fast, reliable, syncs perfectly. Genuinely good for quick captures. But the moment you want a heading, a callout, any
-                  visual structure — you hit the ceiling. Every note looks the same. Flat, forgettable. No joy in opening them.
+                  Fast, reliable, syncs perfectly. Genuinely good for quick captures. But the moment
+                  you want a heading, a callout, any visual structure — you hit the ceiling. Every
+                  note looks the same. Flat, forgettable. No joy in opening them.
                 </p>
                 <div className="rant-gripe">
                   <div className="rant-gripe-item">No real formatting beyond basic styles</div>
@@ -1657,8 +2122,9 @@ export function LandingPage() {
                 <div className="rant-verdict rv-ok">Powerful but austere</div>
                 <div className="rant-title">A hacker's paradise. A designer's nightmare.</div>
                 <p className="rant-body">
-                  The plugin ecosystem is extraordinary. If you want a second brain with bidirectional links and graph views, it's
-                  unmatched. But out of the box it looks like a code editor from 2009. Good design is not optional for a writing tool.
+                  The plugin ecosystem is extraordinary. If you want a second brain with
+                  bidirectional links and graph views, it's unmatched. But out of the box it looks
+                  like a code editor from 2009. Good design is not optional for a writing tool.
                 </p>
                 <div className="rant-gripe">
                   <div className="rant-gripe-item">Requires extensive configuration</div>
@@ -1672,9 +2138,11 @@ export function LandingPage() {
                 <div className="rant-verdict rv-bad">✦ Best design. Paywalled.</div>
                 <div className="rant-title">The one I love. The one that charges me for it.</div>
                 <p className="rant-body">
-                  Craft is genuinely beautiful. The block editor is excellent. The document design is the best in class — I used it every
-                  day for months. Then more features moved behind the Plus plan. AI I don't want. A subscription I can't justify. And closed
-                  source, so I can't fix it myself. That frustration is exactly why OpenCraft exists.
+                  Craft is genuinely beautiful. The block editor is excellent. The document design
+                  is the best in class — I used it every day for months. Then more features moved
+                  behind the Plus plan. AI I don't want. A subscription I can't justify. And closed
+                  source, so I can't fix it myself. That frustration is exactly why OpenCraft
+                  exists.
                 </p>
                 <div className="rant-gripe">
                   <div className="rant-gripe-item">Subscription required for real use</div>
@@ -1686,10 +2154,13 @@ export function LandingPage() {
               <div className="rant-card rc-bear fade-up delay-1">
                 <div className="rant-app-name">Bear</div>
                 <div className="rant-verdict rv-ok">Charming but limited</div>
-                <div className="rant-title">Beautiful for writers. Frustrating for everyone else.</div>
+                <div className="rant-title">
+                  Beautiful for writers. Frustrating for everyone else.
+                </div>
                 <p className="rant-body">
-                  Bear has wonderful taste. The typography is warm, the design is considered, and the tag system is clever. But it's
-                  Markdown-only — limiting for rich notes. Rich features sit behind the Pro plan. And it's Apple-only, excluding Android and
+                  Bear has wonderful taste. The typography is warm, the design is considered, and
+                  the tag system is clever. But it's Markdown-only — limiting for rich notes. Rich
+                  features sit behind the Pro plan. And it's Apple-only, excluding Android and
                   Windows users entirely.
                 </p>
                 <div className="rant-gripe">
@@ -1703,8 +2174,9 @@ export function LandingPage() {
                 <div className="rant-verdict rv-ok">Clean editor, one-time buy</div>
                 <div className="rant-title">Closest to "just write" — but no organisation</div>
                 <p className="rant-body">
-                  Typora gets the writing experience right. WYSIWYG Markdown, clean defaults, no distractions. Honest one-time pricing. But
-                  there's no note organisation system — you end up managing hundreds of .md files in Finder. That's a text editor, not a
+                  Typora gets the writing experience right. WYSIWYG Markdown, clean defaults, no
+                  distractions. Honest one-time pricing. But there's no note organisation system —
+                  you end up managing hundreds of .md files in Finder. That's a text editor, not a
                   note app.
                 </p>
                 <div className="rant-gripe">
@@ -1724,7 +2196,10 @@ export function LandingPage() {
               <h2 className="display-md light fade-up delay-1" style={{ marginBottom: "14px" }}>
                 So I built OpenCraft
               </h2>
-              <p className="body-lg fade-up delay-2" style={{ maxWidth: "480px", margin: "0 auto" }}>
+              <p
+                className="body-lg fade-up delay-2"
+                style={{ maxWidth: "480px", margin: "0 auto" }}
+              >
                 Here's what I believe a note editor should be.
               </p>
             </div>
@@ -1733,49 +2208,62 @@ export function LandingPage() {
                 <div className="mf-num">01</div>
                 <div className="mf-title">Design is not optional.</div>
                 <p className="mf-body">
-                  How a tool looks affects how you think inside it. A beautiful writing environment invites you to write more, to care more,
-                  to return. Craft understood this. <strong>OpenCraft keeps that truth.</strong> Ugly tools produce less thinking, or no
-                  thinking at all.
+                  How a tool looks affects how you think inside it. A beautiful writing environment
+                  invites you to write more, to care more, to return. Craft understood this.{" "}
+                  <strong>OpenCraft keeps that truth.</strong> Ugly tools produce less thinking, or
+                  no thinking at all.
                 </p>
-                <div className="mf-highlight">If the app isn't a joy to open, you won't open it. The experience is the product.</div>
+                <div className="mf-highlight">
+                  If the app isn't a joy to open, you won't open it. The experience is the product.
+                </div>
               </div>
               <div className="mf-block fade-up">
                 <div className="mf-num">02</div>
                 <div className="mf-title">Your notes should be free. Not free-to-try.</div>
                 <p className="mf-body">
-                  Software that charges you to access your own words is software you don't actually own.{" "}
-                  <strong>OpenCraft is free. Permanently.</strong> Not "free tier with 50 notes." Free because it's MIT licensed and you can
-                  host it yourself, fork it yourself, or just use it without ever touching a payment form.
+                  Software that charges you to access your own words is software you don't actually
+                  own. <strong>OpenCraft is free. Permanently.</strong> Not "free tier with 50
+                  notes." Free because it's MIT licensed and you can host it yourself, fork it
+                  yourself, or just use it without ever touching a payment form.
                 </p>
               </div>
               <div className="mf-block fade-up">
                 <div className="mf-num">03</div>
                 <div className="mf-title">AI is a distraction from writing.</div>
                 <p className="mf-body">
-                  Every note app is now racing to put AI everywhere — autocomplete your sentences, summarise your thoughts, "enhance" your
-                  writing. I don't want that. <strong>I want to write my own sentences.</strong> The value of a note is that it's yours —
-                  your thinking, your phrasing, your memory. AI-generated notes are no one's notes.
+                  Every note app is now racing to put AI everywhere — autocomplete your sentences,
+                  summarise your thoughts, "enhance" your writing. I don't want that.{" "}
+                  <strong>I want to write my own sentences.</strong> The value of a note is that
+                  it's yours — your thinking, your phrasing, your memory. AI-generated notes are no
+                  one's notes.
                 </p>
-                <div className="mf-highlight">OpenCraft has no AI. Not now, not ever. The ⌘ key is yours.</div>
+                <div className="mf-highlight">
+                  OpenCraft has no AI. Not now, not ever. The ⌘ key is yours.
+                </div>
               </div>
               <div className="mf-block fade-up">
                 <div className="mf-num">04</div>
                 <div className="mf-title">Local files. Real files. Your files.</div>
                 <p className="mf-body">
-                  Cloud-first apps hold your data hostage. When the company folds, raises prices, or deprecates your feature — your notes
-                  are at risk. <strong>OpenCraft writes to your disk.</strong> Readable Markdown files, in folders, that you can open with
-                  any text editor. The app is just a beautiful interface over files you already own.
+                  Cloud-first apps hold your data hostage. When the company folds, raises prices, or
+                  deprecates your feature — your notes are at risk.{" "}
+                  <strong>OpenCraft writes to your disk.</strong> Readable Markdown files, in
+                  folders, that you can open with any text editor. The app is just a beautiful
+                  interface over files you already own.
                 </p>
               </div>
               <div className="mf-block fade-up">
                 <div className="mf-num">05</div>
                 <div className="mf-title">Simple things should be simple.</div>
                 <p className="mf-body">
-                  Notion gave us relational databases and took away the feeling of just writing. <strong>OpenCraft does one thing: notes.</strong>{" "}
-                  Not project management. Not wikis. Not team collaboration. You can have one note or ten thousand — but the app never asks
-                  you to configure it before you can start.
+                  Notion gave us relational databases and took away the feeling of just writing.{" "}
+                  <strong>OpenCraft does one thing: notes.</strong> Not project management. Not
+                  wikis. Not team collaboration. You can have one note or ten thousand — but the app
+                  never asks you to configure it before you can start.
                 </p>
-                <div className="mf-highlight">Open the app. Start writing. That should be the entire onboarding.</div>
+                <div className="mf-highlight">
+                  Open the app. Start writing. That should be the entire onboarding.
+                </div>
               </div>
             </div>
           </div>
@@ -1787,7 +2275,10 @@ export function LandingPage() {
             <br />
             the same frustration —
           </h2>
-          <p className="body-lg fade-up delay-1" style={{ maxWidth: "460px", margin: "0 auto 40px" }}>
+          <p
+            className="body-lg fade-up delay-1"
+            style={{ maxWidth: "460px", margin: "0 auto 40px" }}
+          >
             OpenCraft is yours. Free, open, and unapologetically simple. Come build it with me.
           </p>
           <div className="cta-actions fade-up delay-2">
@@ -1802,7 +2293,11 @@ export function LandingPage() {
             </button>
             <button
               className="btn btn-dark-lg"
-              style={{ background: "rgba(246,242,235,.1)", boxShadow: "none", border: "1.5px solid rgba(246,242,235,.15)" }}
+              style={{
+                background: "rgba(246,242,235,.1)",
+                boxShadow: "none",
+                border: "1.5px solid rgba(246,242,235,.15)",
+              }}
               onClick={enterApp}
             >
               Open the app
@@ -1814,7 +2309,11 @@ export function LandingPage() {
           <div className="ft-inner">
             <div className="ft-bottom" style={{ paddingTop: 0, borderTop: "none" }}>
               <div className="logo-wrap" onClick={() => goPage("home")}>
-                <img src={opencraftWhite} alt="OpenCraft" style={{ height: "48px", width: "auto" }} />
+                <img
+                  src={opencraftWhite}
+                  alt="OpenCraft"
+                  style={{ height: "48px", width: "auto" }}
+                />
               </div>
               <div className="ft-legal">
                 <a onClick={() => goPage("home")}>Home</a>
