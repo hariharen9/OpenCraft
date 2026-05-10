@@ -17,7 +17,13 @@ export function Inspector() {
   const [helpOpen, setHelpOpen] = useState(false);
 
   return (
-    <aside className="flex h-full w-[300px] shrink-0 flex-col bg-transparent">
+    <motion.aside
+      initial={{ width: 0, opacity: 0 }}
+      animate={{ width: 300, opacity: 1 }}
+      exit={{ width: 0, opacity: 0 }}
+      transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+      className="flex h-full shrink-0 flex-col bg-transparent overflow-hidden"
+    >
       {/* Top bar */}
       <div className="flex h-[44px] shrink-0 items-center justify-end gap-1 px-3">
         <button
@@ -86,9 +92,12 @@ export function Inspector() {
             <div className="rounded-lg bg-[#222] p-4 border border-[#333]">
               <h4 className="text-[13px] font-semibold text-white mb-2">Editor Blocks</h4>
               <p className="text-[12px] text-[#888]">
-                Press <code className="bg-[#333] px-1 rounded text-[#ccc]">/</code> or use the
-                **Insert** tab to add complex blocks like **Kanban boards**, **Gallery grids**,
-                **TeX formulas**, and **Mermaid diagrams**.
+                Press <code className="bg-[#333] px-1 rounded text-[#ccc]">/</code> or use the{" "}
+                <strong className="text-[#eee]">Insert</strong> tab to add complex blocks like{" "}
+                <strong className="text-[#eee]">Kanban boards</strong>,{" "}
+                <strong className="text-[#eee]">Gallery grids</strong>,{" "}
+                <strong className="text-[#eee]">TeX formulas</strong>, and{" "}
+                <strong className="text-[#eee]">Mermaid diagrams</strong>.
               </p>
             </div>
 
@@ -143,7 +152,7 @@ export function Inspector() {
           </motion.div>
         </AnimatePresence>
       </div>
-    </aside>
+    </motion.aside>
   );
 }
 

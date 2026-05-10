@@ -245,7 +245,13 @@ export function Sidebar() {
   );
 
   return (
-    <aside className="flex h-full w-[260px] shrink-0 flex-col bg-transparent text-[#c8c8c8]">
+    <motion.aside
+      initial={{ width: 0, opacity: 0 }}
+      animate={{ width: 260, opacity: 1 }}
+      exit={{ width: 0, opacity: 0 }}
+      transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+      className="flex h-full shrink-0 flex-col bg-transparent text-[#c8c8c8] overflow-hidden"
+    >
       <div className="h-[20px] shrink-0" />
 
       <div className="px-5 pb-3 pt-2">
@@ -757,7 +763,7 @@ export function Sidebar() {
           onClose={closeContextMenu}
         />
       )}
-    </aside>
+    </motion.aside>
   );
 }
 
