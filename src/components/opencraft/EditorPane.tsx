@@ -22,6 +22,13 @@ import { createLowlight, common } from "lowlight";
 import "highlight.js/styles/github-dark.css";
 import { Card } from "@/extensions/card";
 import { Subpage } from "@/extensions/subpage";
+import { MathBlock } from "@/extensions/math";
+import { MermaidBlock } from "@/extensions/mermaid";
+import { WhiteboardBlock } from "@/extensions/whiteboard";
+import { CustomDivider } from "@/extensions/divider";
+import { PageBreakBlock } from "@/extensions/page-break";
+import { GalleryBlock } from "@/extensions/gallery";
+import { KanbanBlock } from "@/extensions/kanban";
 
 const lowlight = createLowlight(common);
 import {
@@ -107,7 +114,7 @@ export function EditorPane() {
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ codeBlock: false }),
+      StarterKit.configure({ codeBlock: false, horizontalRule: false }),
       Underline,
       Link.configure({ openOnClick: false, HTMLAttributes: { class: "oc-link" } }),
       TextStyle,
@@ -132,6 +139,13 @@ export function EditorPane() {
       CodeBlockLowlight.configure({ lowlight }),
       Card,
       Subpage,
+      MathBlock,
+      MermaidBlock,
+      WhiteboardBlock,
+      CustomDivider,
+      PageBreakBlock,
+      GalleryBlock,
+      KanbanBlock,
       Markdown.configure({ html: false, breaks: true, transformPastedText: true }),
     ],
     content: "",

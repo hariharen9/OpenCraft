@@ -12,9 +12,10 @@ import {
   LayoutGrid,
   Columns3,
   GripVertical,
-  Camera,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 
 type Item = {
@@ -26,6 +27,9 @@ type Item = {
 
 export function InsertTab() {
   const editor = useEditorStore((s) => s.editor);
+  const [imageDialogOpen, setImageDialogOpen] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   if (!editor) return null;
 
   const blocks: Item[] = [
@@ -39,49 +43,37 @@ export function InsertTab() {
       label: "Page",
       icon: <FileText className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () =>
-        editor.chain().focus().insertContent("<h2>New Page</h2><p></p>").run(),
+      action: () => {
+        const { schema } = editor.state;
+        const p = schema.nodes.paragraph.create();
+        const sub = schema.nodes.subpage?.createAndFill({}, p);
+        if (sub) editor.commands.insertContentAt(editor.state.selection.from, sub);
+      },
     },
     {
       label: "Card",
       icon: <CreditCard className="h-3.5 w-3.5" />,
-      tint: "bg-gradient-to-br from-indigo-500 to-purple-500 text-white",
-      action: () =>
-        editor
-          .chain()
-          .focus()
-          .insertContent('<blockquote><p>Card placeholder</p></blockquote>')
-          .run(),
+      tint: "bg-[#2a2a2a] text-[#cfcfcf]",
+      action: () => {
+        const { schema } = editor.state;
+        const p = schema.nodes.paragraph.create();
+        const card = schema.nodes.card?.createAndFill({}, p);
+        if (card) editor.commands.insertContentAt(editor.state.selection.from, card);
+      },
     },
     {
       label: "File Attachment",
       icon: <Paperclip className="h-3.5 w-3.5" />,
       tint: "bg-rose-500/20 text-rose-300",
-      action: () => toast.info("Coming Soon", { description: "File attachments are stored locally and will be fully enabled soon." }),
+      action: () => fileInputRef.current?.click(),
     },
     {
       label: "Image",
       icon: <ImageIcon className="h-3.5 w-3.5" />,
       tint: "bg-emerald-500/20 text-emerald-300",
       action: () => {
-        const url = window.prompt("Image URL");
-        if (url) editor.chain().focus().setImage({ src: url }).run();
-      },
-    },
-    {
-      label: "Image from Unsplash",
-      icon: <Camera className="h-3.5 w-3.5" />,
-      tint: "bg-zinc-500/20 text-zinc-300",
-      action: () => {
-        const q = window.prompt("Unsplash search query", "mountains");
-        if (q)
-          editor
-            .chain()
-            .focus()
-            .setImage({
-              src: `https://source.unsplash.com/1200x600/?${encodeURIComponent(q)}`,
-            })
-            .run();
+        setImageUrl("");
+        setImageDialogOpen(true);
       },
     },
     {
@@ -94,33 +86,19 @@ export function InsertTab() {
       label: "TeX Formula",
       icon: <Sigma className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () => {
-        const tex = window.prompt("TeX expression", "E = mc^2");
-        if (tex)
-          editor.chain().focus().insertContent(`<p><code>$${tex}$</code></p>`).run();
-      },
+      action: () => editor.chain().focus().insertContent({ type: 'mathBlock' }).run(),
     },
     {
       label: "Mermaid Diagram",
       icon: <GitBranch className="h-3.5 w-3.5" />,
       tint: "bg-amber-500/20 text-amber-300",
-      action: () =>
-        editor
-          .chain()
-          .focus()
-          .insertContent("<pre><code>graph TD;\n  A-->B;\n  B-->C;</code></pre>")
-          .run(),
+      action: () => editor.chain().focus().insertContent({ type: 'mermaidBlock' }).run(),
     },
     {
       label: "Whiteboard",
       icon: <PenLine className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () =>
-        editor
-          .chain()
-          .focus()
-          .insertContent('<blockquote><p>🖼️ Whiteboard placeholder</p></blockquote>')
-          .run(),
+      action: () => editor.chain().focus().insertContent({ type: 'whiteboardBlock' }).run(),
     },
   ];
 
@@ -140,29 +118,17 @@ export function InsertTab() {
       label: "Gallery",
       icon: <LayoutGrid className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () =>
-        editor
-          .chain()
-          .focus()
-          .insertContent('<blockquote><p>Gallery placeholder</p></blockquote>')
-          .run(),
+      action: () => editor.chain().focus().insertContent({ type: 'galleryBlock' }).run(),
     },
     {
       label: "Kanban",
       icon: <Columns3 className="h-3.5 w-3.5" />,
       tint: "bg-[#2a2a2a] text-[#cfcfcf]",
-      action: () =>
-        editor
-          .chain()
-          .focus()
-          .insertContent(
-            '<blockquote><p><strong>Kanban Board</strong> placeholder</p></blockquote>',
-          )
-          .run(),
+      action: () => editor.chain().focus().insertContent({ type: 'kanbanBlock' }).run(),
     },
   ];
 
-  const lines: { label: string; svg: React.ReactNode; insert: string }[] = [
+  const lines: { label: string; svg: React.ReactNode; action: () => void }[] = [
     {
       label: "Dotted",
       svg: (
@@ -172,7 +138,7 @@ export function InsertTab() {
           ))}
         </div>
       ),
-      insert: "<p>· · · ·</p>",
+      action: () => editor.chain().focus().setCustomDivider({ variant: 'dotted' }).run(),
     },
     {
       label: "Dashed",
@@ -183,17 +149,17 @@ export function InsertTab() {
           ))}
         </div>
       ),
-      insert: "<hr>",
+      action: () => editor.chain().focus().setCustomDivider({ variant: 'dashed' }).run(),
     },
     {
       label: "Thin",
       svg: <div className="h-[1px] w-full bg-[#888]" />,
-      insert: "<hr>",
+      action: () => editor.chain().focus().setCustomDivider({ variant: 'thin' }).run(),
     },
     {
       label: "Thick",
       svg: <div className="h-[3px] w-full bg-[#cfcfcf]" />,
-      insert: "<hr>",
+      action: () => editor.chain().focus().setCustomDivider({ variant: 'thick' }).run(),
     },
   ];
 
@@ -220,7 +186,7 @@ export function InsertTab() {
           {lines.map((l) => (
             <button
               key={l.label}
-              onClick={() => editor.chain().focus().insertContent(l.insert).run()}
+              onClick={l.action}
               className="group flex items-center justify-between gap-2 rounded-md bg-[#262626] px-3 py-3 text-[#aaa] hover:bg-[#2c2c2c] active:scale-[0.98]"
             >
               <span className="flex-1">{l.svg}</span>
@@ -232,18 +198,15 @@ export function InsertTab() {
 
       <div>
         <SectionLabel>Insert Page Break</SectionLabel>
-        <div className="space-y-2">
-          {[0, 1].map((i) => (
-            <button
-              key={i}
-              onClick={() => editor.chain().focus().setHorizontalRule().run()}
-              className="group flex w-full items-center justify-between gap-2 rounded-md bg-[#262626] px-3 py-3 hover:bg-[#2c2c2c] active:scale-[0.99]"
-            >
-              <span className="h-[10px] flex-1 rounded-sm bg-[#333]" />
-              <GripVertical className="h-3.5 w-3.5 text-[#555]" />
-            </button>
-          ))}
-        </div>
+        <button
+          onClick={() => editor.chain().focus().insertContent({ type: 'pageBreakBlock' }).run()}
+          className="group flex w-full items-center justify-between gap-2 rounded-md bg-[#262626] px-3 py-3 hover:bg-[#2c2c2c] active:scale-[0.99]"
+        >
+          <span className="flex-1 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-[#777]">
+            Page Break
+          </span>
+          <GripVertical className="h-3.5 w-3.5 text-[#555]" />
+        </button>
       </div>
 
       <div>
@@ -253,6 +216,82 @@ export function InsertTab() {
         </p>
         <TableGrid />
       </div>
+
+      {/* ─── Image URL Dialog ─── */}
+      <Dialog open={imageDialogOpen} onOpenChange={setImageDialogOpen}>
+        <DialogContent
+          className="border-[#333] bg-[#1a1a1a] text-white sm:max-w-[380px]"
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            setTimeout(() => {
+              const input = document.getElementById("img-url-input");
+              input?.focus();
+              (input as HTMLInputElement)?.select();
+            }, 50);
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-[14px] text-[#e0e0e0]">Insert Image</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <input
+              id="img-url-input"
+              type="text"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://example.com/image.jpg"
+              className="w-full rounded-md border border-[#444] bg-[#252525] px-3 py-2 text-[13px] text-white outline-none placeholder:text-[#666] focus:border-[#666]"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && imageUrl) {
+                  editor.chain().focus().setImage({ src: imageUrl }).run();
+                  setImageDialogOpen(false);
+                  setImageUrl("");
+                }
+              }}
+            />
+            <div className="flex justify-end gap-2">
+              <DialogClose asChild>
+                <button className="rounded-md bg-[#2a2a2a] px-4 py-1.5 text-[13px] text-[#aaa] hover:bg-[#333]">
+                  Cancel
+                </button>
+              </DialogClose>
+              <button
+                disabled={!imageUrl}
+                onClick={() => {
+                  editor.chain().focus().setImage({ src: imageUrl }).run();
+                  setImageDialogOpen(false);
+                  setImageUrl("");
+                }}
+                className="rounded-md bg-[#3a3a3a] px-4 py-1.5 text-[13px] text-white hover:bg-[#4a4a4a] disabled:opacity-40"
+              >
+                Insert
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ─── Hidden file input for attachments ─── */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        className="hidden"
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          if (!file || !editor) return;
+          const fd = await file.arrayBuffer();
+          const base64 = btoa(new Uint8Array(fd).reduce((s, b) => s + String.fromCharCode(b), ""));
+          const dataUrl = `data:${file.type};base64,${base64}`;
+          const { schema } = editor.state;
+          const link = schema.text(`📎 ${file.name}`, [
+            schema.marks.link.create({ href: dataUrl }),
+          ]);
+          const p = schema.nodes.paragraph.create({}, link);
+          editor.commands.insertContentAt(editor.state.selection.from, p);
+          toast.success("Attached", { description: file.name });
+          e.target.value = "";
+        }}
+      />
     </div>
   );
 }
@@ -263,12 +302,7 @@ function Row({ item }: { item: Item }) {
       onClick={item.action}
       className="group flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-[13px] text-[#d0d0d0] hover:bg-[#2a2a2a] active:scale-[0.99]"
     >
-      <span
-        className={
-          "flex h-5 w-5 items-center justify-center rounded-[5px] " +
-          (item.tint ?? "bg-[#2a2a2a] text-[#cfcfcf]")
-        }
-      >
+      <span className="flex items-center justify-center text-[#888] group-hover:text-[#cfcfcf] transition-colors">
         {item.icon}
       </span>
       <span className="flex-1">{item.label}</span>
@@ -287,25 +321,38 @@ function TableGrid() {
   const editor = useEditorStore((s) => s.editor);
   const ROWS = 6;
   const COLS = 8;
+  const [hover, setHover] = useState<{ r: number; c: number } | null>(null);
   return (
-    <div
-      className="grid gap-[3px]"
-      style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
-    >
-      {Array.from({ length: ROWS * COLS }).map((_, i) => {
-        const r = Math.floor(i / COLS) + 1;
-        const c = (i % COLS) + 1;
-        return (
-          <button
-            key={i}
-            onClick={() =>
-              editor?.chain().focus().insertTable({ rows: r, cols: c, withHeaderRow: true }).run()
-            }
-            className="aspect-square rounded-[3px] bg-[#2a2a2a] hover:bg-[#3a3a3a]"
-            title={`${r}×${c}`}
-          />
-        );
-      })}
+    <div>
+      <div
+        className="grid gap-[3px]"
+        style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
+      >
+        {Array.from({ length: ROWS * COLS }).map((_, i) => {
+          const r = Math.floor(i / COLS) + 1;
+          const c = (i % COLS) + 1;
+          const active = hover && r <= hover.r && c <= hover.c;
+          return (
+            <button
+              key={i}
+              onClick={() =>
+                editor?.chain().focus().insertTable({ rows: r, cols: c, withHeaderRow: true }).run()
+              }
+              onMouseEnter={() => setHover({ r, c })}
+              onMouseLeave={() => setHover(null)}
+              className={`aspect-square rounded-[3px] ${
+                active ? "bg-[#5a7aff]" : "bg-[#2a2a2a]"
+              }`}
+              title={`${r}×${c}`}
+            />
+          );
+        })}
+      </div>
+      {hover && (
+        <p className="mt-1.5 text-center text-[11px] text-[#888]">
+          {hover.r}×{hover.c}
+        </p>
+      )}
     </div>
   );
 }
