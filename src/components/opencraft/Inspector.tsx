@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Share2, Bell, HelpCircle, Info, Keyboard, Zap, Sparkles, Cloud } from "lucide-react";
+import { Share2, Bell, HelpCircle, Info, Keyboard, Zap, Sparkles, Cloud, Search } from "lucide-react";
 import { InsertTab } from "./tabs/InsertTab";
 import { FormatTab } from "./tabs/FormatTab";
 import { StyleTab } from "./tabs/StyleTab";
 import { InfoTab } from "./tabs/InfoTab";
 import { useAuthStore } from "@/store/auth-store";
+import { useEditorStore } from "@/store/editor-store";
+import { format } from "date-fns";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const TABS = ["Insert", "Format", "Style", "Info"] as const;
@@ -15,6 +17,13 @@ export function Inspector() {
   const [tab, setTab] = useState<Tab>("Insert");
   const { user } = useAuthStore();
   const [helpOpen, setHelpOpen] = useState(false);
+  const setCommandPaletteOpen = useEditorStore((s) => s.setCommandPaletteOpen);
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <motion.aside
@@ -26,6 +35,14 @@ export function Inspector() {
     >
       {/* Top bar */}
       <div className="flex h-[44px] shrink-0 items-center justify-end gap-1 px-3">
+        <div className="flex flex-col items-end mr-2.5 select-none opacity-80">
+          <span className="text-[11px] font-bold text-white leading-none mb-0.5 tabular-nums">
+            {format(now, "h:mm:ss a")}
+          </span>
+          <span className="text-[9px] text-[#666] leading-none uppercase tracking-wider font-medium">
+            {format(now, "EEE, MMM d")}
+          </span>
+        </div>
         <button
           aria-label="Profile"
           className="h-7 w-7 rounded-full bg-[#333] text-[11px] font-semibold text-white overflow-hidden flex items-center justify-center border border-[#444]"
@@ -45,6 +62,14 @@ export function Inspector() {
           <Bell className="h-4 w-4" />
         </IconBtn>
         */}
+        <div className="group relative flex items-center">
+          <IconBtn label="Search" onClick={() => setCommandPaletteOpen(true)}>
+            <Search className="h-4 w-4" />
+          </IconBtn>
+          <div className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-[#333] px-2 py-1 text-[10px] text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+            Search <span className="ml-1 text-[#888]">⌘K</span>
+          </div>
+        </div>
         <IconBtn label="Help" onClick={() => setHelpOpen(true)}>
           <HelpCircle className="h-4 w-4" />
         </IconBtn>

@@ -34,6 +34,9 @@ interface EditorStore {
   setAccentColor: (c: string) => void;
   presenting: boolean;
   setPresenting: (v: boolean) => void;
+  commandPaletteOpen: boolean;
+  setCommandPaletteOpen: (v: boolean) => void;
+  toggleCommandPalette: () => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
@@ -65,4 +68,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
   setAccentColor: (c) => set({ accentColor: c }),
   presenting: false,
   setPresenting: (v) => set({ presenting: v }),
+  commandPaletteOpen: false,
+  setCommandPaletteOpen: (v) => set({ commandPaletteOpen: v }),
+  toggleCommandPalette: () => set((s) => ({ commandPaletteOpen: !s.commandPaletteOpen })),
 }));

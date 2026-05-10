@@ -6,6 +6,7 @@ import { EditorPane } from "@/components/opencraft/EditorPane";
 import { TasksView } from "@/components/opencraft/TasksView";
 import { CalendarView } from "@/components/opencraft/CalendarView";
 import { Inspector } from "@/components/opencraft/Inspector";
+import { CommandPalette } from "@/components/opencraft/CommandPalette";
 import { useEditorStore } from "@/store/editor-store";
 
 export const Route = createFileRoute("/app")({
@@ -91,6 +92,7 @@ function OpenCraft() {
           activeView !== "calendar" &&
           activeView !== "home" && <Inspector />}
       </AnimatePresence>
+      <CommandPalette />
     </div>
   );
 }

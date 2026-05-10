@@ -722,6 +722,7 @@ export function Sidebar() {
       </DndContext>
 
       {/* Bottom toolbar */}
+      <div className="mx-4 border-t border-white/[0.06]" />
       <div className="flex items-center gap-1 px-3 pb-3 pt-2">
         <button
           onClick={handleExport}
@@ -752,6 +753,21 @@ export function Sidebar() {
           className="hidden"
           onChange={handleImport}
         />
+      </div>
+      
+      <div className="mx-4 border-t border-white/[0.06]" />
+      <div className="px-5 py-3.5 text-center">
+        <p className="text-[10px] tracking-wide text-[#666]">
+          Crafted with ❤️ by{" "}
+          <a
+            href="https://hariharen.site"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-[#888] transition-colors hover:text-[#ccc]"
+          >
+            Hariharen
+          </a>
+        </p>
       </div>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
