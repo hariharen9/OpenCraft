@@ -17,6 +17,13 @@ import { Underline } from "@tiptap/extension-underline";
 import { Link } from "@tiptap/extension-link";
 import { FontFamily } from "@tiptap/extension-font-family";
 import { Markdown } from "tiptap-markdown";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { createLowlight, common } from "lowlight";
+import "highlight.js/styles/github-dark.css";
+import { Card } from "@/extensions/card";
+import { Subpage } from "@/extensions/subpage";
+
+const lowlight = createLowlight(common);
 import {
   PanelLeft,
   PanelRight,
@@ -100,7 +107,7 @@ export function EditorPane() {
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({}),
+      StarterKit.configure({ codeBlock: false }),
       Underline,
       Link.configure({ openOnClick: false, HTMLAttributes: { class: "oc-link" } }),
       TextStyle,
@@ -122,6 +129,9 @@ export function EditorPane() {
       TableRow,
       TableHeader,
       TableCell,
+      CodeBlockLowlight.configure({ lowlight }),
+      Card,
+      Subpage,
       Markdown.configure({ html: false, breaks: true, transformPastedText: true }),
     ],
     content: "",

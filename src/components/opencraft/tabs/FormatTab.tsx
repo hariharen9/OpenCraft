@@ -1,10 +1,10 @@
+import { useState, useRef } from "react";
 import {
   Bold,
   Italic,
   Strikethrough,
   Code,
   CheckSquare,
-  Play,
   List,
   ListOrdered,
   Outdent,
@@ -13,6 +13,10 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
+  FileText,
+  Square,
+  Code2,
+  ChevronDown,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
@@ -35,6 +39,7 @@ export function FormatTab() {
   const editor = useEditorStore((s) => s.editor);
   useEditorStore((s) => s.tick);
   const setTextColor = useEditorStore((s) => s.setTextColor);
+  const accentColor = useEditorStore((s) => s.accentColor);
 
   if (!editor) return null;
 
@@ -47,7 +52,6 @@ export function FormatTab() {
 
   const listBtns = [
     { label: "Tasks", icon: <CheckSquare className="h-3.5 w-3.5" />, active: editor.isActive("taskList"), run: () => editor.chain().focus().toggleTaskList().run() },
-    { label: "Toggle", icon: <Play className="h-3.5 w-3.5" />, active: editor.isActive("blockquote"), run: () => editor.chain().focus().toggleBlockquote().run() },
     { label: "Bullet", icon: <List className="h-3.5 w-3.5" />, active: editor.isActive("bulletList"), run: () => editor.chain().focus().toggleBulletList().run() },
     { label: "Ordered", icon: <ListOrdered className="h-3.5 w-3.5" />, active: editor.isActive("orderedList"), run: () => editor.chain().focus().toggleOrderedList().run() },
   ];
@@ -103,36 +107,37 @@ export function FormatTab() {
       <Section label="Groups">
         <div className="grid grid-cols-2 gap-2">
           <button
-            onClick={() =>
-              editor.chain().focus().insertContent("<h2>New Page</h2><p></p>").run()
-            }
+            onClick={() => {
+              const { schema } = editor.state;
+              const p = schema.nodes.paragraph.create();
+              const sub = schema.nodes.subpage.createAndFill({}, p);
+              if (sub) editor.commands.insertContentAt(editor.state.selection.from, sub);
+            }}
             className="flex items-center justify-center gap-2 rounded-md bg-[#262626] px-3 py-3 text-[13px] text-[#cfcfcf] hover:bg-[#2c2c2c] active:scale-95"
           >
-            <span className="flex h-4 w-5 items-center justify-center rounded-[3px] bg-[#3a3a3a] text-[8px]">
-              📄
+            <span className="flex h-5 w-5 items-center justify-center rounded-[3px] bg-[#3a3a3a]">
+              <FileText className="h-3 w-3" />
             </span>
             Page
           </button>
           <button
-            onClick={() =>
-              editor
-                .chain()
-                .focus()
-                .insertContent("<blockquote><p>Card</p></blockquote>")
-                .run()
-            }
+            onClick={() => {
+              const { schema } = editor.state;
+              const card = schema.nodes.card.createAndFill({}, schema.nodes.paragraph.create());
+              if (card) editor.commands.insertContentAt(editor.state.selection.from, card);
+            }}
             className="flex items-center justify-center gap-2 rounded-md bg-[#262626] px-3 py-3 text-[13px] text-[#cfcfcf] hover:bg-[#2c2c2c] active:scale-95"
           >
-            <span className="flex h-4 w-5 items-center justify-center rounded-[3px] bg-gradient-to-br from-indigo-500 to-purple-500 text-[8px]">
-              🃏
+            <span className="flex h-5 w-5 items-center justify-center rounded-[3px] bg-[#3a3a3a]">
+              <Square className="h-3 w-3" />
             </span>
             Card
           </button>
         </div>
       </Section>
 
-      <ButtonRow buttons={inlineBtns} />
-      <ButtonRow buttons={listBtns} />
+      <ButtonRow buttons={inlineBtns} cols={4} />
+      <ButtonRow buttons={listBtns} cols={3} />
       <div className="grid grid-cols-6 gap-1.5">
         {[...indentBtns, ...alignBtns].map((b: any) => (
           <ToolButton key={b.label} {...b} />
@@ -142,45 +147,25 @@ export function FormatTab() {
       <Section label="Decorations">
         <div className="grid grid-cols-2 gap-2">
           <button
-            onClick={() => editor.chain().focus().toggleHighlight({ color: "#ff8a4c33" }).run()}
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
             className="flex items-center justify-center gap-2 rounded-md bg-[#262626] px-3 py-2 text-[13px] text-[#cfcfcf] hover:bg-[#2c2c2c] active:scale-95"
           >
-            <span className="h-3 w-[2px] bg-[#ff8a4c]" />
+            <span className="h-4 w-[3px] rounded-sm" style={{ backgroundColor: accentColor }} />
             Focus
           </button>
           <button
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            className="rounded-md bg-[#262626] px-3 py-2 text-[13px] text-[#cfcfcf] hover:bg-[#2c2c2c] active:scale-95"
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+            className={"flex items-center justify-center gap-2 rounded-md px-3 py-2 text-[13px] transition-colors active:scale-95 " + (editor.isActive("codeBlock") ? "bg-[#3a3a3a] text-white" : "bg-[#262626] text-[#cfcfcf] hover:bg-[#2c2c2c]")}
           >
-            Block
+            <Code2 className="h-3.5 w-3.5" />
+            Code
           </button>
         </div>
+        {editor.isActive("codeBlock") && <LanguageDropdown editor={editor} />}
       </Section>
 
       <Section label="Color">
-        <div className="grid grid-cols-6 gap-2">
-          {COLORS.map((c) => (
-            <button
-              key={c}
-              onClick={() => {
-                setTextColor(c);
-                editor.chain().focus().setColor(c).run();
-              }}
-              aria-label={`Color ${c}`}
-              className="h-7 w-7 rounded-full ring-1 ring-[#333] transition-transform active:scale-90 hover:scale-110"
-              style={{ backgroundColor: c }}
-            />
-          ))}
-          <button
-            onClick={() => editor.chain().focus().unsetColor().run()}
-            aria-label="More colors"
-            className="h-7 w-7 rounded-full ring-1 ring-[#333] transition-transform active:scale-90"
-            style={{
-              background:
-                "conic-gradient(red, orange, yellow, green, cyan, blue, magenta, red)",
-            }}
-          />
-        </div>
+        <ColorContent editor={editor} setTextColor={setTextColor} />
       </Section>
 
       <Section label="Font">
@@ -199,15 +184,23 @@ function Section({ label, children }: { label: string; children: React.ReactNode
   );
 }
 
-function ButtonRow({ buttons }: { buttons: any[] }) {
+function ButtonRow({ buttons, cols = 4 }: { buttons: ToolBtn[]; cols?: number }) {
+  const gridClass = cols === 3 ? "grid-cols-3" : "grid-cols-4";
   return (
-    <div className="grid grid-cols-4 gap-1.5">
+    <div className={`grid ${gridClass} gap-1.5`}>
       {buttons.map((b) => (
-        <ToolButton key={b.label} {...b} />
+        <ToolButton key={b.label} icon={b.icon} label={b.label} active={b.active} run={b.run} />
       ))}
     </div>
   );
 }
+
+type ToolBtn = {
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  run: () => void;
+};
 
 function ToolButton({
   icon,
@@ -233,6 +226,38 @@ function ToolButton({
     >
       {icon}
     </button>
+  );
+}
+
+function ColorContent({ editor, setTextColor }: { editor: any; setTextColor: (c: string) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <div className="grid grid-cols-6 gap-2">
+      {COLORS.map((c) => (
+        <button
+          key={c}
+          onClick={() => {
+            setTextColor(c);
+            editor.chain().focus().setColor(c).run();
+          }}
+          aria-label={`Color ${c}`}
+          className="h-7 w-7 rounded-full ring-1 ring-[#333] transition-transform active:scale-90 hover:scale-110"
+          style={{ backgroundColor: c }}
+        />
+      ))}
+      <button
+        onClick={() => inputRef.current?.click()}
+        aria-label="Custom color"
+        className="relative h-7 w-7 rounded-full ring-1 ring-[#333] transition-transform active:scale-90 hover:scale-110"
+        style={{
+          background: "conic-gradient(red, orange, yellow, green, cyan, blue, magenta, red)",
+        }}
+      >
+        <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow">+</span>
+      </button>
+      <input ref={inputRef} type="color" className="sr-only" onChange={(e) => { setTextColor(e.target.value); editor.chain().focus().setColor(e.target.value).run(); }} />
+    </div>
   );
 }
 
@@ -299,6 +324,75 @@ function FontPicker() {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+const LANGUAGES = [
+  { id: "plaintext", label: "Plain Text", badge: "Tx", color: "#888" },
+  { id: "javascript", label: "JavaScript", badge: "JS", color: "#f7df1e" },
+  { id: "typescript", label: "TypeScript", badge: "TS", color: "#3178c6" },
+  { id: "python", label: "Python", badge: "Py", color: "#3776ab" },
+  { id: "html", label: "HTML", badge: "HT", color: "#e34f26" },
+  { id: "css", label: "CSS", badge: "CS", color: "#1572b6" },
+  { id: "json", label: "JSON", badge: "JS", color: "#5a5a5a" },
+  { id: "bash", label: "Bash", badge: "Ba", color: "#4eaa25" },
+  { id: "sql", label: "SQL", badge: "SQ", color: "#e38c00" },
+  { id: "markdown", label: "Markdown", badge: "MD", color: "#083fa1" },
+  { id: "rust", label: "Rust", badge: "Rs", color: "#dea584" },
+  { id: "go", label: "Go", badge: "Go", color: "#00add8" },
+];
+
+function LanguageDropdown({ editor }: { editor: any }) {
+  const [open, setOpen] = useState(false);
+  const current = editor.getAttributes("codeBlock").language || "plaintext";
+  const cur = LANGUAGES.find((l) => l.id === current) ?? LANGUAGES[0];
+
+  return (
+    <div className="relative mt-2">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-between gap-2 rounded-md bg-[#262626] px-3 py-2 text-[12px] text-[#bcbcbc] transition-colors hover:bg-[#2c2c2c] active:scale-[0.99]"
+      >
+        <span className="flex items-center gap-2">
+          <span
+            className="flex h-4 w-5 items-center justify-center rounded-[3px] text-[9px] font-bold"
+            style={{ backgroundColor: cur.color + "33", color: cur.color }}
+          >
+            {cur.badge}
+          </span>
+          {cur.label}
+        </span>
+        <ChevronDown className={"h-3 w-3 transition-transform " + (open ? "rotate-180" : "")} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-48 overflow-y-auto rounded-md border border-[#333] bg-[#1c1c1c] py-1 shadow-lg">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.id}
+                onClick={() => {
+                  editor.chain().focus().updateAttributes("codeBlock", { language: lang.id }).run();
+                  setOpen(false);
+                }}
+                className={
+                  "flex w-full items-center gap-2 px-3 py-1.5 text-[12px] transition-colors hover:bg-[#2a2a2a] " +
+                  (current === lang.id ? "text-white" : "text-[#bcbcbc]")
+                }
+              >
+                <span
+                  className="flex h-4 w-5 items-center justify-center rounded-[3px] text-[9px] font-bold"
+                  style={{ backgroundColor: lang.color + "33", color: lang.color }}
+                >
+                  {lang.badge}
+                </span>
+                {lang.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
