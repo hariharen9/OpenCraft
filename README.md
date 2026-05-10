@@ -1,78 +1,94 @@
-<img src="assets/opencraft-white.png" alt="OpenCraft" width="320" style="align: center;">
+<div align="center">
+  <img src="assets/opencraft-white.png" alt="OpenCraft" width="400">
+  <br />
+  <br />
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![GitHub stars](https://img.shields.io/github/stars/hariharen9/OpenCraft?style=social)](https://github.com/hariharen9/OpenCraft)
+  [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+  [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 
-**I was frustrated. So I built my own.**
-
-Craft is the most beautiful note app ever made. Then I hit the paywall. Notion is powerful — after three hours of configuration. Apple Notes is free, then you try to format something. Obsidian is a hacker's paradise and a designer's nightmare. Bear is charming but Apple-only. Typora gets the writing experience right but has zero organisation.
-
-None of them were enough. So I built OpenCraft.
-
-No AI. No collaboration bloat. No subscription. Just a beautiful, fast note editor that gets out of your way — and stays that way.
-
----
-
-## Why I built this
-
-**Notion** — A database that forgot it was supposed to be a note app. Everything interesting is behind a paid plan. Terrible offline. Massively overkill for personal notes.
-
-**Apple Notes** — The reliable Honda Civic of note apps. Adequate, forgettable. The moment you want a heading or a callout, you hit the ceiling. Locked to Apple. No joy in opening them.
-
-**Obsidian** — A hacker's paradise. A designer's nightmare. Requires extensive configuration. Ugly default experience. Sync costs extra. Not built for casual writers.
-
-**Craft** — The one I love. The one that charges me for it. Genuinely beautiful, then more features moved behind the Plus plan. AI I don't want. A subscription I can't justify. Closed source, so I can't fix it myself. That frustration is exactly why OpenCraft exists.
-
-**Bear** — Beautiful for writers. Frustrating for everyone else. Apple-only. Rich features behind Pro. Markdown-only limits non-technical users.
-
-**Typora** — Closest to "just write" — but no organisation. A text editor, not a note app.
+  <p align="center">
+    <strong>The note-taking app for those who just want to think.</strong>
+    <br />
+    Beautiful. Local-first. Unapologetically simple.
+  </p>
+</div>
 
 ---
 
-## What I believe
+## 💎 The "Why" behind OpenCraft
 
-**Design is not optional.** Ugly tools produce less thinking. If the app isn't a joy to open, you won't open it.
+I was frustrated with the current state of note-taking. 
 
-**Your notes should be free. Not free-to-try.** OpenCraft is MIT licensed. Free forever. Not "free tier with 50 notes." Permanently free.
+**Notion** became a slow database. **Craft** moved everything behind a paywall and filled it with AI I didn't ask for. **Apple Notes** is reliable but lacks the "soul" and formatting power a writer needs. **Obsidian** is powerful, but it requires a PhD in configuration just to make it look decent.
 
-**AI is a distraction from writing.** OpenCraft has no AI. Not now, not ever. The ⌘ key is yours.
+I didn't want a "second brain" that required its own maintenance schedule. I wanted a **focused writing space** that felt as premium as a high-end notebook but as fast as a text file.
 
-**Local files. Real files. Your files.** Cloud-first apps hold your data hostage. OpenCraft writes to your device. The app is just a beautiful interface over files you already own.
-
-**Simple things should be simple.** OpenCraft does one thing: notes. Not project management. Not wikis. Not team collaboration. Open the app. Start writing. That's the entire onboarding.
+So, I built **OpenCraft**.
 
 ---
 
-## What it does
+## ✨ Features at a Glance
 
-**Block Editor** — Rich blocks: text, headings, images, code, callouts, quotes, tables, checklists, dividers. Drag to reorder. Nest freely.
-
-**Custom Blocks** — Kanban boards, image galleries, Mermaid diagrams, LaTeX math, embedded tldraw whiteboards, styled cards, nested subpages.
-
-**Spaces & Folders** — Separate spaces for work, personal, side projects. Nested folders. Tags across everything. Full-text search in under 200ms.
-
-**Views** — Dashboard with stats and recent docs. Calendar view. Full task management with recurrence, subtasks, drag-and-drop.
-
-**Keyboard-First** — `/` slash commands. `⌘K` quick switcher. `⌘⇧P` command palette. Your hands never leave the keys.
-
-**Themes** — Light, Dark, Sepia, Midnight. Each tuned for its mood.
-
-**Export** — Markdown, PDF, HTML. Never locked in a proprietary format.
-
-**Privacy** — Local-first. Zero telemetry. Optional cloud sync if you want it. MIT licensed — read the code, fork it, own it.
+| Feature | Description |
+| :--- | :--- |
+| **🚀 Instant Search** | Full-text universal search across all documents in under 200ms. |
+| **🖌️ Block Editor** | A rich, fluid writing experience with support for slash commands. |
+| **📅 Task Central** | Integrated task management with calendar sync and recurring duties. |
+| **🔒 Privacy First** | Zero telemetry. No tracking. Your notes live on your machine. |
+| **📂 Intelligent Org** | Nested folders and workspace-wide tags to keep your brain organized. |
+| **⚡ Command Palette** | Keyboard-first navigation for every action with `⌘ K`. |
 
 ---
 
-## Getting Started
+## 🎨 How it’s better
+
+### 1. Design as a First-Class Citizen
+Most open-source tools look like they were designed by engineers for engineers. OpenCraft is different. Every pixel, every animation, and every hover effect is tuned to create a **flow state**. If a tool isn't a joy to open, you won't use it.
+
+### 2. Your Data, Your Home
+OpenCraft is **local-first**. Your notes aren't sitting on someone else's server waiting to be scanned by an AI model. They live on your device. You own the files. The app is just a beautiful window into your own thoughts.
+
+### 3. The "No-AI" Promise
+We believe writing is thinking. Automating it defeats the purpose. OpenCraft has no AI features. No "Write it for me." No "Summarize." Just you and the cursor.
+
+---
+
+## 🛠️ Tech Stack
+
+Built with a modern, high-performance stack for a seamless experience:
+
+- **Framework**: [TanStack Start](https://tanstack.com/start) / React 19
+- **Editor Core**: [Tiptap](https://tiptap.dev/)
+- **Styling**: Vanilla CSS + Tailwind
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Storage**: IndexedDB (Local-first)
+
+---
+
+## 🚀 Getting Started
+
+OpenCraft is free, forever. No "Pro" plans. No "50-note limit." Just download, open, and write.
 
 ```bash
+# Clone the repository
 git clone https://github.com/hariharen9/OpenCraft
-cd OpenCraft
+
+# Install dependencies
 npm install
+
+# Start the engine
 npm run dev
 ```
 
-No account. No signup. No credit card. Open it and start writing.
-
 ---
 
-_OpenCraft exists because none of the tools I loved loved me back. If you've felt the same frustration — it's yours. Free, open, and unapologetically simple._
-
-_Star on [GitHub](https://github.com/hariharen9/OpenCraft). Contribute. Fork it. Or just write._
+<div align="center">
+  <p><em>Built by <a href="https://hariharen.site">Hariharen</a> because the tools we loved didn't love us back.</em></p>
+  <p>
+    <a href="https://github.com/hariharen9/OpenCraft/issues">Report Bug</a> ·
+    <a href="https://github.com/hariharen9/OpenCraft/issues">Request Feature</a>
+  </p>
+</div>

@@ -131,12 +131,16 @@ export function LandingPage() {
               that gets out of your way — and stays that way.
             </p>
             <div className="hero-actions">
-              <button className="btn btn-dark-lg" onClick={() => goPage("features")}>
+              <button className="btn btn-dark-lg" onClick={enterApp}>
+                Open App
+              </button>
+              <button className="btn btn-outline-lg" onClick={() => goPage("features")}>
                 Explore Features
               </button>
-              <button className="btn btn-outline-lg" onClick={() => goPage("why")}>
-                Why OpenCraft?
-              </button>
+            </div>
+            <div className="creator-tag fade-up delay-4" style={{ marginTop: '24px', fontSize: '13px', color: 'var(--ink-4)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '20px', height: '1px', background: 'var(--ink-4)' }}></div>
+              Created by <a href="https://hariharen.site" target="_blank" style={{ color: 'var(--ink-2)', fontWeight: 600 }}>Hariharen</a>
             </div>
             <div className="hero-stats">
               <div className="hs-item">
@@ -145,8 +149,8 @@ export function LandingPage() {
               </div>
               <div className="hs-div"></div>
               <div className="hs-item">
-                <span className="hs-num">0kb</span>
-                <span className="hs-label">Telemetry</span>
+                <span className="hs-num">100%</span>
+                <span className="hs-label">Private</span>
               </div>
               <div className="hs-div"></div>
               <div className="hs-item">
@@ -155,8 +159,8 @@ export function LandingPage() {
               </div>
               <div className="hs-div"></div>
               <div className="hs-item">
-                <span className="hs-num">4</span>
-                <span className="hs-label">Platforms</span>
+                <span className="hs-num">Local</span>
+                <span className="hs-label">First</span>
               </div>
             </div>
             <div
@@ -599,24 +603,24 @@ export function LandingPage() {
                 <span className="feat-ico">📁</span>
                 <div className="feat-t">Local First</div>
                 <p className="feat-d">
-                  Your notes live on your disk as real files. No cloud required. iCloud or Syncthing
-                  sync, your choice.
+                  Your notes live in your browser's secure storage. No cloud required. 
+                  Privacy is built-in, not an afterthought.
                 </p>
               </div>
               <div className="feat-card fade-up delay-4">
                 <span className="feat-ico">↗️</span>
-                <div className="feat-t">Export Anywhere</div>
+                <div className="feat-t">Markdown Export</div>
                 <p className="feat-d">
-                  Markdown, PDF, HTML. Your writing is never locked in a proprietary format. Take it
-                  anywhere.
+                  Universal compatibility. Export your writing as clean Markdown files. 
+                  Take your thoughts anywhere.
                 </p>
               </div>
               <div className="feat-card fade-up delay-5">
                 <span className="feat-ico">⌨️</span>
-                <div className="feat-t">Keyboard First</div>
+                <div className="feat-t">Command Palette</div>
                 <p className="feat-d">
-                  Full shortcuts for everything. Slash commands. Quick switcher. Write without
-                  lifting your hands.
+                  Full shortcuts for everything. Universal search, slash commands, and a keyboard-first 
+                  quick switcher (`⌘K`).
                 </p>
               </div>
             </div>
@@ -1053,7 +1057,8 @@ export function LandingPage() {
             </div>
             <div className="ft-bottom">
               <span className="ft-copy">
-                © 2026 OpenCraft Contributors. Open Source under the MIT License.
+                © 2026 OpenCraft. Created by <a href="https://hariharen.site" target="_blank" style={{ color: 'white', textDecoration: 'underline', textUnderlineOffset: '4px' }}>Hariharen</a>. 
+                Open Source under the MIT License.
               </span>
               <div className="ft-legal">
                 <a href="#">Privacy</a>
@@ -1096,13 +1101,13 @@ export function LandingPage() {
               </div>
               <div className="sh-div"></div>
               <div>
-                <div className="sh-num light">50+</div>
-                <div className="sh-label light">Syntax Themes</div>
+                <div className="sh-num light">Canvas</div>
+                <div className="sh-label light">Whiteboard</div>
               </div>
               <div className="sh-div"></div>
               <div>
-                <div className="sh-num light">3</div>
-                <div className="sh-label light">Font Families</div>
+                <div className="sh-num light">Kanban</div>
+                <div className="sh-label light">Boards</div>
               </div>
               <div className="sh-div"></div>
               <div>
@@ -1172,18 +1177,26 @@ export function LandingPage() {
               </div>
               <div className="wf-block fade-up">
                 <div className="wf-ico">✅</div>
-                <div className="wf-t">Checklists</div>
+                <div className="wf-t">Checklists &amp; Kanban</div>
                 <p className="wf-d">
-                  Tasks embedded right in your notes. No separate todo app needed. Check things off
-                  as you go.
+                  Tasks embedded right in your notes. Use checklists for simple logs or Kanban boards 
+                  for visual project tracking.
                 </p>
               </div>
               <div className="wf-block fade-up delay-1">
-                <div className="wf-ico">📊</div>
-                <div className="wf-t">Tables</div>
+                <div className="wf-ico">🎨</div>
+                <div className="wf-t">Whiteboards</div>
                 <p className="wf-d">
-                  Clean, lightweight tables for data that needs structure. Keyboard navigable.
-                  Markdown exportable.
+                  Integrated tldraw whiteboards. Sketch your ideas directly inside your documents. 
+                  Visual and text combined.
+                </p>
+              </div>
+              <div className="wf-block fade-up delay-2">
+                <div className="wf-ico">📊</div>
+                <div className="wf-t">Mermaid &amp; Tables</div>
+                <p className="wf-d">
+                  Create flowcharts, sequence diagrams, and Gantt charts with Mermaid. Plus clean, 
+                  keyboard-navigable tables.
                 </p>
               </div>
             </div>
@@ -1481,10 +1494,10 @@ export function LandingPage() {
                 animation: "landingFadeUp .6s .36s ease both",
               }}
             >
-              <span className="st-badge st-blue">🏠 3 Spaces</span>
-              <span className="st-badge st-green">🏷️ Cross-app Tags</span>
+              <span className="st-badge st-blue">🏠 Unlimited Spaces</span>
+              <span className="st-badge st-green">🏷️ Universal Tags</span>
               <span className="st-badge st-rust">⭐ Starred Notes</span>
-              <span className="st-badge st-gold">📋 Templates</span>
+              <span className="st-badge st-gold">🧠 Brain Index</span>
             </div>
           </div>
           <div className="subhero-stripe op-stripe"></div>
@@ -1712,8 +1725,8 @@ export function LandingPage() {
               </div>
               <div className="sh-div"></div>
               <div>
-                <div className="sh-num">04</div>
-                <div className="sh-label">Platforms</div>
+                <div className="sh-num">Web</div>
+                <div className="sh-label">First</div>
               </div>
               <div className="sh-div"></div>
               <div>
@@ -1782,10 +1795,10 @@ export function LandingPage() {
               <div className="fp-big-card fade-up delay-3">
                 <div className="fp-tag ft-gold">Export</div>
                 <div className="fp-num">04</div>
-                <div className="fp-t">Export Everywhere</div>
+                <div className="fp-t">Markdown Export</div>
                 <p className="fp-d">
-                  Markdown, PDF, HTML. Your writing is never locked in a proprietary format. Copy as
-                  Markdown in one keystroke.
+                  Universal compatibility. Export your writing as clean Markdown files. 
+                  Take your thoughts anywhere without proprietary lock-in.
                 </p>
               </div>
             </div>
@@ -1857,17 +1870,17 @@ export function LandingPage() {
                 <div className="fp-num">05</div>
                 <div className="fp-t">Local First</div>
                 <p className="fp-d">
-                  Notes live on your disk as readable Markdown files. No internet connection needed.
-                  Ever.
+                  Notes live in your browser's secure storage. Zero cloud dependency. 
+                  Privacy by default, no account required.
                 </p>
               </div>
               <div className="fp-big-card fade-up delay-1">
-                <div className="fp-tag ft-blue">Sync</div>
+                <div className="fp-tag ft-blue">Privacy</div>
                 <div className="fp-num">06</div>
-                <div className="fp-t">Bring Your Own Sync</div>
+                <div className="fp-t">Private &amp; Secure</div>
                 <p className="fp-d">
-                  Use iCloud, Dropbox, Syncthing, or any folder-based sync. OpenCraft doesn't care.
-                  Pick what you trust.
+                  OpenCraft is built for solo writers. Your data stays on your machine, 
+                  shielded from the prying eyes of corporate cloud servers.
                 </p>
               </div>
               <div className="fp-big-card fade-up delay-2">
@@ -2243,13 +2256,12 @@ export function LandingPage() {
               </div>
               <div className="mf-block fade-up">
                 <div className="mf-num">04</div>
-                <div className="mf-title">Local files. Real files. Your files.</div>
+                <div className="mf-title">Local-first. Private. Yours.</div>
                 <p className="mf-body">
-                  Cloud-first apps hold your data hostage. When the company folds, raises prices, or
-                  deprecates your feature — your notes are at risk.{" "}
-                  <strong>OpenCraft writes to your disk.</strong> Readable Markdown files, in
-                  folders, that you can open with any text editor. The app is just a beautiful
-                  interface over files you already own.
+                  Cloud-first apps hold your data hostage. When the company folds or raises prices, 
+                  your notes are at risk. <strong>OpenCraft prioritizes your machine.</strong> 
+                  We use secure local storage to keep your thoughts fast, accessible offline, and 
+                  under your total control.
                 </p>
               </div>
               <div className="mf-block fade-up">
