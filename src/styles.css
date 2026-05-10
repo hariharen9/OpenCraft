@@ -1,7 +1,6 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
 
 /*
@@ -146,7 +145,6 @@
 /* OpenCraft editor styles */
 .opencraft-prose {
   color: #e0e0e0;
-  font-size: 16px;
   line-height: 1.7;
 }
 .opencraft-prose > * + * { margin-top: 0.85em; }
@@ -185,7 +183,14 @@
 .opencraft-prose ul { list-style: disc; }
 .opencraft-prose ol { list-style: decimal; }
 .opencraft-prose li::marker { color: #777; }
-.opencraft-prose hr { border: none; border-top: 1px solid #333; margin: 1.5em 0; }
+.opencraft-prose hr { border: none; margin: 1.5em 0; }
+.sep-line hr { border-top: 1px solid #555; }
+.sep-dots hr { height: 8px; background: radial-gradient(circle, #555 1.5px, transparent 1.5px) 0 0 / 8px 8px; }
+.sep-squiggle hr {
+  height: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='8'%3E%3Cpath d='M0,4 Q5,0 10,4 T20,4' fill='none' stroke='%23555' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x 0 0;
+  background-size: 20px 8px;
+}
 .opencraft-prose a { color: #4cc2ff; text-decoration: underline; text-underline-offset: 3px; }
 .opencraft-prose table { border-collapse: collapse; width: 100%; margin: 1em 0; }
 .opencraft-prose th, .opencraft-prose td {

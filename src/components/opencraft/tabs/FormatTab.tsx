@@ -13,9 +13,9 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
-  ChevronDown,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
+import { useWorkspaceStore } from "@/store/workspace-store";
 
 const TEXT_STYLES = [
   { label: "Title", level: 1 as const, cls: "text-[15px] font-bold" },
@@ -236,51 +236,69 @@ function ToolButton({
   );
 }
 
+const FONTS = [
+  { id: "default" as const, label: "Default", fam: "ui-sans-serif, system-ui, sans-serif", cls: "font-sans" },
+  { id: "serif" as const, label: "Serif", fam: "'Cormorant Garamond', serif", cls: "font-serif" },
+  { id: "mono" as const, label: "Mono", fam: "ui-monospace, SF Mono, monospace", cls: "font-mono" },
+];
+
+const SIZE_LABELS: Record<string, string> = { Ss: "M", "00": "S", Rr: "L" };
+
 function FontPicker() {
   const font = useEditorStore((s) => s.font);
   const setFont = useEditorStore((s) => s.setFont);
   const fontSize = useEditorStore((s) => s.fontSize);
   const setFontSize = useEditorStore((s) => s.setFontSize);
   const editor = useEditorStore((s) => s.editor);
-
-  const fontLabel = font === "default" ? "Default" : font === "serif" ? "Serif" : "Mono";
-
-  const cycleFont = () => {
-    const next = font === "default" ? "serif" : font === "serif" ? "mono" : "default";
-    setFont(next);
-    const family =
-      next === "serif"
-        ? "Georgia, serif"
-        : next === "mono"
-          ? "ui-monospace, SF Mono, monospace"
-          : "ui-sans-serif, system-ui, sans-serif";
-    editor?.chain().focus().setFontFamily(family).run();
-  };
+  const activeDocId = useWorkspaceStore((s) => s.activeDocId);
+  const updateDocMeta = useWorkspaceStore((s) => s.updateDocMeta);
 
   return (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={cycleFont}
-        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#0e3a72] px-4 py-2 text-[13px] font-medium text-white hover:bg-[#0d4187] active:scale-95"
-      >
-        <span className="text-[14px] italic">Aa</span>
-        {fontLabel}
-        <ChevronDown className="h-3 w-3 opacity-60" />
-      </button>
-      {(["Ss", "00", "Rr"] as const).map((s) => (
-        <button
-          key={s}
-          onClick={() => setFontSize(s)}
-          className={
-            "h-8 w-8 rounded-md text-[12px] font-medium transition-colors active:scale-90 " +
-            (fontSize === s
-              ? "bg-[#3a3a3a] text-white"
-              : "bg-[#262626] text-[#999] hover:bg-[#2c2c2c]")
-          }
-        >
-          {s}
-        </button>
-      ))}
+    <div className="space-y-2">
+      <div className="grid grid-cols-3 gap-1.5">
+        {FONTS.map((f) => (
+          <button
+            key={f.id}
+            onClick={() => {
+              setFont(f.id);
+              if (activeDocId) updateDocMeta(activeDocId, { font: f.id } as any);
+              editor?.chain().focus().setFontFamily(f.fam).run();
+            }}
+            className={
+              "rounded-md px-2 py-2 text-center transition-colors active:scale-95 " +
+              (font === f.id
+                ? "bg-[#0e3a72] text-white"
+                : "bg-[#262626] text-[#bcbcbc] hover:bg-[#2c2c2c]") +
+              " " + f.cls
+            }
+          >
+            <div className="text-[16px]">Aa</div>
+            <div className="mt-0.5 text-[10px] font-normal">{f.label}</div>
+          </button>
+        ))}
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="w-6 text-[11px] text-[#777]">Size</span>
+        <div className="flex flex-1 gap-1">
+          {(["Ss", "00", "Rr"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => {
+                setFontSize(s);
+                if (activeDocId) updateDocMeta(activeDocId, { fontSize: s } as any);
+              }}
+              className={
+                "flex-1 rounded-md py-1 text-[11px] font-medium transition-colors active:scale-90 " +
+                (fontSize === s
+                  ? "bg-[#3a3a3a] text-white"
+                  : "bg-[#262626] text-[#999] hover:bg-[#2c2c2c]")
+              }
+            >
+              {SIZE_LABELS[s]}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

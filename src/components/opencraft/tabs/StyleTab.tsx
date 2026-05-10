@@ -1,16 +1,28 @@
-import { Plus, Minus, Squircle, Waves, ChevronDown } from "lucide-react";
+import { useState, useRef } from "react";
+import { Plus, Minus, Squircle, Waves, Trash2, Palette } from "lucide-react";
 import { useEditorStore, type SeparatorStyle } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
 
-const PAGE_BGS = [
-  "#1c1c1c",
-  "#0e0e0e",
-  "#1a1f2c",
-  "#1f1a1a",
-  "#161d1a",
-  "#201a24",
+const BACKDROP_SOLIDS = [
+  "#1c1c1c", "#0e0e0e", "#1a1f2c", "#1f1a1a",
+  "#161d1a", "#201a24", "#2d1b1b", "#1b2d2d",
+  "#2a2a2a", "#3a3a3a",
 ];
-const TEXT_COLORS = ["#e0e0e0", "#ffffff", "#9a9a9a", "#ff8a4c", "#4cc2ff", "#a78bfa"];
+
+const BACKDROP_GRADIENTS = [
+  "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+  "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+  "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+  "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+  "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)",
+  "linear-gradient(180deg, #0f0c29, #302b63, #24243e)",
+  "linear-gradient(180deg, #1a1a2e, #16213e, #0f3460)",
+];
+
+const TEXT_COLORS = ["#e0e0e0", "#ffffff", "#9a9a9a", "#ff8a4c", "#4cc2ff", "#a78bfa", "#22c55e", "#ef4444"];
+
+function isGradient(v: string) { return v.startsWith("linear-gradient") || v.startsWith("radial-gradient"); }
 
 export function StyleTab() {
   const editor = useEditorStore((s) => s.editor);
@@ -23,10 +35,8 @@ export function StyleTab() {
 
   const doc = docs.find((d) => d.id === activeDocId) ?? null;
 
-  // Per-document styling (with safe defaults)
   const pageBg = doc?.pageBg ?? "#1f1f1f";
   const widePage = doc?.widePage ?? false;
-  const coverImage = doc?.coverImage ?? null;
   const separator = (doc?.separator ?? "line") as SeparatorStyle;
   const font = doc?.font ?? "default";
   const fontSize = doc?.fontSize ?? "Ss";
@@ -35,82 +45,112 @@ export function StyleTab() {
     if (activeDocId) updateDocMeta(activeDocId, updates as any);
   };
 
+  const [tab, setTab] = useState<"solid" | "gradient">("solid");
+
   return (
     <div className="space-y-6">
       {/* Preview card */}
       <div className="flex flex-col items-center pt-2">
         <div
-          className="relative flex h-[170px] w-[120px] items-start justify-end rounded-md p-2 shadow-md"
-          style={{ backgroundColor: pageBg }}
+          className="relative flex h-[170px] w-[120px] items-start justify-end overflow-hidden rounded-md p-2 shadow-md"
+          style={{ background: pageBg }}
         >
           <div className="flex flex-col gap-1 pt-1">
             <div className="h-1 w-12 rounded-full bg-[#444]" />
             <div className="h-1 w-10 rounded-full bg-[#444]" />
             <div className="h-1 w-14 rounded-full bg-[#444]" />
           </div>
-          <span className="absolute right-2 top-1.5 text-[9px] text-[#888]">
-            Original
-          </span>
+          <span className="absolute right-2 top-1.5 text-[9px] text-[#888]">Style</span>
         </div>
-        <button className="mt-3 flex items-center gap-1.5 rounded-md bg-[#262626] px-3 py-1.5 text-[12px] text-[#cfcfcf] hover:bg-[#2c2c2c] active:scale-95">
-          <span className="grid h-3 w-3 grid-cols-2 gap-[1px]">
-            <span className="rounded-full bg-current" />
-            <span className="rounded-full bg-current" />
-            <span className="rounded-full bg-current" />
-            <span className="rounded-full bg-current" />
-          </span>
-          All Styles
-        </button>
       </div>
 
-      <Section label="Color">
-        <Row label="Backdrop">
-          <button className="flex h-6 w-6 items-center justify-center rounded-md bg-[#2a2a2a] text-[#888] hover:bg-[#333] active:scale-90">
-            <Plus className="h-3.5 w-3.5" />
-          </button>
-        </Row>
-        <Row label="Document Color">
-          <SwatchPopover
-            colors={PAGE_BGS}
-            value={pageBg}
-            onChange={(c) => setDocStyle({ pageBg: c })}
-          />
-        </Row>
-        <Row label="Text Color">
-          <SwatchPopover
-            colors={TEXT_COLORS}
-            value={textColor}
-            onChange={(c) => {
-              setTextColor(c);
-              editor?.chain().focus().setColor(c).run();
-            }}
-          />
-        </Row>
-      </Section>
-
-      <Section label="Cover">
-        <Row label="Cover Image">
-          {coverImage ? (
+      {/* Background */}
+      <Section label="Background">
+        <div className="space-y-2 pt-1">
+          {/* Tab toggle */}
+          <div className="flex gap-1 rounded-md bg-[#262626] p-0.5 text-[11px]">
             <button
-              onClick={() => setDocStyle({ coverImage: null })}
-              className="flex h-6 w-6 items-center justify-center rounded-md bg-[#2a2a2a] text-[#888] hover:bg-[#333] active:scale-90"
-              aria-label="Remove cover"
+              onClick={() => setTab("solid")}
+              className={"flex-1 rounded px-2 py-1 transition-colors " + (tab === "solid" ? "bg-[#1a1a1a] text-white" : "text-[#888]")}
             >
-              <Minus className="h-3.5 w-3.5" />
+              Solid
             </button>
-          ) : (
             <button
-              onClick={() => {
-                const url = window.prompt("Cover image URL");
-                if (url) setDocStyle({ coverImage: url });
-              }}
-              className="flex h-6 w-6 items-center justify-center rounded-md bg-[#2a2a2a] text-[#888] hover:bg-[#333] active:scale-90"
-              aria-label="Add cover"
+              onClick={() => setTab("gradient")}
+              className={"flex-1 rounded px-2 py-1 transition-colors " + (tab === "gradient" ? "bg-[#1a1a1a] text-white" : "text-[#888]")}
             >
-              <Plus className="h-3.5 w-3.5" />
+              Gradient
+            </button>
+          </div>
+
+          {/* Solid colors */}
+          {tab === "solid" && (
+            <div className="grid grid-cols-5 gap-2">
+              {BACKDROP_SOLIDS.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setDocStyle({ pageBg: c })}
+                  className={"h-8 w-full rounded-md ring-1 transition-all active:scale-90 " + (pageBg === c ? "ring-2 ring-white scale-110" : "ring-[#555]")}
+                  style={{ backgroundColor: c }}
+                  title={c}
+                />
+              ))}
+              <ColorPickerButton
+                value={pageBg}
+                onChange={(c) => setDocStyle({ pageBg: c })}
+              />
+            </div>
+          )}
+
+          {/* Gradients */}
+          {tab === "gradient" && (
+            <div className="grid grid-cols-2 gap-2">
+              {BACKDROP_GRADIENTS.map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setDocStyle({ pageBg: g })}
+                  className={"h-10 w-full rounded-md ring-1 transition-all active:scale-95 " + (pageBg === g ? "ring-2 ring-white" : "ring-[#555]")}
+                  style={{ background: g }}
+                  title={g}
+                />
+              ))}
+            </div>
+          )}
+
+          {isGradient(pageBg) && (
+            <button
+              onClick={() => setDocStyle({ pageBg: "#1c1c1c" })}
+              className="flex w-full items-center justify-center gap-1.5 rounded-md bg-[#262626] py-1.5 text-[11px] text-[#888] hover:bg-[#2c2c2c] active:scale-95"
+            >
+              <Trash2 className="h-3 w-3" /> Reset to solid
             </button>
           )}
-        </Row>
+        </div>
+      </Section>
+
+      <Section label="Text Color">
+        <div className="grid grid-cols-4 gap-2 pt-1">
+          {TEXT_COLORS.map((c) => (
+            <button
+              key={c}
+              onClick={() => {
+                setTextColor(c);
+                if (editor) {
+                  const sel = editor.state.selection;
+                  editor
+                    .chain()
+                    .selectAll()
+                    .setColor(c)
+                    .setTextSelection(sel.from)
+                    .run();
+                }
+              }}
+              className={"h-7 w-full rounded-md ring-1 transition-all active:scale-90 " + (textColor === c ? "ring-2 ring-white scale-110" : "ring-[#555]")}
+              style={{ backgroundColor: c }}
+              title={c}
+            />
+          ))}
+        </div>
       </Section>
 
       <Section label="Separator Style">
@@ -155,19 +195,20 @@ export function StyleTab() {
             aria-checked={widePage}
             onClick={() => setDocStyle({ widePage: !widePage })}
             className={
-              "relative h-5 w-9 rounded-full transition-colors " +
+              "relative h-5 w-9 shrink-0 rounded-full transition-colors " +
               (widePage ? "bg-[#0e3a72]" : "bg-[#3a3a3a]")
             }
           >
             <span
               className={
-                "absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform " +
-                (widePage ? "translate-x-[18px]" : "translate-x-0.5")
+                "absolute left-[2px] top-[2px] h-4 w-4 rounded-full bg-white shadow-sm transition-all " +
+                (widePage ? "translate-x-4" : "translate-x-0")
               }
             />
           </button>
         </Row>
       </Section>
+
     </div>
   );
 }
@@ -192,36 +233,35 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
-function SwatchPopover({
-  colors,
-  value,
-  onChange,
-}: {
-  colors: string[];
-  value: string;
-  onChange: (c: string) => void;
-}) {
+function ColorPickerButton({ value, onChange }: { value: string; onChange: (c: string) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
   return (
-    <div className="group relative">
+    <>
       <button
-        className="h-6 w-6 overflow-hidden rounded-md ring-1 ring-[#444]"
-        style={{
-          background: `linear-gradient(135deg, ${value} 50%, #fff 50%)`,
-        }}
+        onClick={() => inputRef.current?.click()}
+        className="flex h-8 items-center justify-center rounded-md bg-[#262626] ring-1 ring-[#555] transition-all hover:bg-[#2c2c2c] active:scale-90"
+        title="Custom color"
+      >
+        <Palette className="h-3.5 w-3.5 text-[#888]" />
+      </button>
+      <input
+        ref={inputRef}
+        type="color"
+        value={value.startsWith("#") ? value : "#1c1c1c"}
+        onChange={(e) => onChange(e.target.value)}
+        className="sr-only"
       />
-      <div className="invisible absolute right-0 top-7 z-10 grid grid-cols-6 gap-1 rounded-md bg-[#262626] p-2 opacity-0 shadow-lg ring-1 ring-[#333] transition-opacity group-hover:visible group-hover:opacity-100">
-        {colors.map((c) => (
-          <button
-            key={c}
-            onClick={() => onChange(c)}
-            className="h-5 w-5 rounded-sm ring-1 ring-[#444]"
-            style={{ backgroundColor: c }}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
+
+const SIZE_LABELS: Record<string, string> = { Ss: "M", "00": "S", Rr: "L" };
+
+const FONTS = [
+  { id: "default" as const, label: "Default", fam: "ui-sans-serif, system-ui, sans-serif", cls: "font-sans" },
+  { id: "serif" as const, label: "Serif", fam: "'Cormorant Garamond', serif", cls: "font-serif" },
+  { id: "mono" as const, label: "Mono", fam: "ui-monospace, SF Mono, monospace", cls: "font-mono" },
+];
 
 function FontShortcut({
   font,
@@ -235,43 +275,55 @@ function FontShortcut({
   onSizeChange: (s: "Ss" | "00" | "Rr") => void;
 }) {
   const editor = useEditorStore((s) => s.editor);
-  const cycle = () => {
-    const next = font === "default" ? "serif" : font === "serif" ? "mono" : "default";
-    onFontChange(next);
-    const family =
-      next === "serif"
-        ? "Georgia, serif"
-        : next === "mono"
-          ? "ui-monospace, SF Mono, monospace"
-          : "ui-sans-serif, system-ui, sans-serif";
-    editor?.chain().focus().setFontFamily(family).run();
-  };
-  const label = font === "default" ? "Default" : font === "serif" ? "Serif" : "Mono";
+  const setFont = useEditorStore((s) => s.setFont);
+  const setFontSize = useEditorStore((s) => s.setFontSize);
 
   return (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={cycle}
-        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#0e3a72] px-4 py-2 text-[13px] font-medium text-white hover:bg-[#0d4187] active:scale-95"
-      >
-        <span className="text-[14px] italic">Aa</span>
-        {label}
-        <ChevronDown className="h-3 w-3 opacity-60" />
-      </button>
-      {(["Ss", "00", "Rr"] as const).map((s) => (
-        <button
-          key={s}
-          onClick={() => onSizeChange(s)}
-          className={
-            "h-8 w-8 rounded-md text-[12px] font-medium transition-colors active:scale-90 " +
-            (fontSize === s
-              ? "bg-[#3a3a3a] text-white"
-              : "bg-[#262626] text-[#999] hover:bg-[#2c2c2c]")
-          }
-        >
-          {s}
-        </button>
-      ))}
+    <div className="space-y-2">
+      <div className="grid grid-cols-3 gap-1.5">
+        {FONTS.map((f) => (
+          <button
+            key={f.id}
+            onClick={() => {
+              onFontChange(f.id);
+              setFont(f.id);
+              editor?.chain().focus().setFontFamily(f.fam).run();
+            }}
+            className={
+              "rounded-md px-2 py-2 text-center transition-colors active:scale-95 " +
+              (font === f.id
+                ? "bg-[#0e3a72] text-white"
+                : "bg-[#262626] text-[#bcbcbc] hover:bg-[#2c2c2c]") +
+              " " + f.cls
+            }
+          >
+            <div className="text-[16px]">Aa</div>
+            <div className="mt-0.5 text-[10px] font-normal">{f.label}</div>
+          </button>
+        ))}
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="w-6 text-[11px] text-[#777]">Size</span>
+        <div className="flex flex-1 gap-1">
+          {(["Ss", "00", "Rr"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => {
+                onSizeChange(s);
+                setFontSize(s);
+              }}
+              className={
+                "flex-1 rounded-md py-1 text-[11px] font-medium transition-colors active:scale-90 " +
+                (fontSize === s
+                  ? "bg-[#3a3a3a] text-white"
+                  : "bg-[#262626] text-[#999] hover:bg-[#2c2c2c]")
+              }
+            >
+              {SIZE_LABELS[s]}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

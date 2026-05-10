@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -23,6 +23,8 @@ import {
   MessageSquare,
   Sparkles,
   Plus,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
@@ -41,6 +43,8 @@ export function EditorPane() {
   const toggleInspector = useEditorStore((s) => s.toggleInspector);
   const presenting = useEditorStore((s) => s.presenting);
   const setPresenting = useEditorStore((s) => s.setPresenting);
+  const storeFont = useEditorStore((s) => s.font);
+  const storeFontSize = useEditorStore((s) => s.fontSize);
 
   const activeDocId = useWorkspaceStore((s) => s.activeDocId);
   const docs = useWorkspaceStore((s) => s.docs);
@@ -49,12 +53,40 @@ export function EditorPane() {
   const activeDoc = docs.find((d) => d.id === activeDocId) ?? null;
   const title = activeDoc?.title ?? "";
 
-  // Per-document styling (fall back to defaults)
+  const setFont = useEditorStore((s) => s.setFont);
+  const setFontSize = useEditorStore((s) => s.setFontSize);
+
+  // Sync editor store from doc meta on doc switch
+  useEffect(() => {
+    if (activeDoc) {
+      setFont(activeDoc.font ?? "default");
+      setFontSize(activeDoc.fontSize ?? "Ss");
+    }
+  }, [activeDocId]);
+
+  // Per-document styling (fall back to editor store, then defaults)
   const pageBg = activeDoc?.pageBg ?? "#1f1f1f";
-  const font = activeDoc?.font ?? "default";
-  const fontSize = activeDoc?.fontSize ?? "Ss";
+  const font = storeFont;
+  const fontSize = storeFontSize;
   const widePage = activeDoc?.widePage ?? false;
+  const separator = activeDoc?.separator ?? "line";
   const coverImage = activeDoc?.coverImage ?? null;
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showScrollBtns, setShowScrollBtns] = useState(false);
+  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleScroll = useCallback(() => {
+    setShowScrollBtns(true);
+    if (scrollTimer.current) clearTimeout(scrollTimer.current);
+    scrollTimer.current = setTimeout(() => setShowScrollBtns(false), 1500);
+  }, []);
+
+  const scrollTo = (dir: "top" | "bottom") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: dir === "top" ? 0 : el.scrollHeight, behavior: "smooth" });
+  };
 
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadedDocRef = useRef<string | null>(null);
@@ -183,7 +215,7 @@ export function EditorPane() {
   // No active document — show placeholder
   if (!activeDocId) {
     return (
-      <main className="relative flex h-full min-w-0 flex-1 flex-col items-center justify-center" style={{ backgroundColor: pageBg }}>
+      <main className="relative flex h-full min-w-0 flex-1 flex-col items-center justify-center" style={pageBgStyle(pageBg)}>
         <header className="absolute inset-x-0 top-0 z-10 flex h-[44px] shrink-0 items-center justify-between px-3">
           <div className="flex items-center gap-1">
             <IconBtn label="Toggle sidebar" onClick={toggleSidebar} active={sidebarOpen}>
@@ -208,7 +240,7 @@ export function EditorPane() {
   return (
     <main
       className="relative flex h-full min-w-0 flex-1 flex-col"
-      style={{ backgroundColor: pageBg }}
+      style={pageBgStyle(pageBg)}
     >
       {/* Stop presenting button */}
       {presenting && (
@@ -257,49 +289,78 @@ export function EditorPane() {
       </header>
 
       {/* Scrollable canvas */}
-      <div className="min-h-0 flex-1 overflow-y-auto pt-[44px]">
-        {coverImage && (
+      <div className="relative min-h-0 flex-1">
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="h-full overflow-y-auto pt-[44px]"
+        >
+          {coverImage && (
+            <div
+              className="h-[180px] w-full bg-cover bg-center"
+              style={{ backgroundImage: `url(${coverImage})` }}
+            />
+          )}
           <div
-            className="h-[180px] w-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${coverImage})` }}
-          />
-        )}
+            className={
+              "mx-auto px-12 py-12 " +
+              (widePage ? "max-w-[1100px]" : "max-w-[760px]") +
+              " " +
+              fontClass +
+              " " +
+              sizeClass
+            }
+          >
+            <div className="group relative mb-8">
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Page Title"
+                className="w-full bg-transparent pb-3 text-[40px] font-bold leading-tight tracking-[-0.02em] text-[#e0e0e0] outline-none placeholder:text-[#4a4a4a] focus:ring-0"
+              />
+              <div className="border-b border-[#2a2a2a]" />
+              <div className="absolute right-0 top-3 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                <IconBtn label="Add cover">
+                  <Sparkles className="h-3.5 w-3.5" />
+                </IconBtn>
+                <IconBtn label="Comment">
+                  <MessageSquare className="h-3.5 w-3.5" />
+                </IconBtn>
+              </div>
+            </div>
+
+            <div className={`sep-${separator}`}>
+              <EditorContent editor={editor} />
+            </div>
+
+            {/* Add block button */}
+            <button
+              onClick={() => editor?.chain().focus().insertContent("<p></p>").run()}
+              className="mt-4 flex items-center gap-1.5 rounded-md px-2 py-1 text-[12px] text-[#666] opacity-0 transition-opacity hover:bg-[#2a2a2a] hover:text-[#bbb] focus:opacity-100"
+            >
+              <Plus className="h-3.5 w-3.5" /> Add a block
+            </button>
+          </div>
+        </div>
+
+        {/* Scroll to top/bottom buttons */}
         <div
           className={
-            "mx-auto px-12 py-12 " +
-            (widePage ? "max-w-[1100px]" : "max-w-[760px]") +
-            " " +
-            fontClass +
-            " " +
-            sizeClass
+            "pointer-events-none absolute right-0 top-1/2 flex -translate-y-1/2 flex-col gap-1 pr-1 transition-opacity duration-300 " +
+            (showScrollBtns ? "opacity-100" : "opacity-0")
           }
         >
-          <div className="group relative mb-8">
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Page Title"
-              className="w-full bg-transparent pb-3 text-[40px] font-bold leading-tight tracking-[-0.02em] text-[#e0e0e0] outline-none placeholder:text-[#4a4a4a] focus:ring-0"
-            />
-            <div className="border-b border-[#2a2a2a]" />
-            <div className="absolute right-0 top-3 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-              <IconBtn label="Add cover">
-                <Sparkles className="h-3.5 w-3.5" />
-              </IconBtn>
-              <IconBtn label="Comment">
-                <MessageSquare className="h-3.5 w-3.5" />
-              </IconBtn>
-            </div>
-          </div>
-
-          <EditorContent editor={editor} />
-
-          {/* Add block button */}
           <button
-            onClick={() => editor?.chain().focus().insertContent("<p></p>").run()}
-            className="mt-4 flex items-center gap-1.5 rounded-md px-2 py-1 text-[12px] text-[#666] opacity-0 transition-opacity hover:bg-[#2a2a2a] hover:text-[#bbb] focus:opacity-100"
+            onClick={() => scrollTo("top")}
+            className="pointer-events-auto flex h-5 w-5 items-center justify-center rounded bg-[#3a3a3a] text-[#bbb] shadow transition-colors hover:bg-[#4a4a4a] hover:text-white"
           >
-            <Plus className="h-3.5 w-3.5" /> Add a block
+            <ChevronUp className="h-3 w-3" />
+          </button>
+          <button
+            onClick={() => scrollTo("bottom")}
+            className="pointer-events-auto flex h-5 w-5 items-center justify-center rounded bg-[#3a3a3a] text-[#bbb] shadow transition-colors hover:bg-[#4a4a4a] hover:text-white"
+          >
+            <ChevronDown className="h-3 w-3" />
           </button>
         </div>
       </div>
@@ -312,6 +373,18 @@ export function EditorPane() {
       )}
     </main>
   );
+}
+
+function pageBgStyle(bg: string): React.CSSProperties {
+  if (bg.startsWith("url(")) {
+    return {
+      backgroundImage: bg,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    };
+  }
+  return { background: bg };
 }
 
 function IconBtn({
