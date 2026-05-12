@@ -1,9 +1,64 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { useAuthStore } from "@/store/auth-store";
 import { useEffect } from "react";
+
+function ErrorDetail({ error }: { error: Error }) {
+  const [copied, setCopied] = useState(false);
+
+  const errorText = [
+    `**Error:** ${error.name}: ${error.message}`,
+    error.stack ? `**Stack:**\n\`\`\`\n${error.stack}\n\`\`\`` : "",
+    "",
+    `**URL:** ${window.location.href}`,
+    `**User Agent:** ${navigator.userAgent}`,
+    `**Timestamp:** ${new Date().toISOString()}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const githubIssueUrl = `https://github.com/hariharen9/OpenCraft/issues/new?title=${encodeURIComponent(error.name + ": " + error.message.slice(0, 80))}&body=${encodeURIComponent(errorText)}`;
+
+  const copyError = async () => {
+    try {
+      await navigator.clipboard.writeText(errorText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
+
+  return (
+    <div className="mt-4 w-full max-w-lg">
+      <details className="group">
+        <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors">
+          Error details
+        </summary>
+        <pre className="mt-2 max-h-48 overflow-auto rounded-md bg-black/10 p-3 text-left text-[11px] text-muted-foreground whitespace-pre-wrap break-all">
+          {errorText}
+        </pre>
+      </details>
+      <div className="mt-3 flex flex-wrap justify-center gap-2">
+        <button
+          onClick={copyError}
+          className="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent"
+        >
+          {copied ? "Copied!" : "Copy error"}
+        </button>
+        <a
+          href={githubIssueUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent"
+        >
+          Report on GitHub
+        </a>
+      </div>
+    </div>
+  );
+}
 
 function NotFoundComponent() {
   return (
@@ -40,7 +95,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <ErrorDetail error={error} />
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
               router.invalidate();

@@ -5,12 +5,15 @@ import "./LandingPage.css";
 // Import branding assets
 import opencraftBlack from "@/Assets/opencraft-black.png";
 import opencraftWhite from "@/Assets/opencraft-white.png";
+import { PrivacyDialog, TermsDialog } from "./LegalModals";
 
 type PageId = "home" | "features" | "writing" | "organize" | "why";
 
 export function LandingPage() {
   const [activePage, setActivePage] = useState<PageId>("home");
   const [scrolled, setScrolled] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -1061,13 +1064,16 @@ export function LandingPage() {
                 Open Source under the MIT License.
               </span>
               <div className="ft-legal">
-                <a href="#">Privacy</a>
-                <a href="#">License</a>
+                <a onClick={() => setPrivacyOpen(true)}>Privacy</a>
+                <a onClick={() => setTermsOpen(true)}>Terms</a>
               </div>
             </div>
           </div>
         </footer>
       </div>
+
+      <PrivacyDialog open={privacyOpen} onOpenChange={setPrivacyOpen} />
+      <TermsDialog open={termsOpen} onOpenChange={setTermsOpen} />
 
       {/* ════════════════════════════════════
            WRITING PAGE
