@@ -1,5 +1,8 @@
 {
   "name": "opencraft",
+  "version": "1.0.0",
+  "description": "A focused writing space",
+  "author": "OpenCraft Team",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -7,10 +10,37 @@
     "dev": "vite dev",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:electron": "cross-env ELECTRON_BUILD=true vite build && electron-builder",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "postinstall": "npm rebuild lightningcss @rollup/rollup-linux-x64-gnu || true"
+    "postinstall": "npm rebuild lightningcss @rollup/rollup-linux-x64-gnu || true",
+    "electron:start": "electron electron/main.cjs",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:8543 && electron electron/main.cjs\""
+  },
+  "build": {
+    "appId": "com.opencraft.app",
+    "productName": "OpenCraft",
+    "npmRebuild": false,
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "asarUnpack": [
+      "dist/server/**/*"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -74,6 +104,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "express": "^5.2.1",
     "firebase": "^12.13.0",
     "framer-motion": "^12.38.0",
     "idb-keyval": "^6.2.2",
@@ -109,6 +140,10 @@
     "@vitejs/plugin-react": "^5.0.4",
     "ajv": "^8.20.0",
     "ajv-errors": "^3.0.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^42.0.1",
+    "electron-builder": "^26.8.1",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.6",
@@ -118,7 +153,8 @@
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "wait-on": "^9.0.6"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.60.3",

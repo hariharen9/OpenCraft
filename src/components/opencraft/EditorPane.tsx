@@ -46,6 +46,9 @@ import {
   Plus,
   ChevronUp,
   ChevronDown,
+  Minus,
+  Square,
+  X,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
@@ -58,6 +61,10 @@ import { EditorToolbar } from "./EditorToolbar";
 import { EditorBubbleMenu } from "./EditorBubbleMenu";
 
 export function EditorPane() {
+  const isElectron = typeof window !== "undefined" && !!(window as any).electron;
+  const isMac = isElectron && (window as any).electron.platform === "darwin";
+  const isWindowsOrLinux = isElectron && !isMac;
+
   const setEditor = useEditorStore((s) => s.setEditor);
   const bump = useEditorStore((s) => s.bump);
   const sidebarOpen = useEditorStore((s) => s.sidebarOpen);
@@ -392,8 +399,15 @@ export function EditorPane() {
       )}
 
       {/* Top header */}
-      <header className="absolute inset-x-0 top-0 z-10 flex h-[44px] shrink-0 items-center justify-between px-3">
-        <div className="flex items-center gap-1">
+      <header 
+        className="absolute inset-x-0 top-0 z-10 flex h-[44px] shrink-0 items-center justify-between"
+        style={{
+          paddingLeft: isMac ? "76px" : "12px",
+          paddingRight: "12px",
+          WebkitAppRegion: isElectron ? "drag" : "no-drag",
+        } as any}
+      >
+        <div className="flex items-center gap-1" style={{ WebkitAppRegion: "no-drag" } as any}>
           <IconBtn label="Apps">
             <span className="grid h-4 w-4 grid-cols-2 gap-[2px]">
               <span className="rounded-[1px] bg-current" />
@@ -407,12 +421,38 @@ export function EditorPane() {
           </IconBtn>
         </div>
 
-        <div className="truncate text-[13px] text-[#9a9a9a]">{title || "Untitled Page"}</div>
+        <div className="truncate text-[13px] text-[#9a9a9a] select-none pointer-events-none">{title || "Untitled Page"}</div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5" style={{ WebkitAppRegion: "no-drag" } as any}>
           <IconBtn label="Toggle inspector" onClick={toggleInspector} active={inspectorOpen}>
             <PanelRight className="h-4 w-4" />
           </IconBtn>
+
+          {isWindowsOrLinux && (
+            <div className="flex items-center ml-2 border-l border-white/10 pl-2 gap-1">
+              <button 
+                onClick={() => (window as any).electron.minimize()}
+                className="rounded-md p-1.5 text-[#9a9a9a] hover:bg-[#2a2a2a] hover:text-[#e0e0e0] active:scale-95 transition-colors"
+                title="Minimize"
+              >
+                <Minus className="h-3.5 w-3.5" />
+              </button>
+              <button 
+                onClick={() => (window as any).electron.maximize()}
+                className="rounded-md p-1.5 text-[#9a9a9a] hover:bg-[#2a2a2a] hover:text-[#e0e0e0] active:scale-95 transition-colors"
+                title="Maximize"
+              >
+                <Square className="h-3 w-3" />
+              </button>
+              <button 
+                onClick={() => (window as any).electron.close()}
+                className="rounded-md p-1.5 text-[#9a9a9a] hover:bg-red-500/20 hover:text-red-400 active:scale-95 transition-colors"
+                title="Close"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
