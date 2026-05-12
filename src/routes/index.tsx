@@ -1,5 +1,14 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { LandingPage } from "@/components/opencraft/LandingPage";
+import { useEffect } from "react";
+
+function IndexPage() {
+  useEffect(() => {
+    document.title = "OpenCraft — The Open Source Note Editor";
+  }, []);
+
+  return <LandingPage />;
+}
 
 export const Route = createFileRoute("/")({
   beforeLoad: () => {
@@ -7,15 +16,5 @@ export const Route = createFileRoute("/")({
       throw redirect({ to: "/app", replace: true });
     }
   },
-  component: LandingPage,
-  head: () => ({
-    meta: [
-      { title: "OpenCraft — The Open Source Note Editor" },
-      {
-        name: "description",
-        content:
-          "OpenCraft is a beautiful, open-source, local-first markdown writing app. Write without the noise.",
-      },
-    ],
-  }),
+  component: IndexPage,
 });

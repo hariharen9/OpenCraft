@@ -8,18 +8,10 @@ import { CalendarView } from "@/components/opencraft/CalendarView";
 import { Inspector } from "@/components/opencraft/Inspector";
 import { CommandPalette } from "@/components/opencraft/CommandPalette";
 import { useEditorStore } from "@/store/editor-store";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/app")({
   component: OpenCraft,
-  head: () => ({
-    meta: [
-      { title: "OpenCraft — A focused writing space" },
-      {
-        name: "description",
-        content: "OpenCraft is an open-source, local-first markdown writing app inspired by Craft.",
-      },
-    ],
-  }),
 });
 
 const viewVariants = {
@@ -32,6 +24,10 @@ function OpenCraft() {
   const sidebarOpen = useEditorStore((s) => s.sidebarOpen);
   const inspectorOpen = useEditorStore((s) => s.inspectorOpen);
   const activeView = useEditorStore((s) => s.activeView);
+
+  useEffect(() => {
+    document.title = "OpenCraft — A focused writing space";
+  }, []);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#161616] text-[#e0e0e0] antialiased">
