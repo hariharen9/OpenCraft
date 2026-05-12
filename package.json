@@ -9,39 +9,12 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "build:dev": "vite build --mode development",
-    "build:electron": "cross-env ELECTRON_BUILD=true vite build && electron-builder",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "postinstall": "npm rebuild lightningcss @rollup/rollup-linux-x64-gnu || true",
-    "electron:start": "electron electron/main.cjs",
-    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:8543 && electron electron/main.cjs\""
+    "postinstall": "npm rebuild lightningcss @rollup/rollup-linux-x64-gnu || true"
   },
-  "build": {
-    "appId": "com.opencraft.app",
-    "productName": "OpenCraft",
-    "npmRebuild": false,
-    "directories": {
-      "output": "dist-electron"
-    },
-    "files": [
-      "dist/**/*",
-      "electron/**/*"
-    ],
-    "asarUnpack": [
-      "dist/server/**/*"
-    ],
-    "mac": {
-      "target": "dmg"
-    },
-    "win": {
-      "target": "nsis"
-    },
-    "linux": {
-      "target": "AppImage"
-    }
-  },
+
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
@@ -142,8 +115,7 @@
     "ajv-errors": "^3.0.0",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
-    "electron": "^42.0.1",
-    "electron-builder": "^26.8.1",
+
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.6",

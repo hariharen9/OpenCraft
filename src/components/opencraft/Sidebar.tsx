@@ -185,22 +185,6 @@ export function Sidebar() {
     const activeDoc = docs.find((d) => d.id === activeDocId);
     const md = (editor.storage as any).markdown?.getMarkdown?.() ?? "";
 
-    if ((window as any).electron) {
-      try {
-        const res = await (window as any).electron.exportFile(activeDoc?.title || "untitled", md);
-        if (res?.success) {
-          toast.success("Document exported successfully", {
-            description: `Saved to ${res.filePath}`,
-          });
-        } else if (res && !res.canceled && res.error) {
-          toast.error("Export Failed", { description: res.error });
-        }
-      } catch (err: any) {
-        toast.error("Export Error", { description: err.message });
-      }
-      return;
-    }
-
     const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -224,28 +208,7 @@ export function Sidebar() {
     e.target.value = "";
   };
 
-  const handleNativeImport = async () => {
-    if (!editor) return;
-    if ((window as any).electron) {
-      try {
-        const result = await (window as any).electron.importFile();
-        if (result) {
-          const docId = createDoc();
-          setActiveDoc(docId);
-          setActiveView("editor");
-          setTimeout(() => {
-            editor.commands.setContent(result.content);
-            updateDocMeta(docId, { title: result.title });
-          }, 100);
-          toast.success("Document imported successfully", {
-            description: `Imported "${result.title}"`,
-          });
-        }
-      } catch (err: any) {
-        toast.error("Import Error", { description: err.message });
-      }
-    }
-  };
+
 
   const handleCreateWorkspace = () => {
     if (newWsName.trim()) {
@@ -772,13 +735,7 @@ export function Sidebar() {
           <Download className="h-4 w-4" />
         </button>
         <button
-          onClick={() => {
-            if ((window as any).electron) {
-              handleNativeImport();
-            } else {
-              fileRef.current?.click();
-            }
-          }}
+          onClick={() => fileRef.current?.click()}
           title="Import Markdown"
           className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95"
         >

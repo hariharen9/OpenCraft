@@ -20,7 +20,7 @@ export default defineConfig({
       },
     }),
     viteReact(),
-    ...(process.env.ELECTRON_BUILD ? [] : [netlify()]),
+    netlify(),
   ],
   resolve: {
     dedupe: [
