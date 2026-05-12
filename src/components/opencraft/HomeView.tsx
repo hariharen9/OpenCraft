@@ -24,6 +24,7 @@ import { useWorkspaceStore } from "@/store/workspace-store";
 import { useTasksStore } from "@/store/tasks-store";
 import { useAuthStore } from "@/store/auth-store";
 import { LocalStorageProvider } from "@/lib/storage/local";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { format } from "date-fns";
 import clsx from "clsx";
 
@@ -47,6 +48,7 @@ export function HomeView() {
   const accent = useEditorStore((s) => s.accentColor);
   const setCommandPaletteOpen = useEditorStore((s) => s.setCommandPaletteOpen);
   const { user } = useAuthStore();
+  const isMobile = useIsMobile();
 
   const displayName = user?.displayName || user?.email?.split("@")[0] || "Editor";
 
@@ -158,10 +160,13 @@ export function HomeView() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 mx-auto w-full max-w-6xl px-8 py-12 lg:px-12 lg:py-20"
+        className={clsx(
+          "relative z-10 mx-auto w-full max-w-6xl",
+          isMobile ? "px-5 py-8 pb-28" : "px-8 py-12 lg:px-12 lg:py-20"
+        )}
       >
         {/* Header Section */}
-        <header className="mb-16 flex flex-col items-center text-center">
+        <header className={clsx("flex flex-col text-center", isMobile ? "mb-8 items-start text-left" : "mb-16 items-center")}>
           <motion.div variants={itemVariants} className="mb-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.1em] text-[#888] backdrop-blur-md">
               <Sparkles className="h-3 w-3" />
@@ -170,7 +175,10 @@ export function HomeView() {
           </motion.div>
           <motion.h1
             variants={itemVariants}
-            className="text-[48px] font-extrabold tracking-tight text-white lg:text-[64px]"
+            className={clsx(
+              "font-extrabold tracking-tight text-white",
+              isMobile ? "text-[32px]" : "text-[48px] lg:text-[64px]"
+            )}
             style={{ lineHeight: 1.1 }}
           >
             {greeting()}, <span className="text-[#888]">{displayName}.</span>
@@ -180,22 +188,30 @@ export function HomeView() {
           <motion.button
             variants={itemVariants}
             onClick={() => setCommandPaletteOpen(true)}
-            className="mt-10 flex w-full max-w-md items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.03] px-5 py-3.5 text-[#555] transition-all hover:bg-white/[0.06] hover:border-white/10 group"
+            className={clsx(
+              "flex w-full items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.03] px-5 py-3.5 text-[#555] transition-all hover:bg-white/[0.06] hover:border-white/10 group",
+              isMobile ? "mt-6 max-w-full" : "mt-10 max-w-md"
+            )}
           >
             <Search className="h-5 w-5 group-hover:text-[#888]" />
-            <span className="flex-1 text-left text-[15px]">Search for documents or actions...</span>
-            <kbd className="hidden sm:inline-flex h-6 items-center gap-1 rounded bg-white/5 px-2 font-mono text-[10px] text-[#444] ring-1 ring-white/10">
-              ⌘ K
-            </kbd>
+            <span className="flex-1 text-left text-[15px]">Search documents...</span>
+            {!isMobile && (
+              <kbd className="hidden sm:inline-flex h-6 items-center gap-1 rounded bg-white/5 px-2 font-mono text-[10px] text-[#444] ring-1 ring-white/10">
+                ⌘ K
+              </kbd>
+            )}
           </motion.button>
         </header>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+        <div className={clsx("grid gap-4", isMobile ? "grid-cols-1" : "grid-cols-1 gap-6 md:grid-cols-12")}>
           {/* Main Quick Start / Recent Doc Card */}
           <motion.div
             variants={itemVariants}
-            className="group relative md:col-span-8 lg:row-span-2 overflow-hidden rounded-3xl border border-white/[0.08] bg-[#1f1f1f]/40 p-8 backdrop-blur-xl transition-all hover:border-white/20"
+            className={clsx(
+              "group relative overflow-hidden rounded-3xl border border-white/[0.08] bg-[#1f1f1f]/40 backdrop-blur-xl transition-all hover:border-white/20",
+              isMobile ? "p-5" : "md:col-span-8 lg:row-span-2 p-8"
+            )}
           >
             <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/5 blur-3xl transition-all group-hover:bg-white/10" />
             
@@ -264,7 +280,10 @@ export function HomeView() {
           {/* Inspirational Quote Card */}
           <motion.div
             variants={itemVariants}
-            className="group relative md:col-span-4 rounded-3xl border border-white/[0.08] bg-gradient-to-br from-[#1f1f1f]/60 to-[#161616]/40 p-8 backdrop-blur-xl transition-all hover:border-white/10"
+            className={clsx(
+              "group relative rounded-3xl border border-white/[0.08] bg-gradient-to-br from-[#1f1f1f]/60 to-[#161616]/40 backdrop-blur-xl transition-all hover:border-white/10",
+              isMobile ? "p-5" : "md:col-span-4 p-8"
+            )}
           >
             <Quote className="absolute right-6 top-6 h-12 w-12 text-white/5" />
             <div className="relative h-full flex flex-col justify-between">
@@ -286,7 +305,10 @@ export function HomeView() {
           <motion.div
             variants={itemVariants}
             onClick={() => setActiveView("tasks")}
-            className="group md:col-span-4 rounded-3xl border border-white/[0.08] bg-[#1f1f1f]/40 p-6 backdrop-blur-xl transition-all hover:border-emerald-500/30 cursor-pointer"
+            className={clsx(
+              "group rounded-3xl border border-white/[0.08] bg-[#1f1f1f]/40 backdrop-blur-xl transition-all hover:border-emerald-500/30 cursor-pointer",
+              isMobile ? "p-5" : "md:col-span-4 p-6"
+            )}
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20">
@@ -314,7 +336,10 @@ export function HomeView() {
           {starredDocs.length > 0 && (
             <motion.div
               variants={itemVariants}
-              className="group md:col-span-4 rounded-3xl border border-white/[0.08] bg-[#1f1f1f]/40 p-6 backdrop-blur-xl transition-all hover:border-yellow-500/30"
+              className={clsx(
+                "group rounded-3xl border border-white/[0.08] bg-[#1f1f1f]/40 backdrop-blur-xl transition-all hover:border-yellow-500/30",
+                isMobile ? "p-5" : "md:col-span-4 p-6"
+              )}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-400 ring-1 ring-yellow-500/20">
@@ -336,8 +361,8 @@ export function HomeView() {
           <motion.div
             variants={itemVariants}
             className={clsx(
-              "group rounded-3xl border border-white/[0.08] bg-[#1f1f1f]/40 p-6 backdrop-blur-xl transition-all hover:border-blue-500/30",
-              starredDocs.length > 0 ? "md:col-span-4" : "md:col-span-4"
+              "group rounded-3xl border border-white/[0.08] bg-[#1f1f1f]/40 backdrop-blur-xl transition-all hover:border-blue-500/30",
+              isMobile ? "p-5" : "md:col-span-4 p-6"
             )}
           >
             <div className="flex items-center justify-between mb-4">
@@ -366,12 +391,14 @@ export function HomeView() {
         </div>
 
         {/* Action Pills */}
-        <motion.div variants={itemVariants} className="mt-16 flex flex-wrap justify-center gap-3">
-          <ActionPill icon={<Zap className="h-3.5 w-3.5" />} label="Tasks" onClick={() => setActiveView("tasks")} />
-          <ActionPill icon={<Calendar className="h-3.5 w-3.5" />} label="Calendar" onClick={() => setActiveView("calendar")} />
-          <ActionPill icon={<Star className="h-3.5 w-3.5" />} label="Starred" onClick={() => {}} />
-          <ActionPill icon={<Layers className="h-3.5 w-3.5" />} label="Storage" onClick={() => {}} />
-        </motion.div>
+        {!isMobile && (
+          <motion.div variants={itemVariants} className="mt-16 flex flex-wrap justify-center gap-3">
+            <ActionPill icon={<Zap className="h-3.5 w-3.5" />} label="Tasks" onClick={() => setActiveView("tasks")} />
+            <ActionPill icon={<Calendar className="h-3.5 w-3.5" />} label="Calendar" onClick={() => setActiveView("calendar")} />
+            <ActionPill icon={<Star className="h-3.5 w-3.5" />} label="Starred" onClick={() => {}} />
+            <ActionPill icon={<Layers className="h-3.5 w-3.5" />} label="Storage" onClick={() => {}} />
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );

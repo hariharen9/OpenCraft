@@ -56,6 +56,9 @@ import { addHistorySnapshot } from "@/lib/storage/history";
 import { toast } from "sonner";
 import { EditorToolbar } from "./EditorToolbar";
 import { EditorBubbleMenu } from "./EditorBubbleMenu";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileSidebar } from "./MobileSidebar";
+import clsx from "clsx";
 
 export function EditorPane() {
   const setEditor = useEditorStore((s) => s.setEditor);
@@ -68,6 +71,8 @@ export function EditorPane() {
   const setPresenting = useEditorStore((s) => s.setPresenting);
   const storeFont = useEditorStore((s) => s.font);
   const storeFontSize = useEditorStore((s) => s.fontSize);
+  const isMobile = useIsMobile();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const activeDocId = useWorkspaceStore((s) => s.activeDocId);
   const docs = useWorkspaceStore((s) => s.docs);
@@ -322,7 +327,7 @@ export function EditorPane() {
 
   // Smooth scroll with Lenis
   useEffect(() => {
-    if (!scrollRef.current || !activeDocId) return;
+    if (!scrollRef.current || !activeDocId || isMobile) return;
 
     const lenis = new Lenis({
       wrapper: scrollRef.current,
@@ -346,6 +351,39 @@ export function EditorPane() {
 
   // No active document — show placeholder
   if (!activeDocId) {
+    if (isMobile) {
+      return (
+        <main
+          className="relative flex h-full min-w-0 flex-1 flex-col items-center justify-center"
+          style={pageBgStyle(pageBg)}
+        >
+          <header className="absolute inset-x-0 top-0 z-10 flex h-[44px] shrink-0 items-center justify-between px-3" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
+            <button
+              onClick={() => useEditorStore.getState().setActiveView("home")}
+              className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-[13px] text-[#888] active:scale-95"
+            >
+              <PanelLeft className="h-4 w-4" />
+              <span>Home</span>
+            </button>
+            <div />
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              className="rounded-md p-1.5 text-[#888] active:scale-95"
+              aria-label="Documents"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </header>
+          <div className="text-center">
+            <p className="text-[14px] text-[#666]">No document selected</p>
+            <p className="mt-1 text-[12px] text-[#444]">
+              Create or select a document
+            </p>
+          </div>
+          <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
+        </main>
+      );
+    }
     return (
       <main
         className="relative flex h-full min-w-0 flex-1 flex-col items-center justify-center"
@@ -392,33 +430,59 @@ export function EditorPane() {
       )}
 
       {/* Top header */}
-      <header className="absolute inset-x-0 top-0 z-10 flex h-[44px] shrink-0 items-center justify-between px-3">
-        <div className="flex items-center gap-1">
-          <IconBtn label="Apps">
-            <span className="grid h-4 w-4 grid-cols-2 gap-[2px]">
-              <span className="rounded-[1px] bg-current" />
-              <span className="rounded-[1px] bg-current" />
-              <span className="rounded-[1px] bg-current" />
-              <span className="rounded-[1px] bg-current" />
-            </span>
-          </IconBtn>
-          <IconBtn label="Toggle sidebar" onClick={toggleSidebar} active={sidebarOpen}>
-            <PanelLeft className="h-4 w-4" />
-          </IconBtn>
-        </div>
-
-        <div className="truncate text-[13px] text-[#9a9a9a] select-none pointer-events-none">{title || "Untitled Page"}</div>
-
-        <div className="flex items-center gap-1.5">
-          <IconBtn label="Toggle inspector" onClick={toggleInspector} active={inspectorOpen}>
-            <PanelRight className="h-4 w-4" />
-          </IconBtn>
-        </div>
+      <header 
+        className={clsx(
+          "absolute inset-x-0 top-0 z-10 flex shrink-0 items-center justify-between px-3 transition-all duration-300 pointer-events-none",
+          isMobile ? "h-[52px]" : "h-[44px]"
+        )} 
+        style={isMobile ? { paddingTop: "env(safe-area-inset-top, 0px)", height: "calc(52px + env(safe-area-inset-top, 0px))" } : undefined}
+      >
+        {isMobile ? (
+          <>
+            <button
+              onClick={() => useEditorStore.getState().setActiveView("home")}
+              className="pointer-events-auto flex items-center gap-1.5 rounded-xl bg-[#1a1a1a]/80 backdrop-blur-xl px-3 py-1.5 text-[13px] font-medium text-[#ccc] ring-1 ring-white/10 active:scale-95 shadow-lg"
+            >
+              <PanelLeft className="h-4 w-4" />
+              <span>Back</span>
+            </button>
+            <div className="truncate text-[13px] font-medium text-[#9a9a9a] select-none max-w-[40vw] bg-[#1a1a1a]/40 backdrop-blur-md px-3 py-1 rounded-full ring-1 ring-white/5 shadow-sm">{title || "Untitled"}</div>
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-xl bg-[#1a1a1a]/80 backdrop-blur-xl text-[#ccc] ring-1 ring-white/10 active:scale-95 shadow-lg"
+              aria-label="More"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center gap-1 pointer-events-auto">
+              <IconBtn label="Apps">
+                <span className="grid h-4 w-4 grid-cols-2 gap-[2px]">
+                  <span className="rounded-[1px] bg-current" />
+                  <span className="rounded-[1px] bg-current" />
+                  <span className="rounded-[1px] bg-current" />
+                  <span className="rounded-[1px] bg-current" />
+                </span>
+              </IconBtn>
+              <IconBtn label="Toggle sidebar" onClick={toggleSidebar} active={sidebarOpen}>
+                <PanelLeft className="h-4 w-4" />
+              </IconBtn>
+            </div>
+            <div className="truncate text-[13px] text-[#9a9a9a] select-none pointer-events-none">{title || "Untitled Page"}</div>
+            <div className="flex items-center gap-1.5 pointer-events-auto">
+              <IconBtn label="Toggle inspector" onClick={toggleInspector} active={inspectorOpen}>
+                <PanelRight className="h-4 w-4" />
+              </IconBtn>
+            </div>
+          </>
+        )}
       </header>
 
       {/* Scrollable canvas */}
-      <div className="relative min-h-0 flex-1">
-        <div ref={scrollRef} onScroll={handleScroll} className="h-full overflow-y-auto pt-[44px]">
+      <div className="relative min-h-0 flex-1 flex flex-col">
+        <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto pt-[44px]">
           {coverImage && (
             <div
               className="h-[180px] w-full bg-cover bg-center"
@@ -427,7 +491,8 @@ export function EditorPane() {
           )}
           <div
             className={
-              "mx-auto px-12 py-12 " +
+              "mx-auto py-12 " +
+              (isMobile ? "px-5 pb-28 " : "px-12 ") +
               (widePage ? "max-w-[1100px]" : "max-w-[760px]") +
               " " +
               fontClass +
@@ -440,7 +505,9 @@ export function EditorPane() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Page Title"
-                className="w-full bg-transparent pb-3 text-[40px] font-bold leading-tight tracking-[-0.02em] text-[#e0e0e0] outline-none placeholder:text-[#4a4a4a] focus:ring-0"
+                className={`w-full bg-transparent pb-3 font-bold leading-tight tracking-[-0.02em] text-[#e0e0e0] outline-none placeholder:text-[#4a4a4a] focus:ring-0 ${
+                  isMobile ? "text-[28px]" : "text-[40px]"
+                }`}
               />
               <div className="border-b border-[#2a2a2a]" />
               <div className="absolute right-0 top-3 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
@@ -495,6 +562,7 @@ export function EditorPane() {
           <EditorToolbar editor={editor} />
         </>
       )}
+      {isMobile && <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />}
     </main>
   );
 }

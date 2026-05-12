@@ -47,6 +47,7 @@ import {
 } from "date-fns";
 import { Select } from "@/components/ui/custom-select";
 import { DatePicker } from "@/components/ui/custom-date-picker";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Filter = "all" | "today" | "upcoming" | "completed" | "overdue";
 type SortMode = "manual" | "priority" | "dueDate" | "created";
@@ -88,6 +89,7 @@ export function TasksView() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showSortMenu, setShowSortMenu] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     loadTasks();
@@ -171,9 +173,9 @@ export function TasksView() {
   return (
     <div className="flex h-full w-full flex-col bg-[#1f1f1f]">
       {/* Header */}
-      <header className="flex shrink-0 items-center justify-between px-8 pt-6 pb-2">
+      <header className={`flex shrink-0 items-center justify-between pt-6 pb-2 ${isMobile ? "px-4" : "px-8"}`}>
         <div>
-          <h1 className="text-[22px] font-bold tracking-[-0.02em] text-[#e8e8e8]">Tasks</h1>
+          <h1 className={`font-bold tracking-[-0.02em] text-[#e8e8e8] ${isMobile ? "text-[18px]" : "text-[22px]"}`}>Tasks</h1>
           <p className="mt-0.5 text-[12px] text-[#666]">
             {incompleteCount} remaining · {completedCount} completed
           </p>
@@ -240,7 +242,7 @@ export function TasksView() {
 
       {/* Progress bar */}
       {tasks.length > 0 && (
-        <div className="mx-8 mt-2 mb-1">
+        <div className={`mt-2 mb-1 ${isMobile ? "mx-4" : "mx-8"}`}>
           <div className="flex items-center gap-3">
             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#2a2a2a]">
               <motion.div
@@ -259,7 +261,7 @@ export function TasksView() {
       )}
 
       {/* Filter tabs */}
-      <div className="flex gap-1 px-8 py-3">
+      <div className={`flex gap-1 py-3 overflow-x-auto ${isMobile ? "px-4" : "px-8"}`}>
         {filters.map((f) => (
           <button
             key={f.key}
@@ -294,7 +296,7 @@ export function TasksView() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden px-8"
+            className={`overflow-hidden ${isMobile ? "px-4" : "px-8"}`}
           >
             <div className="mb-4 rounded-xl bg-[#262626] p-4 ring-1 ring-[#333]">
               <input
@@ -355,7 +357,7 @@ export function TasksView() {
       </AnimatePresence>
 
       {/* Task list */}
-      <div className="min-h-0 flex-1 overflow-y-auto px-8 pb-6">
+      <div className={`min-h-0 flex-1 overflow-y-auto pb-6 ${isMobile ? "px-4 pb-24" : "px-8"}`}>
         {!loaded ? (
           <div className="flex items-center justify-center pt-20">
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#444] border-t-[#888]" />

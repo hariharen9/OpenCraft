@@ -14,6 +14,7 @@ import {
 import { useEditorStore } from "@/store/editor-store";
 import { useTasksStore, type Task } from "@/store/tasks-store";
 import { useSettingsStore } from "@/store/settings-store";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   format,
   startOfMonth,
@@ -64,6 +65,7 @@ export function CalendarView() {
   const [viewMode, setViewMode] = useState<ViewMode>("month");
   const [showMiniStats, setShowMiniStats] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     loadTasks();
@@ -156,9 +158,9 @@ export function CalendarView() {
   return (
     <div className="flex h-full w-full flex-col bg-[#1f1f1f]">
       {/* Header */}
-      <header className="flex shrink-0 items-center justify-between px-8 pt-6 pb-2">
+      <header className={`flex shrink-0 items-center justify-between pt-6 pb-2 ${isMobile ? "px-4" : "px-8"}`}>
         <div>
-          <h1 className="text-[22px] font-bold tracking-[-0.02em] text-[#e8e8e8]">Calendar</h1>
+          <h1 className={`font-bold tracking-[-0.02em] text-[#e8e8e8] ${isMobile ? "text-[18px]" : "text-[22px]"}`}>Calendar</h1>
           <p className="mt-0.5 text-[12px] text-[#666]">
             {format(new Date(), "EEEE, MMMM d, yyyy")}
           </p>
@@ -191,9 +193,9 @@ export function CalendarView() {
       </header>
 
       {/* Content split: calendar + agenda */}
-      <div className="flex min-h-0 flex-1 gap-0">
+      <div className={`flex min-h-0 flex-1 ${isMobile ? "flex-col" : "gap-0"}`}>
         {/* Calendar grid side */}
-        <div className="flex min-w-0 flex-1 flex-col px-8 pb-4">
+        <div className={`flex min-w-0 flex-col pb-4 ${isMobile ? "flex-none px-4" : "flex-1 px-8"}`}>
           {/* Month nav */}
           <div className="flex items-center justify-between py-3">
             <button
@@ -312,8 +314,8 @@ export function CalendarView() {
           </div>
         </div>
 
-        {/* Agenda sidebar */}
-        <div className="flex w-[320px] shrink-0 flex-col border-l border-[#2a2a2a] bg-[#1a1a1a]">
+        {/* Agenda sidebar / bottom section */}
+        <div className={`flex shrink-0 flex-col border-[#2a2a2a] bg-[#1a1a1a] ${isMobile ? "w-full flex-1 min-h-0 border-t" : "w-[320px] border-l"}`}>
           {/* Selected date header */}
           <div className="px-5 pt-5 pb-3">
             <div className="flex items-center gap-2">
@@ -338,7 +340,7 @@ export function CalendarView() {
           </div>
 
           {/* Tasks for selected day */}
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
+          <div className={`min-h-0 flex-1 overflow-y-auto px-4 ${isMobile ? "pb-24" : "pb-4"}`}>
             {!loaded ? (
               <div className="flex items-center justify-center py-8">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#444] border-t-[#888]" />

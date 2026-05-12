@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { useEditorStore } from "@/store/editor-store";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const barVariants = {
   hidden: { y: 60, opacity: 0, scale: 0.85 },
@@ -57,7 +58,9 @@ export function EditorToolbar({ editor }: Props) {
   const isFocused = editor.isFocused;
   const tick = useEditorStore((s) => s.tick);
   const accent = useEditorStore((s) => s.accentColor);
+  const isMobile = useIsMobile();
 
+  // On mobile, show a compact toolbar positioned above the bottom nav
   return (
     <AnimatePresence>
       <motion.div
@@ -66,9 +69,10 @@ export function EditorToolbar({ editor }: Props) {
         animate="visible"
         exit="exit"
         className={clsx(
-          "fixed bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 px-3 py-2",
+          "fixed left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 px-2 py-1.5",
           "rounded-2xl shadow-2xl backdrop-blur-xl ring-1 transition-colors duration-300",
           isFocused ? "bg-[#1f1f1f]/95 ring-[#333]" : "bg-[#1f1f1f]/60 ring-[#2a2a2a]",
+          isMobile ? "bottom-20 max-w-[calc(100vw-32px)]" : "bottom-8",
         )}
       >
 
@@ -82,17 +86,17 @@ export function EditorToolbar({ editor }: Props) {
           {/* Undo/Redo */}
           <motion.div
             variants={groupVariants}
-            className="flex items-center gap-1 pr-2 border-r border-[#333]"
+            className="flex items-center gap-0.5 pr-1.5 border-r border-[#333]"
           >
             <ToolbarBtn
-              icon={<Undo size={14} />}
+              icon={<Undo size={isMobile ? 13 : 14} />}
               onClick={() => editor.chain().focus().undo().run()}
               disabled={!editor.can().undo()}
               title="Undo"
               accent={accent}
             />
             <ToolbarBtn
-              icon={<Redo size={14} />}
+              icon={<Redo size={isMobile ? 13 : 14} />}
               onClick={() => editor.chain().focus().redo().run()}
               disabled={!editor.can().redo()}
               title="Redo"
@@ -100,68 +104,72 @@ export function EditorToolbar({ editor }: Props) {
             />
           </motion.div>
 
-          {/* Headings & Paragraph */}
-          <motion.div
-            variants={groupVariants}
-            className="flex items-center gap-1 px-2 border-r border-[#333]"
-          >
-            <ToolbarBtn
-              icon={<Type size={14} />}
-              isActive={editor.isActive("paragraph")}
-              onClick={() => editor.chain().focus().setParagraph().run()}
-              title="Paragraph"
-              accent={accent}
-            />
-            <ToolbarBtn
-              icon={<Heading1 size={14} />}
-              isActive={editor.isActive("heading", { level: 1 })}
-              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-              title="Heading 1"
-              accent={accent}
-            />
-            <ToolbarBtn
-              icon={<Heading2 size={14} />}
-              isActive={editor.isActive("heading", { level: 2 })}
-              onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-              title="Heading 2"
-              accent={accent}
-            />
-            <ToolbarBtn
-              icon={<Heading3 size={14} />}
-              isActive={editor.isActive("heading", { level: 3 })}
-              onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-              title="Heading 3"
-              accent={accent}
-            />
-          </motion.div>
+          {/* Headings & Paragraph — hidden on mobile */}
+          {!isMobile && (
+            <motion.div
+              variants={groupVariants}
+              className="flex items-center gap-1 px-2 border-r border-[#333]"
+            >
+              <ToolbarBtn
+                icon={<Type size={14} />}
+                isActive={editor.isActive("paragraph")}
+                onClick={() => editor.chain().focus().setParagraph().run()}
+                title="Paragraph"
+                accent={accent}
+              />
+              <ToolbarBtn
+                icon={<Heading1 size={14} />}
+                isActive={editor.isActive("heading", { level: 1 })}
+                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                title="Heading 1"
+                accent={accent}
+              />
+              <ToolbarBtn
+                icon={<Heading2 size={14} />}
+                isActive={editor.isActive("heading", { level: 2 })}
+                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                title="Heading 2"
+                accent={accent}
+              />
+              <ToolbarBtn
+                icon={<Heading3 size={14} />}
+                isActive={editor.isActive("heading", { level: 3 })}
+                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                title="Heading 3"
+                accent={accent}
+              />
+            </motion.div>
+          )}
 
-          {/* Lists */}
-          <motion.div
-            variants={groupVariants}
-            className="flex items-center gap-1 px-2 border-r border-[#333]"
-          >
-            <ToolbarBtn
-              icon={<List size={14} />}
-              isActive={editor.isActive("bulletList")}
-              onClick={() => editor.chain().focus().toggleBulletList().run()}
-              title="Bullet List"
-              accent={accent}
-            />
-            <ToolbarBtn
-              icon={<ListOrdered size={14} />}
-              isActive={editor.isActive("orderedList")}
-              onClick={() => editor.chain().focus().toggleOrderedList().run()}
-              title="Numbered List"
-              accent={accent}
-            />
-            <ToolbarBtn
-              icon={<CheckSquare size={14} />}
-              isActive={editor.isActive("taskList")}
-              onClick={() => editor.chain().focus().toggleTaskList().run()}
-              title="Task List"
-              accent={accent}
-            />
-          </motion.div>
+          {/* Lists — hidden on mobile */}
+          {!isMobile && (
+            <motion.div
+              variants={groupVariants}
+              className="flex items-center gap-1 px-2 border-r border-[#333]"
+            >
+              <ToolbarBtn
+                icon={<List size={14} />}
+                isActive={editor.isActive("bulletList")}
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                title="Bullet List"
+                accent={accent}
+              />
+              <ToolbarBtn
+                icon={<ListOrdered size={14} />}
+                isActive={editor.isActive("orderedList")}
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                title="Numbered List"
+                accent={accent}
+              />
+              <ToolbarBtn
+                icon={<CheckSquare size={14} />}
+                isActive={editor.isActive("taskList")}
+                onClick={() => editor.chain().focus().toggleTaskList().run()}
+                title="Task List"
+                accent={accent}
+              />
+            </motion.div>
+          )}
 
           {/* Inline Formatting */}
           <motion.div
@@ -226,37 +234,39 @@ export function EditorToolbar({ editor }: Props) {
             />
           </motion.div>
 
-          {/* Text Align */}
-          <motion.div variants={groupVariants} className="flex items-center gap-1 pl-2">
-            <ToolbarBtn
-              icon={<AlignLeft size={14} />}
-              isActive={editor.isActive({ textAlign: "left" })}
-              onClick={() => editor.chain().focus().setTextAlign("left").run()}
-              title="Align Left"
-              accent={accent}
-            />
-            <ToolbarBtn
-              icon={<AlignCenter size={14} />}
-              isActive={editor.isActive({ textAlign: "center" })}
-              onClick={() => editor.chain().focus().setTextAlign("center").run()}
-              title="Align Center"
-              accent={accent}
-            />
-            <ToolbarBtn
-              icon={<AlignRight size={14} />}
-              isActive={editor.isActive({ textAlign: "right" })}
-              onClick={() => editor.chain().focus().setTextAlign("right").run()}
-              title="Align Right"
-              accent={accent}
-            />
-            <ToolbarBtn
-              icon={<AlignJustify size={14} />}
-              isActive={editor.isActive({ textAlign: "justify" })}
-              onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-              title="Justify"
-              accent={accent}
-            />
-          </motion.div>
+          {/* Text Align — hidden on mobile */}
+          {!isMobile && (
+            <motion.div variants={groupVariants} className="flex items-center gap-1 pl-2">
+              <ToolbarBtn
+                icon={<AlignLeft size={14} />}
+                isActive={editor.isActive({ textAlign: "left" })}
+                onClick={() => editor.chain().focus().setTextAlign("left").run()}
+                title="Align Left"
+                accent={accent}
+              />
+              <ToolbarBtn
+                icon={<AlignCenter size={14} />}
+                isActive={editor.isActive({ textAlign: "center" })}
+                onClick={() => editor.chain().focus().setTextAlign("center").run()}
+                title="Align Center"
+                accent={accent}
+              />
+              <ToolbarBtn
+                icon={<AlignRight size={14} />}
+                isActive={editor.isActive({ textAlign: "right" })}
+                onClick={() => editor.chain().focus().setTextAlign("right").run()}
+                title="Align Right"
+                accent={accent}
+              />
+              <ToolbarBtn
+                icon={<AlignJustify size={14} />}
+                isActive={editor.isActive({ textAlign: "justify" })}
+                onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+                title="Justify"
+                accent={accent}
+              />
+            </motion.div>
+          )}
         </motion.div>
       </motion.div>
     </AnimatePresence>

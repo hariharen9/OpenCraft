@@ -35,9 +35,9 @@ import opencraftLogo from "@/Assets/opencraft-white-single.png";
 import { toast } from "sonner";
 
 const item =
-  "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-[#c8c8c8] hover:bg-[#2f2f2f] cursor-pointer transition-colors active:scale-[0.99] w-full";
+  "group relative flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-[#c8c8c8] cursor-pointer w-full";
 const itemActive =
-  "group flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-white bg-[#2a2a2a] cursor-default w-full";
+  "group relative flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13px] text-white bg-[#2a2a2a] cursor-default w-full";
 
 interface ContextMenuItem {
   label: string;
@@ -50,6 +50,7 @@ export function Sidebar() {
   const editor = useEditorStore((s) => s.editor);
   const activeView = useEditorStore((s) => s.activeView);
   const setActiveView = useEditorStore((s) => s.setActiveView);
+  const accentColor = useEditorStore((s) => s.accentColor);
 
   const store = useWorkspaceStore();
   const {
@@ -237,15 +238,22 @@ export function Sidebar() {
     [folders, updateDocMeta],
   );
 
-  const navItem = (view: ActiveView, icon: React.ReactNode, label: string) => (
-    <button
-      onClick={() => setActiveView(view)}
-      className={activeView === view && (view !== "editor" || !activeDocId) ? itemActive : item}
-    >
-      {icon}
-      {label}
-    </button>
-  );
+  const navItem = (view: ActiveView, icon: React.ReactNode, label: string) => {
+    const isAct = activeView === view && (view !== "editor" || !activeDocId);
+    return (
+      <motion.button
+        onClick={() => setActiveView(view)}
+        className={isAct ? itemActive : item}
+        whileHover={isAct ? undefined : { backgroundColor: `${accentColor}0d` }}
+        whileTap={isAct ? undefined : { scale: 0.98 }}
+        transition={{ duration: 0.2 }}
+      >
+        <AccentBar active={isAct} accent={accentColor} />
+        <AnimatedIcon accent={accentColor}>{icon}</AnimatedIcon>
+        {label}
+      </motion.button>
+    );
+  };
 
   return (
     <motion.aside
@@ -393,13 +401,21 @@ export function Sidebar() {
 
       {/* Primary nav */}
       <nav className="px-2 space-y-0.5">
-        {navItem("home", <Home className="h-4 w-4 text-[#9a9a9a]" />, "Home")}
-        <button onClick={handleNewDoc} className={item}>
-          <PenSquare className="h-4 w-4 text-[#9a9a9a]" />
+        {navItem("home", <Home className="h-4 w-4" />, "Home")}
+        <motion.button
+          onClick={handleNewDoc}
+          className={item}
+          whileHover={{ backgroundColor: `${accentColor}0d` }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 0.2 }}
+        >
+          <AnimatedIcon accent={accentColor}>
+            <PenSquare className="h-4 w-4" />
+          </AnimatedIcon>
           New Document
-        </button>
-        {navItem("tasks", <CheckCircle2 className="h-4 w-4 text-[#9a9a9a]" />, "Tasks")}
-        {navItem("calendar", <Calendar className="h-4 w-4 text-[#9a9a9a]" />, "Calendar")}
+        </motion.button>
+        {navItem("tasks", <CheckCircle2 className="h-4 w-4" />, "Tasks")}
+        {navItem("calendar", <Calendar className="h-4 w-4" />, "Calendar")}
       </nav>
 
       {/* Starred docs */}
@@ -409,43 +425,56 @@ export function Sidebar() {
           <div className="px-1 text-[12px] italic text-[#666]">Star Docs to keep them close</div>
         ) : (
           <div className="space-y-0.5">
-            {starredDocs.map((doc) => (
-              <div key={doc.id} className="group relative">
-                <button
-                  onClick={() => handleOpenDoc(doc.id)}
-                  className={
-                    doc.id === activeDocId && activeView === "editor"
-                      ? itemActive + " pr-12"
-                      : item + " pr-12"
-                  }
-                >
-                  <Star className="h-3.5 w-3.5 fill-current text-yellow-400 shrink-0" />
-                  <span className="flex-1 truncate text-left">{doc.title || "Untitled"}</span>
-                </button>
-                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      updateDocMeta(doc.id, { starred: false });
-                    }}
-                    className="rounded p-0.5 text-[#555] hover:text-[#aaa]"
-                    title="Unstar"
+            {starredDocs.map((doc) => {
+              const isAct = doc.id === activeDocId && activeView === "editor";
+              return (
+                <div key={doc.id} className="group relative">
+                  <motion.button
+                    onClick={() => handleOpenDoc(doc.id)}
+                    className={(isAct ? itemActive : item) + " pr-12"}
+                    whileHover={isAct ? undefined : { backgroundColor: `${accentColor}0d` }}
+                    whileTap={isAct ? undefined : { scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <Star className="h-3 w-3 fill-current text-[#555]" />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteDoc(doc.id);
-                    }}
-                    className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
-                    title="Delete"
+                    <AccentBar active={isAct} accent={accentColor} />
+                    <Star className="h-3.5 w-3.5 fill-current text-yellow-400 shrink-0" />
+                    <span className="flex-1 truncate text-left">{doc.title || "Untitled"}</span>
+                  </motion.button>
+                  <motion.div
+                    className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5"
+                    initial={false}
+                    animate={{ opacity: 0, x: 8 }}
+                    whileHover={{ opacity: 1, x: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    <Trash2 className="h-3 w-3" />
-                  </button>
+                    <motion.button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateDocMeta(doc.id, { starred: false });
+                      }}
+                      className="rounded p-0.5 text-[#555] hover:text-[#aaa]"
+                      title="Unstar"
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.85 }}
+                    >
+                      <Star className="h-3 w-3 fill-current text-[#555]" />
+                    </motion.button>
+                    <motion.button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteDoc(doc.id);
+                      }}
+                      className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
+                      title="Delete"
+                      whileHover={{ scale: 1.2, color: "#ef4444" }}
+                      whileTap={{ scale: 0.85 }}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </motion.button>
+                  </motion.div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -727,28 +756,37 @@ export function Sidebar() {
       {/* Bottom toolbar */}
       <div className="mx-4 border-t border-white/[0.06]" />
       <div className="flex items-center gap-1 px-3 pb-3 pt-2">
-        <button
+        <motion.button
           onClick={handleExport}
           title="Export as Markdown"
-          className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95"
+          className="rounded-md p-1.5 text-[#888]"
+          whileHover={{ backgroundColor: `${accentColor}15`, color: accentColor, scale: 1.05 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
         >
           <Download className="h-4 w-4" />
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={() => fileRef.current?.click()}
           title="Import Markdown"
-          className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95"
+          className="rounded-md p-1.5 text-[#888]"
+          whileHover={{ backgroundColor: `${accentColor}15`, color: accentColor, scale: 1.05 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
         >
           <Upload className="h-4 w-4" />
-        </button>
+        </motion.button>
         <div className="flex-1" />
-        <button
+        <motion.button
           onClick={() => setSettingsOpen(true)}
-          className="rounded-md p-1.5 text-[#888] hover:bg-[#2f2f2f] hover:text-[#ddd] active:scale-95"
+          className="rounded-md p-1.5 text-[#888]"
+          whileHover={{ backgroundColor: `${accentColor}15`, color: accentColor, scale: 1.05 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
           title="Settings"
         >
           <Settings className="h-4 w-4" />
-        </button>
+        </motion.button>
         <input
           ref={fileRef}
           type="file"
@@ -783,6 +821,50 @@ export function Sidebar() {
         />
       )}
     </motion.aside>
+  );
+}
+
+/* ─── Motion Helpers ─── */
+
+function AccentBar({ active, accent }: { active: boolean; accent: string }) {
+  return (
+    <motion.div
+      className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-full"
+      style={{ background: accent }}
+      animate={{
+        height: active ? 16 : 0,
+        opacity: active ? 1 : 0,
+        boxShadow: active ? `0 0 8px ${accent}80` : "none",
+      }}
+      transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+    />
+  );
+}
+
+function HoverGlow({ accent }: { accent: string }) {
+  return (
+    <motion.div
+      className="pointer-events-none absolute inset-0 rounded-md"
+      initial={false}
+      whileHover={{
+        backgroundColor: `${accent}0d`,
+        boxShadow: `inset 0 0 20px -8px ${accent}40`,
+      }}
+      transition={{ duration: 0.3, ease: "linear" }}
+    />
+  );
+}
+
+function AnimatedIcon({ children, accent }: { children: React.ReactNode; accent: string }) {
+  return (
+    <motion.span
+      className="shrink-0"
+      whileHover={{ scale: 1.15, color: accent }}
+      whileTap={{ scale: 0.9 }}
+      transition={{ type: "spring", stiffness: 400, damping: 12 }}
+    >
+      {children}
+    </motion.span>
   );
 }
 
@@ -849,6 +931,7 @@ function DraggableDocItem({
   onDelete: (e: React.MouseEvent) => void;
   compact?: boolean;
 }) {
+  const accentColor = useEditorStore((s) => s.accentColor);
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: doc.id });
 
   return (
@@ -858,29 +941,45 @@ function DraggableDocItem({
       {...attributes}
       {...listeners}
     >
-      <button
+      <motion.button
         onClick={() => onOpen(doc.id)}
         className={(isActive ? itemActive : item) + (compact ? " !py-1 !pl-2" : "")}
+        whileHover={isActive ? undefined : { backgroundColor: `${accentColor}0d` }}
+        whileTap={isActive ? undefined : { scale: 0.98 }}
+        transition={{ duration: 0.2 }}
       >
-        <FileText className="h-4 w-4 text-[#9a9a9a] shrink-0" />
+        <AccentBar active={isActive} accent={accentColor} />
+        <AnimatedIcon accent={accentColor}>
+          <FileText className="h-4 w-4" />
+        </AnimatedIcon>
         <span className="flex-1 truncate text-left">{doc.title || "Untitled"}</span>
-      </button>
-      <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
+      </motion.button>
+      <motion.div
+        className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5"
+        initial={false}
+        animate={{ opacity: 0, x: 8 }}
+        whileHover={{ opacity: 1, x: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      >
+        <motion.button
           onClick={onStar}
           className="rounded p-0.5 text-[#555] hover:text-yellow-400"
           title={doc.starred ? "Unstar" : "Star"}
+          whileHover={{ scale: 1.2 }}
+          whileTap={{ scale: 0.85 }}
         >
           <Star className={"h-3 w-3 " + (doc.starred ? "fill-current text-yellow-400" : "")} />
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={onDelete}
           className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
           title="Delete"
+          whileHover={{ scale: 1.2, color: "#ef4444" }}
+          whileTap={{ scale: 0.85 }}
         >
           <Trash2 className="h-3 w-3" />
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </div>
   );
 }
@@ -914,6 +1013,7 @@ function DroppableFolderRow({
   onCancelRename: () => void;
   children: React.ReactNode;
 }) {
+  const accentColor = useEditorStore((s) => s.accentColor);
   const { setNodeRef, isOver } = useDroppable({ id: folder.id });
 
   return (
@@ -939,31 +1039,46 @@ function DroppableFolderRow({
             />
           </div>
         ) : (
-          <button
+          <motion.button
             onClick={onToggle}
-            className="flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-[12px] font-medium text-[#aaa] hover:bg-[#2f2f2f] transition-colors"
+            className="flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-[12px] font-medium text-[#aaa]"
+            whileHover={{ backgroundColor: `${accentColor}0d` }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
           >
-            <ChevronDown
-              className={`h-3.5 w-3.5 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
-            />
+            <motion.span
+              animate={{ rotate: isExpanded ? 0 : -90 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="h-3.5 w-3.5 flex items-center justify-center shrink-0"
+            >
+              <ChevronDown className="h-3.5 w-3.5" />
+            </motion.span>
             <FolderIcon className="h-3.5 w-3.5" />
             <span className="flex-1 truncate text-left">{folder.name}</span>
             <span className="text-[10px] text-[#666]">{folderDocCount}</span>
-          </button>
+          </motion.button>
         )}
         {!isRenaming && (
-          <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
+          <motion.div
+            className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5"
+            initial={false}
+            animate={{ opacity: 0, x: 8 }}
+            whileHover={{ opacity: 1, x: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <motion.button
               onClick={(e) => {
                 e.stopPropagation();
                 onDeleteFolder();
               }}
               className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
               title="Delete Folder"
+              whileHover={{ scale: 1.2, color: "#ef4444" }}
+              whileTap={{ scale: 0.85 }}
             >
               <Trash2 className="h-3 w-3" />
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         )}
       </div>
       {children}

@@ -380,3 +380,113 @@ hr.divider-dashed {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+/* ─── Mobile-Specific Styles ─── */
+
+/* Prevent overscroll bounce on mobile */
+.mobile-app-container {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+}
+
+/* Safe area padding for notch/home-indicator devices */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .mobile-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mobile-safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Mobile editor adjustments */
+@media (max-width: 767px) {
+  /* Remove scrollbars on mobile */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    scrollbar-width: none;
+  }
+
+  /* Editor typography for mobile */
+  .opencraft-prose {
+    font-size: 16px; /* Prevent iOS zoom on focus */
+    line-height: 1.75;
+  }
+  .opencraft-prose h1 {
+    font-size: 1.75rem;
+    margin-top: 1em;
+  }
+  .opencraft-prose h2 {
+    font-size: 1.35rem;
+    margin-top: 0.9em;
+  }
+  .opencraft-prose h3 {
+    font-size: 1.15rem;
+  }
+  .opencraft-prose pre {
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 13px;
+  }
+  .opencraft-prose blockquote {
+    border-radius: 12px;
+    padding: 0.5em 0.8em;
+  }
+  .opencraft-prose img {
+    border-radius: 12px;
+  }
+  .opencraft-prose table {
+    font-size: 13px;
+  }
+  .opencraft-prose th,
+  .opencraft-prose td {
+    padding: 6px 8px;
+  }
+
+  /* Prevent text selection highlights from being confusing on mobile */
+  .opencraft-prose ::selection {
+    background: rgba(255, 138, 76, 0.25);
+  }
+
+  /* Bottom nav spacing for views */
+  .mobile-view-padding {
+    padding-bottom: 90px;
+  }
+
+  /* Full bleed mobile cards */
+  .mobile-card {
+    border-radius: 20px;
+  }
+
+  /* Input sizing to prevent iOS zoom */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
+  /* Disable hover effects on touch */
+  @media (hover: none) {
+    .hover\:bg-\[\#2a2a2a\]:hover {
+      background-color: inherit;
+    }
+  }
+}
+
+/* PWA standalone adjustments */
+@media (display-mode: standalone) {
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .opencraft-prose {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  input, textarea {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
