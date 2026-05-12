@@ -31,6 +31,16 @@ import { useEditorStore, type ActiveView } from "@/store/editor-store";
 import { useWorkspaceStore, type DocMeta, type Folder } from "@/store/workspace-store";
 import { SettingsDialog } from "./SettingsDialog";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import opencraftLogo from "@/Assets/opencraft-white-single.png";
 import { toast } from "sonner";
 
@@ -101,6 +111,7 @@ export function Sidebar() {
   } | null>(null);
 
   const [draggedDoc, setDraggedDoc] = useState<DocMeta | null>(null);
+  const [docToDelete, setDocToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     load();
@@ -462,7 +473,7 @@ export function Sidebar() {
                     <motion.button
                       onClick={(e) => {
                         e.stopPropagation();
-                        deleteDoc(doc.id);
+                        setDocToDelete(doc.id);
                       }}
                       className="rounded p-0.5 text-[#555] hover:text-[#ef4444]"
                       title="Delete"
@@ -596,7 +607,7 @@ export function Sidebar() {
                                   }}
                                   onDelete={(e) => {
                                     e.stopPropagation();
-                                    deleteDoc(doc.id);
+                                    setDocToDelete(doc.id);
                                   }}
                                 />
                               ))
@@ -735,7 +746,7 @@ export function Sidebar() {
                     }}
                     onDelete={(e) => {
                       e.stopPropagation();
-                      deleteDoc(doc.id);
+                      setDocToDelete(doc.id);
                     }}
                   />
                 ))
@@ -812,6 +823,32 @@ export function Sidebar() {
       </div>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+
+      <AlertDialog open={docToDelete !== null} onOpenChange={(open) => !open && setDocToDelete(null)}>
+        <AlertDialogContent className="bg-[#1f1f1f] border-white/10 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription className="text-[#888]">
+              This action cannot be undone. This will permanently delete this document.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => {
+                if (docToDelete) {
+                  deleteDoc(docToDelete);
+                  toast.success("Document deleted");
+                }
+                setDocToDelete(null);
+              }}
+              className="bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20"
+            >
+              Delete Document
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {contextMenu && (
         <SidebarItemMenu

@@ -46,6 +46,7 @@ import {
   Plus,
   ChevronUp,
   ChevronDown,
+  Settings,
 } from "lucide-react";
 import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore } from "@/store/workspace-store";
@@ -450,9 +451,9 @@ export function EditorPane() {
             <button
               onClick={() => setMobileSidebarOpen(true)}
               className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-xl bg-[#1a1a1a]/80 backdrop-blur-xl text-[#ccc] ring-1 ring-white/10 active:scale-95 shadow-lg"
-              aria-label="More"
+              aria-label="Settings"
             >
-              <Plus className="h-4 w-4" />
+              <Settings className="h-4 w-4" />
             </button>
           </>
         ) : (

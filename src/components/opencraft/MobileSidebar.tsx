@@ -18,8 +18,17 @@ import { useEditorStore } from "@/store/editor-store";
 import { useWorkspaceStore, type DocMeta } from "@/store/workspace-store";
 import { SettingsDialog } from "./SettingsDialog";
 import { toast } from "sonner";
-
 import opencraftLogo from "@/Assets/opencraft-white-single.png";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface MobileSidebarProps {
   open: boolean;
@@ -46,6 +55,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [docToDelete, setDocToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) load();
@@ -218,7 +228,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
                           accent={accent}
                           onOpen={() => handleOpenDoc(doc.id)}
                           onStar={() => updateDocMeta(doc.id, { starred: false })}
-                          onDelete={() => deleteDoc(doc.id)}
+                          onDelete={() => setDocToDelete(doc.id)}
                         />
                       ))}
                     </div>
@@ -244,7 +254,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
                           accent={accent}
                           onOpen={() => handleOpenDoc(doc.id)}
                           onStar={() => updateDocMeta(doc.id, { starred: !doc.starred })}
-                          onDelete={() => deleteDoc(doc.id)}
+                          onDelete={() => setDocToDelete(doc.id)}
                         />
                       ))}
                     </div>
@@ -279,6 +289,32 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
       </AnimatePresence>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+
+      <AlertDialog open={docToDelete !== null} onOpenChange={(open) => !open && setDocToDelete(null)}>
+        <AlertDialogContent className="w-[90vw] max-w-[400px] bg-[#1f1f1f] border-white/10 text-white rounded-2xl p-5">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription className="text-[#888]">
+              This action cannot be undone. This will permanently delete this document.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-4 sm:space-x-2 gap-2 flex-row justify-end">
+            <AlertDialogCancel className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white mt-0 w-auto flex-1 sm:flex-none">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => {
+                if (docToDelete) {
+                  deleteDoc(docToDelete);
+                  toast.success("Document deleted");
+                }
+                setDocToDelete(null);
+              }}
+              className="bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 w-auto flex-1 sm:flex-none"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
