@@ -33,12 +33,12 @@ So, I built **OpenCraft**.
 
 | Feature | Description |
 | :--- | :--- |
-| **🚀 Instant Search** | Full-text universal search across all documents in under 200ms. |
+| **💻 Native Desktop** | First-class Windows & Mac apps with a custom, borderless brutalist UI. |
+| **📂 True Local Files** | On desktop, your notes are saved as real `.md` and `.json` files. |
+| **🚀 Instant Search** | Full-text universal search across all documents with `⌘/Ctrl K`. |
 | **🖌️ Block Editor** | A rich, fluid writing experience with support for slash commands. |
-| **📅 Task Central** | Integrated task management with calendar sync and recurring duties. |
-| **🔒 Privacy First** | Zero telemetry. No tracking. Your notes live on your machine. |
-| **📂 Intelligent Org** | Nested folders and workspace-wide tags to keep your brain organized. |
-| **⚡ Command Palette** | Keyboard-first navigation for every action with `⌘ K`. |
+| **📅 Task Central** | Native OS Notifications, recurring tasks, and calendar sync. |
+| **⚡ Global Shortcuts** | Summon your Command Palette from anywhere with `Ctrl+Shift+O`. |
 
 ---
 
@@ -48,7 +48,9 @@ So, I built **OpenCraft**.
 Most open-source tools look like they were designed by engineers for engineers. OpenCraft is different. Every pixel, every animation, and every hover effect is tuned to create a **flow state**. If a tool isn't a joy to open, you won't use it.
 
 ### 2. Your Data, Your Home
-OpenCraft is **local-first**. Your notes aren't sitting on someone else's server waiting to be scanned by an AI model. They live on your device. You own the files. The app is just a beautiful window into your own thoughts.
+OpenCraft is strictly **local-first**. Your notes aren't sitting on someone else's server waiting to be scanned by an AI model. 
+- **On the Web**, everything lives safely within your browser's IndexedDB.
+- **On Desktop**, your notes are saved directly to your `Documents/OpenCraft` folder as portable `.md` (Markdown) and `.json` files. You can open them in any text editor.
 
 ### 3. The "No-AI" Promise
 We believe writing is thinking. Automating it defeats the purpose. OpenCraft has no AI features. No "Write it for me." No "Summarize." Just you and the cursor.
@@ -60,17 +62,18 @@ We believe writing is thinking. Automating it defeats the purpose. OpenCraft has
 Built with a modern, high-performance stack for a seamless experience:
 
 - **Framework**: [TanStack Start](https://tanstack.com/start) / React 19
+- **Desktop Engine**: [Electron](https://www.electronjs.org/) (Native IPC, File System, OS Integrations)
 - **Editor Core**: [Tiptap](https://tiptap.dev/)
 - **Styling**: Vanilla CSS + Tailwind
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Icons**: [Lucide React](https://lucide.dev/)
-- **Storage**: IndexedDB (Local-first)
+- **Storage**: Native File System (Desktop) / IndexedDB (Web)
 
 ---
 
 ## 🚀 Getting Started
 
-OpenCraft is free, forever. No "Pro" plans. No "50-note limit." Just download, open, and write.
+OpenCraft is free, forever. No "Pro" plans. Just download the latest native app from the **[Releases](https://github.com/hariharen9/OpenCraft/releases)** page, or run it yourself!
 
 ```bash
 # Clone the repository
@@ -79,8 +82,14 @@ git clone https://github.com/hariharen9/OpenCraft
 # Install dependencies
 npm install
 
-# Start the engine
+# Start the Web App
 npm run dev
+
+# Start the Native Desktop App
+npm run dev:desktop
+
+# Build the desktop executables
+npm run build:desktop
 ```
 
 ---
