@@ -2,8 +2,8 @@ name: Build and Release Desktop App
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
 
 jobs:

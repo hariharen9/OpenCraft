@@ -277,7 +277,7 @@ export function InfoTab() {
             <PropRow
               icon={<User className="h-3.5 w-3.5" />}
               label="Author"
-              value={user?.displayName || user?.email || "OpenCraft User"}
+              value={user?.displayName || user?.email || "Best human Alive!"}
             />
           </Section>
 

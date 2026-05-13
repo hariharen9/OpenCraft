@@ -2,7 +2,7 @@
   "name": "opencraft",
   "version": "1.0.0",
   "description": "A focused writing space",
-  "author": "OpenCraft Team",
+  "author": "Hariharen S S",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -24,11 +24,17 @@
       "output": "release"
     },
     "win": {
-      "target": ["nsis", "portable"],
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "icon": "assets/logo.png"
     },
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "icon": "assets/logo.png"
     },
     "fileAssociations": [
