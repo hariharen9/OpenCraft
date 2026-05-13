@@ -81,12 +81,15 @@ export function EditorToolbar({ editor }: Props) {
           variants={groupContainerVariants}
           initial="hidden"
           animate="visible"
-          className="flex items-center gap-1.5"
+          className={clsx(
+            "flex items-center gap-1.5",
+            isMobile && "overflow-x-auto scrollbar-none pb-0.5"
+          )}
         >
           {/* Undo/Redo */}
           <motion.div
             variants={groupVariants}
-            className="flex items-center gap-0.5 pr-1.5 border-r border-[#333]"
+            className="flex items-center gap-0.5 pr-1.5 border-r border-[#333] shrink-0"
           >
             <ToolbarBtn
               icon={<Undo size={isMobile ? 13 : 14} />}
@@ -104,12 +107,11 @@ export function EditorToolbar({ editor }: Props) {
             />
           </motion.div>
 
-          {/* Headings & Paragraph — hidden on mobile */}
-          {!isMobile && (
-            <motion.div
-              variants={groupVariants}
-              className="flex items-center gap-1 px-2 border-r border-[#333]"
-            >
+          {/* Headings & Paragraph */}
+          <motion.div
+            variants={groupVariants}
+            className="flex items-center gap-1 px-2 border-r border-[#333] shrink-0"
+          >
               <ToolbarBtn
                 icon={<Type size={14} />}
                 isActive={editor.isActive("paragraph")}
@@ -139,14 +141,12 @@ export function EditorToolbar({ editor }: Props) {
                 accent={accent}
               />
             </motion.div>
-          )}
 
-          {/* Lists — hidden on mobile */}
-          {!isMobile && (
-            <motion.div
-              variants={groupVariants}
-              className="flex items-center gap-1 px-2 border-r border-[#333]"
-            >
+          {/* Lists */}
+          <motion.div
+            variants={groupVariants}
+            className="flex items-center gap-1 px-2 border-r border-[#333] shrink-0"
+          >
               <ToolbarBtn
                 icon={<List size={14} />}
                 isActive={editor.isActive("bulletList")}
@@ -169,12 +169,11 @@ export function EditorToolbar({ editor }: Props) {
                 accent={accent}
               />
             </motion.div>
-          )}
 
           {/* Inline Formatting */}
           <motion.div
             variants={groupVariants}
-            className="flex items-center gap-1 px-2 border-r border-[#333]"
+            className="flex items-center gap-1 px-2 border-r border-[#333] shrink-0"
           >
             <ToolbarBtn
               icon={<Bold size={14} />}
@@ -216,7 +215,7 @@ export function EditorToolbar({ editor }: Props) {
           {/* Blocks */}
           <motion.div
             variants={groupVariants}
-            className="flex items-center gap-1 px-2 border-r border-[#333]"
+            className="flex items-center gap-1 px-2 border-r border-[#333] shrink-0"
           >
             <ToolbarBtn
               icon={<Quote size={14} />}
@@ -234,9 +233,8 @@ export function EditorToolbar({ editor }: Props) {
             />
           </motion.div>
 
-          {/* Text Align — hidden on mobile */}
-          {!isMobile && (
-            <motion.div variants={groupVariants} className="flex items-center gap-1 pl-2">
+          {/* Text Align */}
+          <motion.div variants={groupVariants} className="flex items-center gap-1 pl-2 shrink-0">
               <ToolbarBtn
                 icon={<AlignLeft size={14} />}
                 isActive={editor.isActive({ textAlign: "left" })}
@@ -266,7 +264,6 @@ export function EditorToolbar({ editor }: Props) {
                 accent={accent}
               />
             </motion.div>
-          )}
         </motion.div>
       </motion.div>
     </AnimatePresence>
