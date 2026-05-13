@@ -43,6 +43,15 @@ export function CommandPalette() {
     return () => document.removeEventListener("keydown", down);
   }, [toggleOpen]);
 
+  // Listen to Global Shortcut from Electron
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.electronAPI) {
+      window.electronAPI.onQuickSearch(() => {
+        setOpen(true);
+      });
+    }
+  }, [setOpen]);
+
   // Pre-load contents for universal search when palette is opened
   useEffect(() => {
     if (!open) return;

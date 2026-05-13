@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { get as idbGet, set as idbSet } from "idb-keyval";
 import { scheduleWorkspaceSync } from "@/lib/storage/sync";
+import { LocalStorageProvider } from "@/lib/storage/local";
 
 const WS_KEY = "opencraft:workspaces";
 const ACTIVE_WS_KEY = "opencraft:active-workspace";
@@ -102,11 +103,33 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   loaded: false,
 
   load: async () => {
-    const [workspaces, docs, activeWs] = await Promise.all([
-      idbGet<Workspace[]>(WS_KEY),
-      idbGet<DocMeta[]>(DOCS_KEY),
-      idbGet<string>(ACTIVE_WS_KEY),
-    ]);
+    let workspaces: Workspace[] | undefined;
+    let docs: DocMeta[] | undefined;
+    let activeWs: string | undefined;
+
+    if (typeof window !== 'undefined' && window.electronAPI) {
+      try {
+        const wsData = await window.electronAPI.readFile(`_meta_workspaces.json`);
+        if (wsData) workspaces = JSON.parse(wsData);
+        
+        const docsData = await window.electronAPI.readFile(`_meta_docs.json`);
+        if (docsData) docs = JSON.parse(docsData);
+
+        const activeWsData = await window.electronAPI.readFile(`_meta_activeWs.json`);
+        if (activeWsData) activeWs = JSON.parse(activeWsData);
+      } catch {}
+    }
+
+    if (!workspaces || !docs) {
+      const results = await Promise.all([
+        idbGet<Workspace[]>(WS_KEY),
+        idbGet<DocMeta[]>(DOCS_KEY),
+        idbGet<string>(ACTIVE_WS_KEY),
+      ]);
+      workspaces = results[0];
+      docs = results[1];
+      activeWs = results[2];
+    }
 
     // Ensure backwards compatibility by initializing missing fields
     const migratedWorkspaces = workspaces?.map((w) => ({
@@ -144,6 +167,11 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
 
   persist: () => {
     const { workspaces, docs, activeWorkspaceId } = get();
+    if (typeof window !== 'undefined' && window.electronAPI) {
+      window.electronAPI.writeFile(`_meta_workspaces.json`, JSON.stringify(workspaces));
+      window.electronAPI.writeFile(`_meta_docs.json`, JSON.stringify(docs));
+      window.electronAPI.writeFile(`_meta_activeWs.json`, JSON.stringify(activeWorkspaceId));
+    }
     idbSet(WS_KEY, workspaces);
     idbSet(DOCS_KEY, docs);
     idbSet(ACTIVE_WS_KEY, activeWorkspaceId);
@@ -325,8 +353,8 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       })),
       activeDocId: s.activeDocId === id ? null : s.activeDocId,
     }));
-    // Also remove the document content from idb
-    import("idb-keyval").then(({ del }) => del(`opencraft:doc:${id}`));
+    // Also remove the document content
+    LocalStorageProvider.remove(id);
     get().persist();
   },
 

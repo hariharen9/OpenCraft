@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
+import { Titlebar } from "@/components/opencraft/Titlebar";
 import { Sidebar } from "@/components/opencraft/Sidebar";
 import { HomeView } from "@/components/opencraft/HomeView";
 import { EditorPane } from "@/components/opencraft/EditorPane";
@@ -45,6 +46,7 @@ function OpenCraft() {
   if (isMobile) {
     return (
       <div className="mobile-app-container flex h-[100dvh] w-screen flex-col overflow-hidden bg-[#161616] text-[#e0e0e0] antialiased">
+        <Titlebar />
         {/* Main content — full screen */}
         <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
           <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-[#1f1f1f]">
@@ -111,11 +113,13 @@ function OpenCraft() {
 
   // Desktop layout (unchanged)
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#161616] text-[#e0e0e0] antialiased">
-      <AnimatePresence>
-        {sidebarOpen && <Sidebar />}
-      </AnimatePresence>
-      <div className="flex min-w-0 flex-1 py-2 pr-2">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#161616] text-[#e0e0e0] antialiased flex-col">
+      <Titlebar />
+      <div className="flex flex-1 min-h-0 relative">
+        <AnimatePresence>
+          {sidebarOpen && <Sidebar />}
+        </AnimatePresence>
+        <div className="flex min-w-0 flex-1 py-2 pr-2">
         <div className="relative flex min-w-0 flex-1 overflow-hidden rounded-xl bg-[#1f1f1f] shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset,0_20px_40px_-20px_rgba(0,0,0,0.6),0_8px_16px_-12px_rgba(0,0,0,0.5)] ring-1 ring-black/40">
           <div className="relative flex min-w-0 flex-1">
             {/* Editor - always mounted so TipTap state is preserved */}
@@ -170,6 +174,7 @@ function OpenCraft() {
           activeView !== "home" && <Inspector />}
       </AnimatePresence>
       <CommandPalette />
+      </div>
     </div>
   );
 }

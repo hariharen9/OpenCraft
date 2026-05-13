@@ -24,14 +24,25 @@
       "output": "release"
     },
     "win": {
-      "target": [
-        "nsis"
-      ],
-      "icon": "public/favicon.ico"
+      "target": ["nsis", "portable"],
+      "icon": "assets/logo.png"
     },
+    "mac": {
+      "target": ["dmg", "zip"],
+      "icon": "assets/logo.png"
+    },
+    "fileAssociations": [
+      {
+        "ext": "md",
+        "name": "Markdown Document",
+        "description": "OpenCraft Markdown File",
+        "icon": "assets/logo.png"
+      }
+    ],
     "files": [
       "dist/**/*",
-      "dist-electron/**/*"
+      "dist-electron/**/*",
+      "assets/**/*"
     ]
   },
   "dependencies": {

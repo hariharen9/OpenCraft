@@ -74,6 +74,15 @@ export const useTasksStore = create<TasksStore>((set) => ({
         recurrence: t.recurrence ?? null,
         category: t.category ?? "Inbox",
       }));
+      
+      if (typeof window !== 'undefined' && window.electronAPI) {
+        const today = new Date().toISOString().split("T")[0];
+        const dueToday = migrated.filter(t => !t.completed && t.dueDate === today);
+        if (dueToday.length > 0) {
+          window.electronAPI.notify("OpenCraft Tasks", `You have ${dueToday.length} task(s) due today.`);
+        }
+      }
+
       set({ tasks: migrated, loaded: true });
     } else {
       set({ loaded: true });
@@ -95,6 +104,11 @@ export const useTasksStore = create<TasksStore>((set) => ({
       recurrence: null,
       category: category ?? "Inbox",
     };
+    
+    if (typeof window !== 'undefined' && window.electronAPI) {
+      window.electronAPI.notify("Task Added", title.trim());
+    }
+
     set((s) => {
       const tasks = [task, ...s.tasks];
       scheduleSave(tasks);

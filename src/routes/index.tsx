@@ -12,8 +12,10 @@ function IndexPage() {
 
 export const Route = createFileRoute("/")({
   beforeLoad: () => {
-    if (typeof window !== "undefined" && localStorage.getItem("opencraft_visited") === "true") {
-      throw redirect({ to: "/app", replace: true });
+    if (typeof window !== "undefined") {
+      if (window.electronAPI || localStorage.getItem("opencraft_visited") === "true") {
+        throw redirect({ to: "/app", replace: true });
+      }
     }
   },
   component: IndexPage,
